@@ -6,7 +6,6 @@
 <title>Form Pengajuan Surat - MTQ UB XIX 2026</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* CSS khusus untuk mempercantik tampilan form pengajuan surat */
     .form-container {
         background: white;
         padding: 40px;
@@ -72,21 +71,35 @@
     .submit-btn:hover {
         background-color: #005f73;
     }
+    
+    .submit-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    /* Trik agar layout surat tidak mengganggu tampilan layar tapi tetap bisa difoto oleh html2pdf */
     #template-surat {
-        display: none; /* Disembunyikan agar tidak terlihat di layar form */
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+        width: 800px;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </head>
 <body>
 
-<header>
+<header style="background: #0077b6;">
     <div class="container">
         <h1>Formulir Pengajuan Surat</h1>
         <p>Delegasi & Dispensasi MTQ UB XIX 2026</p>
     </div>
 </header>
 
-<nav>
+<nav style="background: #005f73;">
     <div class="container">
         <a href="../information/sop-surat.html">← Kembali ke SOP</a>
     </div>
@@ -97,30 +110,30 @@
     <div class="form-container">
         <h2>Lengkapi Data Berikut</h2>
         
-        <form action="proses_surat.php" method="POST">
+        <form id="form-surat">
             <div class="form-group">
                 <label for="nama">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" placeholder="Udin Jamaludin" required>
+                <input type="text" id="nama" placeholder="Contoh: M. Rizqi Fahruddien" required>
             </div>
 
             <div class="form-group">
                 <label for="nim">NIM</label>
-                <input type="text" id="nim" name="nim" placeholder="Masukkan NIM" required>
+                <input type="text" id="nim" placeholder="Masukkan NIM" required>
             </div>
 
             <div class="form-group">
                 <label for="fakultas">Fakultas / Angkatan</label>
-                <input type="text" id="fakultas" name="fakultas" placeholder="FILKOM / 2023" required>
+                <input type="text" id="fakultas" placeholder="Contoh: FILKOM / 2023" required>
             </div>
-
+            
             <div class="form-group">
-                <label for="fakultas">No. HP Aktif</label>
-                <input type="text" id="no-hp" name="no-hp" placeholder="08123456789" required>
+                <label for="no-hp">Nomor HP Aktif</label>
+                <input type="text" id="no-hp" placeholder="Contoh: 08123456789" required>
             </div>
 
             <div class="form-group">
                 <label for="bidang_lomba">Bidang Lomba</label>
-                <select id="bidang_lomba" name="bidang_lomba" required>
+                <select id="bidang_lomba" required>
                     <option value="" disabled selected>-- Pilih Cabang Lomba --</option>
                     <option value="MTQ">Musabaqah Tilawatil Qur’an (MTQ)</option>
                     <option value="MTrQ">Musabaqah Tartilil Qur’an (MTrQ)</option>
@@ -135,15 +148,147 @@
                 </select>
             </div>
 
-            <button type="submit" class="submit-btn">Kirim Pengajuan Surat</button>
+            <button type="submit" class="submit-btn" id="btn-submit">Kirim Pengajuan Surat</button>
         </form>
     </div>
 
 </section>
 
-<footer>
+<div id="template-surat">
+    <div style="font-family: 'Times New Roman', Times, serif; padding: 40px; color: black; background: white; line-height: 1.5;">
+        
+        <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 20px;">PANITIA PELAKSANA</h2>
+            <h1 style="margin: 5px 0; font-size: 24px;">MUSABAQAH TILAWATIL QUR'AN (MTQ) XIX</h1>
+            <h2 style="margin: 0; font-size: 20px;">UNIVERSITAS BRAWIJAYA 2026</h2>
+        </div>
+
+        <h3 style="text-align: center; text-decoration: underline; font-size: 18px; margin-top: 30px;">SURAT KETERANGAN DELEGASI</h3>
+        <br>
+        
+        <p style="text-align: justify; font-size: 16px;">
+            Dengan hormat, yang bertanda tangan di bawah ini Panitia MTQ Universitas Brawijaya XIX Tahun 2026, menerangkan bahwa mahasiswa berikut:
+        </p>
+        
+        <table style="margin-left: 30px; font-size: 16px; margin-top: 15px; margin-bottom: 15px;">
+            <tr><td width="150" style="padding-bottom: 5px;">Nama</td><td style="padding-bottom: 5px;">: <strong id="pdf-nama"></strong></td></tr>
+            <tr><td style="padding-bottom: 5px;">NIM</td><td style="padding-bottom: 5px;">: <span id="pdf-nim"></span></td></tr>
+            <tr><td style="padding-bottom: 5px;">Fakultas / Angkatan</td><td style="padding-bottom: 5px;">: <span id="pdf-fakultas"></span></td></tr>
+            <tr><td style="padding-bottom: 5px;">Nomor HP</td><td style="padding-bottom: 5px;">: <span id="pdf-hp"></span></td></tr>
+            <tr><td style="padding-bottom: 5px;">Cabang Lomba</td><td style="padding-bottom: 5px;">: <strong id="pdf-lomba"></strong></td></tr>
+        </table>
+        
+        <p style="text-align: justify; font-size: 16px;">
+            Merupakan delegasi resmi yang mengikuti rangkaian perlombaan Musabaqah Tilawatil Qur'an (MTQ) Universitas Brawijaya XIX 2026. Surat keterangan ini diterbitkan agar dapat dipergunakan untuk perizinan akademik/dispensasi sebagaimana mestinya.
+        </p>
+        
+        <br><br>
+        <div style="text-align: right; font-size: 16px; margin-top: 40px;">
+            <p>Malang, <span id="pdf-tanggal"></span></p>
+            <p><strong>Panitia Pelaksana,</strong></p>
+            <br><br><br><br>
+            <p>( ........................................ )</p>
+        </div>
+    </div>
+</div>
+
+<footer style="background: #005f73;">
     <p>© 2026 MTQ Universitas Brawijaya XIX</p>
 </footer>
 
+<script>
+    // 1. KONEKSI KE SUPABASE
+    const SUPABASE_URL = 'https://hovevsqsloodjwftcpb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdmV2c3FzbG9vZGFqd2Z0Y3BiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNzU4ODksImV4cCI6MjA5NjY1MTg4OX0.HTtzplxTQfuHhiG83qhiAbR4h5HYl9PwUD8uIrhZdSw';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // 2. KETIKA TOMBOL KIRIM DITEKAN
+    document.getElementById('form-surat').addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+        
+        const btn = document.getElementById('btn-submit');
+        btn.innerText = "Menyimpan ke Database...";
+        btn.disabled = true;
+
+        try {
+            // Ambil inputan user
+            const valNama = document.getElementById('nama').value;
+            const valNim = document.getElementById('nim').value;
+            const valFakultas = document.getElementById('fakultas').value;
+            const valHp = document.getElementById('no-hp').value;
+            const valLomba = document.getElementById('bidang_lomba').value;
+
+            // 3. SIMPAN DATA KE TABEL 'pengajuan_surat' DI SUPABASE
+            // Penamaan kolom telah disesuaikan dengan database Anda
+            const { error } = await supabase
+                .from('pengajuan_surat')
+                .insert([
+                    { 
+                        nama: valNama, 
+                        nim: valNim, 
+                        fakultas_angkatan: valFakultas, // Telah disesuaikan
+                        nomor_hp: valHp,                // Telah disesuaikan
+                        bidang_lomba: valLomba 
+                    }
+                ]);
+
+            // Jika gagal simpan, lempar ke kotak error di bawah
+            if (error) {
+                throw new Error("Gagal menyimpan data ke Supabase: " + error.message);
+            }
+
+            // 4. JIKA SUKSES SIMPAN, INJEKSIKAN DATA KE TEMPLATE SURAT
+            btn.innerText = "Membuat File PDF...";
+
+            document.getElementById('pdf-nama').innerHTML = valNama;
+            document.getElementById('pdf-nim').innerHTML = valNim;
+            document.getElementById('pdf-fakultas').innerHTML = valFakultas;
+            document.getElementById('pdf-hp').innerHTML = valHp;
+            document.getElementById('pdf-lomba').innerHTML = valLomba;
+            
+            // Cetak tanggal hari ini
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('pdf-tanggal').innerHTML = today.toLocaleDateString('id-ID', options);
+
+            // 5. GENERATE PDF MENGGUNAKAN HTML2PDF
+            const element = document.getElementById('template-surat');
+
+            const opt = {
+                margin:       15,
+                filename:     `Surat_Delegasi_MTQ_${valNim}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Beri jeda 0.5 detik agar DOM update dengan sempurna
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    btn.innerText = "Selesai! Surat Berhasil Diunduh";
+                    
+                    // Reset form
+                    document.getElementById('form-surat').reset();
+                    
+                    // Kembalikan tombol ke keadaan normal
+                    setTimeout(() => {
+                        btn.innerText = "Kirim Pengajuan Surat Lagi";
+                        btn.disabled = false;
+                    }, 3000);
+                }).catch(err => {
+                    throw new Error("Sistem gagal merender PDF: " + err);
+                });
+            }, 500);
+
+        } catch (err) {
+            console.error(err);
+            // Menampilkan popup pesan jika ada yang salah (misal masalah tabel/internet)
+            alert("Terjadi Kesalahan: \n" + (err.message || err));
+            btn.innerText = "Kirim Pengajuan Surat";
+            btn.disabled = false;
+        }
+    });
+</script>
 </body>
 </html>
