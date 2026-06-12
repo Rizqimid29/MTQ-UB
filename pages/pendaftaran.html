@@ -6,7 +6,6 @@
 <title>Pendaftaran MTQ UB XIX 2026</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* Tambahan CSS khusus untuk form pendaftaran agar lebih rapi */
     .form-container {
         background: white;
         padding: 30px;
@@ -42,6 +41,7 @@
         font-weight: bold;
         margin-bottom: 5px;
         font-size: 14px;
+        color: #444;
     }
 
     .form-group input {
@@ -49,6 +49,12 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #0077b6;
     }
 
     .form-group input[type="file"] {
@@ -72,7 +78,33 @@
     .back-btn:hover {
         background-color: #fb8500;
     }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        border: none;
+        width: 100%;
+        font-size: 16px;
+        padding: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .submit-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../connector/supabase_connector.js"></script>
+
 </head>
 <body>
 
@@ -96,34 +128,34 @@
         <p style="margin-bottom: 30px;">Klik pada salah satu cabang lomba di bawah ini untuk memunculkan formulir.</p>
         
         <div class="card-grid">
-            <div class="card" onclick="openForm('Musabaqah Tilawatil Qur’an (MTQ)', 1)">
+            <div class="card" onclick="openForm('MTQ', 1)">
                 <h3>MTQ</h3><p style="font-size: 13px;">(1 Individu)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Tartilil Qur’an (MTrQ)', 1)">
+            <div class="card" onclick="openForm('MTrQ', 1)">
                 <h3>MTrQ</h3><p style="font-size: 13px;">(1 Individu)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Hifdzil Qur’an (MHQ)', 1)">
+            <div class="card" onclick="openForm('MHQ', 1)">
                 <h3>MHQ</h3><p style="font-size: 13px;">(1 Individu)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Khaththil Qur’an (MKQ)', 1)">
+            <div class="card" onclick="openForm('MKQ', 1)">
                 <h3>MKQ</h3><p style="font-size: 13px;">(1 Individu)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Debat Ilmiah Al-Qur\'an (MDIA)', 2)">
+            <div class="card" onclick="openForm('MDIA', 2)">
                 <h3>MDIA</h3><p style="font-size: 13px;">(Tim 2 Orang)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Syarhil Qur’an (MSQ)', 3)">
+            <div class="card" onclick="openForm('MSQ', 3)">
                 <h3>MSQ</h3><p style="font-size: 13px;">(Tim 3 Orang)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Fahmil Qur’an (MFQ)', 3)">
+            <div class="card" onclick="openForm('MFQ', 3)">
                 <h3>MFQ</h3><p style="font-size: 13px;">(Tim 3 Orang)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Karya Tulis Ilmiah Al-Qur\'an (MKTIQ)', 3)">
+            <div class="card" onclick="openForm('MKTIQ', 3)">
                 <h3>MKTIQ</h3><p style="font-size: 13px;">(Tim 3 Orang)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Desain Aplikasi Komputer Al-Qur\'an (MDAQ)', 3)">
+            <div class="card" onclick="openForm('MDAQ', 3)">
                 <h3>MDAQ</h3><p style="font-size: 13px;">(Tim 3 Orang)</p>
             </div>
-            <div class="card" onclick="openForm('Musabaqah Maulid Nabi Muhammad SAW (MMN)', 5)">
+            <div class="card" onclick="openForm('MMN', 5)">
                 <h3>MMN</h3><p style="font-size: 13px;">(Tim 5 Orang)</p>
             </div>
         </div>
@@ -136,10 +168,9 @@
             <h2 id="form-title" style="color: #006d77; margin-top: 0; text-align: center;">Form Pendaftaran</h2>
             <p style="text-align: center; margin-bottom: 20px;">Silakan lengkapi data diri peserta di bawah ini.</p>
             
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form id="form-pendaftaran">
                 <div id="dynamic-form-fields"></div>
-
-                <button type="submit" style="width: 100%; font-size: 16px; padding: 15px; margin-top: 10px;">Submit Pendaftaran</button>
+                <button type="submit" class="submit-btn" id="btn-submit">Submit Pendaftaran</button>
             </form>
         </div>
     </div>
@@ -151,79 +182,186 @@
 </footer>
 
 <script>
-    // Fungsi untuk memunculkan form dengan jumlah input dinamis
+    let lombaSaatIni = '';
+    let jumlahPesertaSaatIni = 0;
+
     function openForm(namaLomba, jumlahPeserta) {
-        // Sembunyikan Grid Card, Tampilkan Form
         document.getElementById('selection-view').style.display = 'none';
         document.getElementById('form-view').style.display = 'block';
+        document.getElementById('form-title').innerText = 'Pendaftaran Lomba ' + namaLomba;
         
-        // Ubah Judul Form
-        document.getElementById('form-title').innerText = 'Pendaftaran ' + namaLomba;
+        lombaSaatIni = namaLomba;
+        jumlahPesertaSaatIni = jumlahPeserta;
 
         let fieldsHtml = '';
 
-        // Looping sebanyak jumlah peserta pada cabang lomba tersebut
         for (let i = 0; i < jumlahPeserta; i++) {
-            
-            // Penentuan Judul Section (Individu, Ketua, Anggota)
-            let sectionTitle = '';
-            if (jumlahPeserta === 1) {
-                sectionTitle = 'Data Peserta';
-            } else {
-                if (i === 0) {
-                    sectionTitle = 'Data Ketua Tim';
-                } else {
-                    sectionTitle = 'Data Anggota ' + i;
-                }
-            }
+            let role = (i === 0) ? 'ketua' : 'anggota_' + i; 
+            let sectionTitle = (jumlahPeserta === 1) ? 'Data Peserta' : (i === 0 ? 'Data Ketua Tim' : 'Data Anggota ' + i);
 
-            // Template HTML untuk setiap orang
             fieldsHtml += `
                 <div class="participant-section">
                     <h3>${sectionTitle}</h3>
                     <div class="form-group">
                         <label>Nama Lengkap:</label>
-                        <input type="text" name="nama_${i}" placeholder="Masukkan nama lengkap" required>
+                        <input type="text" id="nama_${role}" placeholder="Masukkan nama lengkap" required>
                     </div>
                     <div class="form-group">
                         <label>NIM:</label>
-                        <input type="text" name="nim_${i}" placeholder="Masukkan NIM" required>
+                        <input type="text" id="nim_${role}" placeholder="Masukkan NIM" required>
                     </div>
                     <div class="form-group">
                         <label>Fakultas / Angkatan:</label>
-                        <input type="text" name="fakultas_angkatan_${i}" placeholder="Contoh: FILKOM / 2023" required>
+                        <input type="text" id="fakultas_${role}" placeholder="Contoh: FILKOM / 2023" required>
                     </div>
                     <div class="form-group">
                         <label>Usia:</label>
-                        <input type="number" name="usia_${i}" placeholder="Masukkan usia saat ini" required>
+                        <input type="number" id="usia_${role}" placeholder="Masukkan usia saat ini" required>
                     </div>
                      <div class="form-group">
-                        <label>No. HP:</label>
-                        <input type="text" name="no_hp_${i}" placeholder="Masukkan No HP" required>
+                        <label>No. HP (WhatsApp):</label>
+                        <input type="text" id="no_hp_${role}" placeholder="Contoh: 08123456789" required>
                     </div>
+                    
                     <div class="form-group">
                         <label>Upload Pass Foto 3x4 (JPG/PNG):</label>
-                        <input type="file" name="foto_${i}" accept="image/*" required>
+                        <input type="file" id="foto_${role}" accept=".jpg, .jpeg, .png" required>
                     </div>
                     <div class="form-group">
                         <label>Upload Scan/Foto KTM (JPG/PNG/PDF):</label>
-                        <input type="file" name="ktm_${i}" accept=".jpg, .jpeg, .png, .pdf" required>
+                        <input type="file" id="ktm_${role}" accept=".jpg, .jpeg, .png, .pdf" required>
                     </div>
                 </div>
             `;
         }
-
-        // Menyuntikkan template ke dalam HTML
         document.getElementById('dynamic-form-fields').innerHTML = fieldsHtml;
     }
 
-    // Fungsi untuk kembali memilih lomba
     function closeForm() {
         document.getElementById('selection-view').style.display = 'block';
         document.getElementById('form-view').style.display = 'none';
-        // Kosongkan form saat kembali
         document.getElementById('dynamic-form-fields').innerHTML = '';
+        lombaSaatIni = '';
+        jumlahPesertaSaatIni = 0;
     }
+
+    // ==========================================
+    // FUNGSI UPLOAD FILE KE SUPABASE STORAGE
+    // ==========================================
+    async function uploadFileKeSupabase(fileInput, customFileName) {
+        if (!fileInput) return null;
+        
+        // 1. Upload ke folder bucket bernama 'berkas_pendaftar'
+        const { data, error } = await supabaseClient.storage
+            .from('berkas_pendaftar')
+            .upload(customFileName, fileInput, { upsert: true }); // upsert menimpa file lama jika namanya sama
+
+        if (error) {
+            throw new Error("Gagal mengunggah file (" + fileInput.name + "): " + error.message);
+        }
+
+        // 2. Minta link publik dari file yang baru saja diupload
+        const { data: urlData } = supabaseClient.storage
+            .from('berkas_pendaftar')
+            .getPublicUrl(customFileName);
+
+        return urlData.publicUrl;
+    }
+
+    // ==========================================
+    // LOGIKA PENGIRIMAN DATA KE SUPABASE
+    // ==========================================
+    document.getElementById('form-pendaftaran').addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+        
+        const btn = document.getElementById('btn-submit');
+        btn.innerText = "Mengunggah Data & File (Mohon Tunggu)...";
+        btn.disabled = true;
+
+        try {
+            // CEK JIKA LOMBA INDIVIDU (1 ORANG)
+            if (jumlahPesertaSaatIni === 1) {
+                // Ambil File dari Input
+                let fileFoto = document.getElementById('foto_ketua').files[0];
+                let fileKtm = document.getElementById('ktm_ketua').files[0];
+                let nimPeserta = document.getElementById('nim_ketua').value;
+
+                // Proses Upload & Dapatkan URL Link-nya
+                let linkFoto = await uploadFileKeSupabase(fileFoto, `${lombaSaatIni}/Foto_${nimPeserta}.${fileFoto.name.split('.').pop()}`);
+                let linkKtm = await uploadFileKeSupabase(fileKtm, `${lombaSaatIni}/KTM_${nimPeserta}.${fileKtm.name.split('.').pop()}`);
+
+                // Siapkan data khusus tabel individu (Teks + Link File)
+                let payloadIndividu = {
+                    cabang_lomba: lombaSaatIni,
+                    nama: document.getElementById('nama_ketua').value,
+                    nim: nimPeserta,
+                    fakultas_angkatan: document.getElementById('fakultas_ketua').value,
+                    usia: parseInt(document.getElementById('usia_ketua').value),
+                    nomor_hp: document.getElementById('no_hp_ketua').value,
+                    link_pas_foto: linkFoto, // Kolom ini sudah ada di Supabase Anda
+                    link_ktm: linkKtm        // Kolom ini sudah ada di Supabase Anda
+                };
+
+                // Tembak ke tabel 'pendaftaran_individu'
+                const { error } = await supabaseClient
+                    .from('pendaftaran_individu')
+                    .insert([ payloadIndividu ]);
+
+                if (error) throw new Error(error.message);
+
+            } 
+            // CEK JIKA LOMBA TIM (LEBIH DARI 1 ORANG)
+            else {
+                let payloadTim = {
+                    cabang_lomba: lombaSaatIni
+                };
+
+                // Looping dinamis untuk menarik data ketua dan seluruh anggota
+                for (let i = 0; i < jumlahPesertaSaatIni; i++) {
+                    let role = (i === 0) ? 'ketua' : 'anggota_' + i;
+                    let nimPeserta = document.getElementById('nim_' + role).value;
+                    
+                    // Ambil Data Teks
+                    payloadTim['nama_' + role] = document.getElementById('nama_' + role).value;
+                    payloadTim['nim_' + role] = nimPeserta;
+                    payloadTim['fakultas_angkatan_' + role] = document.getElementById('fakultas_' + role).value;
+                    payloadTim['usia_' + role] = parseInt(document.getElementById('usia_' + role).value);
+                    payloadTim['nomor_hp_' + role] = document.getElementById('no_hp_' + role).value;
+
+                    // Ambil dan Upload File
+                    let fileFoto = document.getElementById('foto_' + role).files[0];
+                    let fileKtm = document.getElementById('ktm_' + role).files[0];
+
+                    if (fileFoto) {
+                        let linkFoto = await uploadFileKeSupabase(fileFoto, `Tim_${lombaSaatIni}/Foto_${role}_${nimPeserta}.${fileFoto.name.split('.').pop()}`);
+                        payloadTim['link_pas_foto_' + role] = linkFoto;
+                    }
+                    if (fileKtm) {
+                        let linkKtm = await uploadFileKeSupabase(fileKtm, `Tim_${lombaSaatIni}/KTM_${role}_${nimPeserta}.${fileKtm.name.split('.').pop()}`);
+                        payloadTim['link_ktm_' + role] = linkKtm;
+                    }
+                }
+
+                // Tembak ke tabel 'pendaftaran_tim'
+                const { error } = await supabaseClient
+                    .from('pendaftaran_tim')
+                    .insert([ payloadTim ]);
+
+                if (error) throw new Error(error.message);
+            }
+
+            // Jika sukses melewati tahapan di atas
+            alert("Alhamdulillah! Pendaftaran dan unggahan berkas lomba " + lombaSaatIni + " berhasil disubmit.");
+            closeForm(); // Kembali ke menu pilih lomba
+            
+        } catch (err) {
+            console.error(err);
+            alert("Gagal melakukan pendaftaran: \n" + (err.message || err));
+        } finally {
+            btn.innerText = "Submit Pendaftaran";
+            btn.disabled = false;
+        }
+    });
 </script>
 
 </body>
