@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MTrQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar form rapi */
+    .form-table input[type="number"], 
+    .form-table input[type="text"],
+    .form-table input[type="date"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom total otomatis */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .participant-info input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Tartilil Qur’an (MTrQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <!-- INFORMASI UMUM & JADWAL -->
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Tartilil Qur'an (MTrQ) adalah bidang lomba membaca Al-Qur'an dengan bacaan tartil (murottal), yaitu membaca Al-Qur'an dengan kecepatan bacaan sedang (tidak terlalu perlahan dan tidak terlalu cepat) serta mengikuti kaidah-kaidah ilmu bacaan (tajwid), fashohah (adab), dan seni (lagu dan suara) dalam melantunkan ayat Al-Qur'an.</p>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Penyisihan:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Selasa, 5 Mei 2026</li>
+                    <li>⏰ : 08.00 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Final:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Rabu, 6 Mei 2026</li>
+                    <li>⏰ : 08.00 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULIR PENILAIAN -->
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MTrQ UB 2026. Silakan isi kolom <strong>Nilai Yang Diperoleh</strong> di bawah ini. Kolom berwarna abu-abu akan terisi otomatis.</p>
+
+    <form action="#" method="POST">
+        <!-- TABEL 1: BIDANG TAJWID -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG TAJWID</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_tajwid">No. Urut :</label>
+                <input type="text" id="no_urut_tajwid" name="no_urut_tajwid" placeholder="...">
+                <label for="nama_peserta_tajwid">Nama Peserta :</label>
+                <input type="text" id="nama_peserta_tajwid" name="nama_peserta_tajwid" placeholder="...">
+                <label for="asal_fakultas_tajwid">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_tajwid" name="asal_fakultas_tajwid" placeholder="...">
+                <label for="tanggal_tajwid">Tanggal :</label>
+                <input type="date" id="tanggal_tajwid" name="tanggal_tajwid">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Makharijul Huruf</td>
+                    <td>20</td>
+                    <td>4</td>
+                    <td><input type="number" name="nilai_tajwid_1" min="4" max="20"></td>
+                    <td><input type="text" name="catatan_tajwid_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Sifat Huruf</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_tajwid_2" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_tajwid_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Ahkamul Huruf</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_tajwid_3" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_tajwid_3"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">40</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_tajwid" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Muhammad Irham, S.Pd.I)</p>
+        </div>
+
+        <!-- TABEL 2: BIDANG LAGU DAN IRAMA -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG LAGU DAN IRAMA</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_lagu">No. Urut :</label>
+                <input type="text" id="no_urut_lagu" name="no_urut_lagu" placeholder="...">
+                <label for="nama_peserta_lagu">Nama Peserta :</label>
+                <input type="text" id="nama_peserta_lagu" name="nama_peserta_lagu" placeholder="...">
+                <label for="asal_fakultas_lagu">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_lagu" name="asal_fakultas_lagu" placeholder="...">
+                <label for="tanggal_lagu">Tanggal :</label>
+                <input type="date" id="tanggal_lagu" name="tanggal_lagu">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Variasi & Keindahan Irama</td>
+                    <td>6</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_lagu_1" min="3" max="6"></td>
+                    <td><input type="text" name="catatan_lagu_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Volume</td>
+                    <td>8</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_lagu_2" min="3" max="8"></td>
+                    <td><input type="text" name="catatan_lagu_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Kebersihan</td>
+                    <td>8</td>
+                    <td>2</td>
+                    <td><input type="number" name="nilai_lagu_3" min="2" max="8"></td>
+                    <td><input type="text" name="catatan_lagu_3"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Pengaturan Napas</td>
+                    <td>8</td>
+                    <td>2</td>
+                    <td><input type="number" name="nilai_lagu_4" min="2" max="8"></td>
+                    <td><input type="text" name="catatan_lagu_4"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">30</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_lagu" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Thusan Hamidi, M.Pd)</p>
+        </div>
+
+        <!-- TABEL 3: BIDANG FASHOHAH -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG FASHOHAH</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_fashohah">No. Urut :</label>
+                <input type="text" id="no_urut_fashohah" name="no_urut_fashohah" placeholder="...">
+                <label for="nama_peserta_fashohah">Nama Peserta :</label>
+                <input type="text" id="nama_peserta_fashohah" name="nama_peserta_fashohah" placeholder="...">
+                <label for="asal_fakultas_fashohah">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_fashohah" name="asal_fakultas_fashohah" placeholder="...">
+                <label for="tanggal_fashohah">Tanggal :</label>
+                <input type="date" id="tanggal_fashohah" name="tanggal_fashohah">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Adab</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_fashohah_1" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_fashohah_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Kelancaran</td>
+                    <td>10</td>
+                    <td>4</td>
+                    <td><input type="number" name="nilai_fashohah_2" min="4" max="10"></td>
+                    <td><input type="text" name="catatan_fashohah_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Waqaf wal Ibtida’</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_fashohah_3" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_fashohah_3"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">30</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_fashohah" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Misbah Husolli.)</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    // Fungsi untuk menghitung otomatis total Bidang Tajwid
+    function hitungTajwid() {
+        let total = 0;
+        for (let i = 1; i <= 3; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_tajwid_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_tajwid')[0].value = total > 0 ? total : "";
+    }
+
+    // Fungsi untuk menghitung otomatis total Bidang Lagu dan Irama
+    function hitungLagu() {
+        let total = 0;
+        for (let i = 1; i <= 4; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_lagu_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_lagu')[0].value = total > 0 ? total : "";
+    }
+
+    // Fungsi untuk menghitung otomatis total Bidang Fashohah
+    function hitungFashohah() {
+        let total = 0;
+        for (let i = 1; i <= 3; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_fashohah_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_fashohah')[0].value = total > 0 ? total : "";
+    }
+
+    // Event listener: hitung ulang tiap ada angka yang dimasukkan juri
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', () => {
+            hitungTajwid();
+            hitungLagu();
+            hitungFashohah();
+        });
+    });
+</script>
+</body>
+</html>

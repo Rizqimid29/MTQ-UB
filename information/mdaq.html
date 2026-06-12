@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MDAQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar form rapi */
+    .form-table input[type="number"], 
+    .form-table input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom total otomatis */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .participant-info input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .sub-items {
+        padding-left: 20px;
+        margin: 5px 0;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .guide-box {
+        background-color: #e2e8f0;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        font-size: 13px;
+        line-height: 1.5;
+        border-left: 5px solid #023047;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Desain Aplikasi Komputer Al-Qur'an (MDAQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Desain Aplikasi Komputer Al-Qur'an merupakan bidang lomba aplikasi perangkat lunak tentang karya aplikasi Al-Qur'an, Hadits maupun karya Islam lainnya, yang dilaksanakan secara beregu[cite: 1410, 2131].</p>
+        
+        <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Final:</h4>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>📅 : Selasa, 5 Mei 2026</li>
+            <li>⏰ : 08.00 - selesai</li>
+            <li>🏡 : <a href="https://drive.google.com/file/d/1-emDpyj-aYLHlT252-IzF_1lia39lCbL/view?usp=sharing">RUANG SITI NURBAYA GU GEDUNG A (FP)</a></li>
+        </ul>
+    </div>
+
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>LEMBAR PENILAIAN PRESENTASI BABAK FINAL BIDANG MDAQ MTQ UB 2026. Silakan masukkan nilai pada kolom <strong>Skor</strong> sesuai dengan panduan ketentuan skor di bawah ini.</p>
+
+    <div class="guide-box">
+        <strong>Ketentuan Pemberian Skor (1, 2, 3, 5, 6, 7):</strong><br>
+        1 = Sangat buruk | 2 = Buruk | 3 = Kurang | 5 = Cukup baik | 6 = Baik | 7 = Memuaskan (Angka 4 dilewati) 
+    </div>
+
+    <form action="#" method="POST">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <div class="participant-info" style="margin-bottom: 0;">
+                <label for="nama_ketua">Nama Ketua :</label>
+                <input type="text" id="nama_ketua" name="nama_ketua" placeholder="...">
+                <label for="fakultas">Fakultas :</label>
+                <input type="text" id="fakultas" name="fakultas" placeholder="...">
+                <label for="judul">Judul :</label>
+                <input type="text" id="judul" name="judul" placeholder="...">
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">1. Presentasi</h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="50%">Kriteria Penilaian</th>
+                    <th width="10%">Bobot</th>
+                    <th width="15%">Skor</th>
+                    <th width="20%">Nilai (Bobot x Skor)</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td style="text-align: left;">
+                        <strong>a. Pemaparan</strong> 
+                        <div class="sub-items">
+                            1) Sistematika penyajian dan isi<br> 
+                            2) Demonstrasi gagasan<br> 
+                            3) Cara dan sikap presentasi<br> 
+                            4) Ketepatan waktu 
+                        </div>
+                    </td>
+                    <td>30</td>
+                    <td>
+                        <input type="number" id="skor_pres_1" min="1" max="7" placeholder="Masukkan skor">
+                    </td>
+                    <td><input type="number" id="nilai_pres_1" readonly></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td style="text-align: left;">
+                        <strong>b. Gagasan</strong> 
+                        <div class="sub-items">
+                            1) Inovasi konsep dan kreativitas gagasan (keunikan, manfaat, dan dampak)<br> 
+                            2) Kelayakan implementasi<br> 
+                            3) Kesesuaian penyampaian presentasi dengan isi proposal 
+                        </div>
+                    </td>
+                    <td>70</td>
+                    <td>
+                        <input type="number" id="skor_pres_2" min="1" max="7" placeholder="Masukkan skor">
+                    </td>
+                    <td><input type="number" id="nilai_pres_2" readonly></td>
+                </tr>
+                <tr style="background: #fcfcfc;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">TOTAL</td>
+                    <td><input type="number" id="total_pres" readonly></td>
+                </tr>
+                <tr style="background: #e2e8f0;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">NILAI PRESENTASI (30% x Total Nilai)</td>
+                    <td><input type="number" id="final_pres" readonly step="0.1" style="font-weight: bold; color: #006d77;"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">2. Tanya Jawab</h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="50%">Kriteria Penilaian</th>
+                    <th width="10%">Bobot</th>
+                    <th width="15%">Skor</th>
+                    <th width="20%">Nilai (Bobot x Skor) </th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td style="text-align: left;">
+                        <strong>a. Argumentasi dan Pengembangan Gagasan</strong> 
+                        <div class="sub-items">
+                            1) Komprehensifitas pemikiran kritis<br> 
+                            2) Struktur gagasan (gagasan didukung dengan argumentasi ilmiah yang telah ditulis)<br> 
+                            3) Konsistensi berargumen<br> 
+                            4) Referensi dan data yang akurat
+                        </div>
+                    </td>
+                    <td>70</td>
+                    <td>
+                        <input type="number" id="skor_tj_1" min="1" max="7" placeholder="Masukkan skor">
+                    </td>
+                    <td><input type="number" id="nilai_tj_1" readonly></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td style="text-align: left;">
+                        <strong>b. Diskusi dan Aspek Kebahasaan</strong> 
+                        <div class="sub-items">
+                            1) Kejelasan penggunaan bahasa dalam menyampaikan gagasan<br> 
+                            2) Kontribusi tim 
+                        </div>
+                    </td>
+                    <td>30</td>
+                    <td>
+                        <input type="number" id="skor_tj_2" min="1" max="7" placeholder="Masukkan skor">
+                    </td>
+                    <td><input type="number" id="nilai_tj_2" readonly></td>
+                </tr>
+                <tr style="background: #fcfcfc;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">TOTAL</td>
+                    <td><input type="number" id="total_tj" readonly></td>
+                </tr>
+                <tr style="background: #e2e8f0;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">NILAI TANYA JAWAB (40% x Total Nilai)</td>
+                    <td><input type="number" id="final_tj" readonly step="0.1" style="font-weight: bold; color: #006d77;"></td>
+                </tr>
+                <tr style="background: #023047; color: white;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 15px;">NILAI KESELURUHAN (Nilai Presentasi + Nilai Tanya Jawab)</td>
+                    <td><input type="number" id="grand_total" readonly step="0.1" style="font-size: 16px; font-weight: bold; background: #ffb703; border-color: #ffb703; color: #023047;"></td>
+                </tr>
+            </table>
+
+            <p style="text-align: right; margin-top: 40px;">Malang, ________ 2026<br>Hakim Penilai<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    function hitungMDAQ() {
+        // --- 1. Perhitungan Presentasi ---
+        let skorPres1 = parseFloat(document.getElementById('skor_pres_1').value);
+        let skorPres2 = parseFloat(document.getElementById('skor_pres_2').value);
+
+        let nilaiPres1 = !isNaN(skorPres1) ? 30 * skorPres1 : 0; 
+        let nilaiPres2 = !isNaN(skorPres2) ? 70 * skorPres2 : 0; 
+
+        document.getElementById('nilai_pres_1').value = !isNaN(skorPres1) ? nilaiPres1 : "";
+        document.getElementById('nilai_pres_2').value = !isNaN(skorPres2) ? nilaiPres2 : "";
+
+        let totalPres = 0;
+        if (!isNaN(skorPres1) || !isNaN(skorPres2)) {
+            totalPres = nilaiPres1 + nilaiPres2;
+            document.getElementById('total_pres').value = totalPres;
+            
+            let finalPres = 0.3 * totalPres; 
+            document.getElementById('final_pres').value = finalPres.toFixed(1);
+        } else {
+            document.getElementById('total_pres').value = "";
+            document.getElementById('final_pres').value = "";
+        }
+
+        // --- 2. Perhitungan Tanya Jawab ---
+        let skorTj1 = parseFloat(document.getElementById('skor_tj_1').value);
+        let skorTj2 = parseFloat(document.getElementById('skor_tj_2').value);
+
+        let nilaiTj1 = !isNaN(skorTj1) ? 70 * skorTj1 : 0; 
+        let nilaiTj2 = !isNaN(skorTj2) ? 30 * skorTj2 : 0; 
+
+        document.getElementById('nilai_tj_1').value = !isNaN(skorTj1) ? nilaiTj1 : "";
+        document.getElementById('nilai_tj_2').value = !isNaN(skorTj2) ? nilaiTj2 : "";
+
+        let totalTj = 0;
+        if (!isNaN(skorTj1) || !isNaN(skorTj2)) {
+            totalTj = nilaiTj1 + nilaiTj2;
+            document.getElementById('total_tj').value = totalTj;
+            
+            let finalTj = 0.4 * totalTj; 
+            document.getElementById('final_tj').value = finalTj.toFixed(1);
+        } else {
+            document.getElementById('total_tj').value = "";
+            document.getElementById('final_tj').value = "";
+        }
+
+        // --- 3. Nilai Keseluruhan ---
+        if (!isNaN(skorPres1) || !isNaN(skorPres2) || !isNaN(skorTj1) || !isNaN(skorTj2)) {
+            let finalPresVal = parseFloat(document.getElementById('final_pres').value) || 0;
+            let finalTjVal = parseFloat(document.getElementById('final_tj').value) || 0;
+            let grandTotal = finalPresVal + finalTjVal; 
+            document.getElementById('grand_total').value = grandTotal.toFixed(1);
+        } else {
+            document.getElementById('grand_total').value = "";
+        }
+    }
+
+    // Mengaktifkan pemicu hitung otomatis saat angka di-input
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', hitungMDAQ);
+    });
+</script>
+</body>
+</html>

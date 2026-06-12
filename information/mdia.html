@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MDIA</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar form rapi */
+    .form-table input[type="number"], 
+    .form-table input[type="text"],
+    .form-table input[type="date"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom total otomatis */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .participant-info input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .arabic-text {
+        font-size: 18px;
+        font-weight: bold;
+        color: #006d77;
+        margin-bottom: 5px;
+        display: block;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Debat Ilmiah Kandungan Al-Qur'an (MDIA)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Debat Ilmiah Kandungan Al-Qur'an (MDIA) merupakan kegiatan bertukar pendapat atau argumentasi yang diwakilkan dengan 2 tim yakni tim afirmatif (mendukung topik) dan tim oposisi (menentang topik) terhadap suatu permasalahan yang dibahas berkaitan dengan Al- Qur'an, Hadist Nabi, dan Ijtihad para Ulama'.</p>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Debat Bahasa Inggris:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Selasa, 5 Mei 2026</li>
+                    <li>⏰ : 08.00 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1zjrUoY2EVThyr-TSyq2A3947kSLGhrqY/view?usp=sharing">Ruang Bumitama Fakultas Pertanian Gedung E Lt. 5 (FP)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Debat Bahasa Inggris:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Rabu, 6 Mei 2026</li>
+                    <li>⏰ : 08.00 - selesai</li>
+                     <li>🏡 : <a href="https://drive.google.com/file/d/1zjrUoY2EVThyr-TSyq2A3947kSLGhrqY/view?usp=sharing">Ruang Bumitama Fakultas Pertanian Gedung E Lt. 5 (FP)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2>Formulir Penilaian Dewan Hakim (Bahasa Arab)</h2>
+    <p>Silakan masukkan nilai peserta pada kolom <strong>Nilai Yang Diperoleh</strong> sesuai dengan rubrik dan batas maksimal. Kolom abu-abu akan menjumlahkan secara otomatis.</p>
+
+    <form action="#" method="POST">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <div class="participant-info" style="margin-bottom: 0;">
+                <label for="tanggal">Tanggal (التاريخ) :</label>
+                <input type="date" id="tanggal" name="tanggal">
+                <label for="nama_peserta">Nama (الاسم) :</label>
+                <input type="text" id="nama_peserta" name="nama_peserta" placeholder="...">
+                <label for="tim">Tim (الفريق) :</label>
+                <input type="text" id="tim" name="tim" placeholder="...">
+                <label for="fakultas">Jurusan & Fakultas (القسم والكلية) :</label>
+                <input type="text" id="fakultas" name="fakultas" placeholder="...">
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="50%">Kriteria Penilaian</th>
+                    <th width="20%">Nilai Maksimal</th>
+                    <th width="25%">Nilai Yang Diperoleh</th>
+                </tr>
+                <tr>
+                    <td rowspan="2">1</td>
+                    <td style="text-align: left;">
+                        <span class="arabic-text">مُحْتَوَى الخِطَابِ</span>
+                        <strong>Isi Penyampaian Debat</strong><br>
+                        a. Argumen (الحجة)
+                    </td>
+                    <td>20</td>
+                    <td><input type="number" id="nilai_argumen" min="0" max="20" placeholder="Skor (0-20)"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">
+                        b. Bantahan (التفنيد)
+                    </td>
+                    <td>20</td>
+                    <td><input type="number" id="nilai_bantahan" min="0" max="20" placeholder="Skor (0-20)"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td style="text-align: left;">
+                        <span class="arabic-text">أُسْلُوبُ الإِلْقَاءِ</span>
+                        <strong>Gaya Penyampaian</strong>
+                    </td>
+                    <td>40</td>
+                    <td><input type="number" id="nilai_gaya" min="0" max="40" placeholder="Skor (0-40)"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td style="text-align: left;">
+                        <span class="arabic-text">اسْتِرَاتِيجِيَّةُ الفَرِيقِ</span>
+                        <strong>Strategi Tim</strong>
+                    </td>
+                    <td>20</td>
+                    <td><input type="number" id="nilai_strategi" min="0" max="20" placeholder="Skor (0-20)"></td>
+                </tr>
+                <tr style="background: #023047; color: white;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 16px;">
+                        <span style="color: #ffb703;">الدَّرَجَةُ</span> | TOTAL NILAI
+                    </td>
+                    <td style="font-weight: bold; font-size: 16px;">100</td>
+                    <td>
+                        <input type="number" id="total_nilai" readonly style="font-size: 18px; font-weight: bold; background: #ffb703; border: none; color: #023047;">
+                    </td>
+                </tr>
+            </table>
+
+            <p style="text-align: right; margin-top: 40px;">تَحْرِيرٌ فِي مالانج، 6 مايو 2026<br>Malang, 6 Mei 2026<br>الحاكمة (Dewan Juri)<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    function hitungMDIA() {
+        // Ambil nilai dari masing-masing input, gunakan 0 jika kosong
+        let nilaiArgumen = parseFloat(document.getElementById('nilai_argumen').value) || 0;
+        let nilaiBantahan = parseFloat(document.getElementById('nilai_bantahan').value) || 0;
+        let nilaiGaya = parseFloat(document.getElementById('nilai_gaya').value) || 0;
+        let nilaiStrategi = parseFloat(document.getElementById('nilai_strategi').value) || 0;
+
+        // Validasi agar nilai tidak melebihi maksimal per baris
+        if (nilaiArgumen > 20) { document.getElementById('nilai_argumen').value = 20; nilaiArgumen = 20; }
+        if (nilaiBantahan > 20) { document.getElementById('nilai_bantahan').value = 20; nilaiBantahan = 20; }
+        if (nilaiGaya > 40) { document.getElementById('nilai_gaya').value = 40; nilaiGaya = 40; }
+        if (nilaiStrategi > 20) { document.getElementById('nilai_strategi').value = 20; nilaiStrategi = 20; }
+
+        // Cek apakah ada inputan yang diisi
+        let inputAda = document.getElementById('nilai_argumen').value !== "" || 
+                       document.getElementById('nilai_bantahan').value !== "" || 
+                       document.getElementById('nilai_gaya').value !== "" || 
+                       document.getElementById('nilai_strategi').value !== "";
+
+        // Hitung dan tampilkan total jika ada isian
+        if (inputAda) {
+            let total = nilaiArgumen + nilaiBantahan + nilaiGaya + nilaiStrategi;
+            document.getElementById('total_nilai').value = total;
+        } else {
+            document.getElementById('total_nilai').value = "";
+        }
+    }
+
+    // Mengaktifkan pemicu hitung otomatis saat angka di-input
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', hitungMDIA);
+    });
+</script>
+</body>
+</html>

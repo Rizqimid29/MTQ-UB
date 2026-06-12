@@ -1,0 +1,152 @@
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+    color:#333;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    overflow:hidden;
+}
+
+header{
+    background:#006d77;
+    color:white;
+    padding:30px 0;
+    text-align:center;
+}
+
+nav{
+    background:#023047;
+    padding:10px;
+    text-align:center;
+}
+
+nav a{
+    color:white;
+    margin:0 15px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.hero{
+    background:white;
+    padding:50px 20px;
+    text-align:center;
+}
+
+.hero button{
+    background:#006d77;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+/* --- GRID UNTUK 5 CARD DALAM 1 BARIS --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+/* --- KODE BARU UNTUK LINK CARD & EFEK HOVER --- */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    height: 150px; /* Tinggi disesuaikan agar proporsional */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #023047;
+}
+
+.card-link:hover .card {
+    transform: translateY(-10px); /* Efek card terangkat saat di-hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* --- GAYA KHUSUS TABEL FORMULIR PENILAIAN (DI PAGE BARU NANTI) --- */
+.form-table th {
+    background-color: #023047;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.form-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.form-table td:nth-child(2) {
+    text-align: left; /* Teks deskripsi agar rata kiri */
+}
+
+/* --- KODE LAMA LANJUTAN --- */
+form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+form input, form select{
+    padding:10px;
+}
+
+form button{
+    background:#006d77;
+    color:white;
+    border:none;
+    padding:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+table th, table td{
+    border:1px solid #ccc;
+    padding:10px;
+}
+
+footer{
+    background:#023047;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:30px;
+}
+
+/* Responsivitas untuk layar tablet/HP */
+@media (max-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr; 
+    }
+}

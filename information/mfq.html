@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MFQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar form rapi dan cerah */
+    .form-table input[type="number"], 
+    .form-table input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        color: #0077b6; /* Warna tulisan input lebih cerah */
+        font-weight: bold;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    .form-table th {
+        background-color: #0077b6; /* Warna biru yang lebih cerah dan segar */
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .form-table td {
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    /* Warna abu-abu terang untuk kolom total otomatis */
+    input[readonly] {
+        background-color: #f1f3f5;
+        color: #0077b6;
+        cursor: not-allowed;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .submit-btn {
+        background-color: #0077b6; /* Warna tombol lebih cerah */
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #005f73;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+        color: #444; 
+    }
+
+    .participant-info input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+        color: #0077b6;
+        font-weight: bold;
+    }
+
+    /* Grid khusus 40 soal penyisihan */
+    .grid-40 {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .grid-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .grid-item label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        color: #0077b6;
+        margin-bottom: 5px;
+    }
+
+    .grid-item input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* Warna khas untuk setiap tim di Sesi X */
+    .bg-tim-a { background-color: #e3f2fd; } /* Latar Biru Terang */
+    .bg-tim-b { background-color: #fbe9e7; } /* Latar Merah/Oranye Terang */
+    .bg-tim-c { background-color: #e8f5e9; } /* Latar Hijau Terang */
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Fahmil Qur'an (MFQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <!-- INFORMASI UMUM & JADWAL -->
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Fahmil Qur'an adalah jenis lomba pemahaman atau pendalaman Al-Qur'an dengan penekanan pada pengungkapan ilmu Al-Qur'an dan pemahaman kandungan ayat dalam bentuk cerdas cermat.</p>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div>
+                <h4 style="color: #0077b6; margin-bottom: 5px;">Jadwal Penyisihan:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Selasa, 5 Mei 2026</li>
+                    <li>⏰ : 08.00 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1aCbNPCWlvgZ4zTdtBvNznEtsOZUT41GR/view?usp=sharing">MIPA CENTER 1.1 (MIPA)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #0077b6; margin-bottom: 5px;">Jadwal Final:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Rabu, 6 Mei 2026</li>
+                    <li>⏰ : 08.15 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1aCbNPCWlvgZ4zTdtBvNznEtsOZUT41GR/view?usp=sharing">MIPA CENTER 1.1 (MIPA)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULIR PENILAIAN -->
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>Silakan gunakan <strong>Form Penyisihan</strong> untuk ujian tulis beregu, dan <strong>Form Sesi X</strong> untuk babak cerdas cermat Semifinal/Final.</p>
+
+    <form action="#" method="POST">
+        
+        <!-- ============================================== -->
+        <!-- BAGIAN 1: BABAK PENYISIHAN (40 SOAL)           -->
+        <!-- ============================================== -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
+            <h3 style="border-bottom: 2px solid #0077b6; padding-bottom: 10px; margin-bottom: 20px; color: #0077b6;">1. PENILAIAN BABAK PENYISIHAN</h3>
+            
+            <div class="participant-info">
+                <label for="nama_tim_penyisihan">Nama Tim (Regu) :</label>
+                <input type="text" id="nama_tim_penyisihan" name="nama_tim_penyisihan" placeholder="Misal: Regu 01">
+                <label for="fakultas_penyisihan">Fakultas :</label>
+                <input type="text" id="fakultas_penyisihan" name="fakultas_penyisihan" placeholder="...">
+            </div>
+
+            <p style="font-size: 13px; color: #666; margin-bottom: 10px;"><em>*Masukkan poin per soal. Setiap soal bernilai 2,5 poin jika dijawab benar. Total skor maksimal 100.</em></p>
+            
+            <!-- Grid 40 Input -->
+            <div class="grid-40">
+                <!-- Baris 1-10 -->
+                <div class="grid-item"><label>Soal 1</label><input type="number" id="p_1" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 2</label><input type="number" id="p_2" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 3</label><input type="number" id="p_3" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 4</label><input type="number" id="p_4" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 5</label><input type="number" id="p_5" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 6</label><input type="number" id="p_6" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 7</label><input type="number" id="p_7" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 8</label><input type="number" id="p_8" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 9</label><input type="number" id="p_9" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 10</label><input type="number" id="p_10" step="0.5" max="2.5"></div>
+                
+                <!-- Baris 11-20 -->
+                <div class="grid-item"><label>Soal 11</label><input type="number" id="p_11" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 12</label><input type="number" id="p_12" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 13</label><input type="number" id="p_13" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 14</label><input type="number" id="p_14" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 15</label><input type="number" id="p_15" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 16</label><input type="number" id="p_16" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 17</label><input type="number" id="p_17" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 18</label><input type="number" id="p_18" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 19</label><input type="number" id="p_19" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 20</label><input type="number" id="p_20" step="0.5" max="2.5"></div>
+
+                <!-- Baris 21-30 -->
+                <div class="grid-item"><label>Soal 21</label><input type="number" id="p_21" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 22</label><input type="number" id="p_22" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 23</label><input type="number" id="p_23" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 24</label><input type="number" id="p_24" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 25</label><input type="number" id="p_25" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 26</label><input type="number" id="p_26" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 27</label><input type="number" id="p_27" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 28</label><input type="number" id="p_28" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 29</label><input type="number" id="p_29" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 30</label><input type="number" id="p_30" step="0.5" max="2.5"></div>
+
+                <!-- Baris 31-40 -->
+                <div class="grid-item"><label>Soal 31</label><input type="number" id="p_31" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 32</label><input type="number" id="p_32" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 33</label><input type="number" id="p_33" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 34</label><input type="number" id="p_34" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 35</label><input type="number" id="p_35" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 36</label><input type="number" id="p_36" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 37</label><input type="number" id="p_37" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 38</label><input type="number" id="p_38" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 39</label><input type="number" id="p_39" step="0.5" max="2.5"></div>
+                <div class="grid-item"><label>Soal 40</label><input type="number" id="p_40" step="0.5" max="2.5"></div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end; align-items: center;">
+                <span style="font-size: 18px; font-weight: bold; margin-right: 15px; color: #0077b6;">TOTAL NILAI PENYISIHAN :</span>
+                <input type="number" id="total_penyisihan" readonly style="width: 120px; font-size: 20px; padding: 10px; border: 2px solid #0077b6;">
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- BAGIAN 2: BABAK SESI X (SEMIFINAL / FINAL)     -->
+        <!-- ============================================== -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="border-bottom: 2px solid #0077b6; padding-bottom: 10px; margin-bottom: 20px; color: #0077b6;">2. PENILAIAN BABAK SESI X (SEMIFINAL & FINAL)</h3>
+            
+            <p style="font-size: 13px; color: #666; margin-bottom: 15px;"><em>*Masukkan perolehan skor atau pengurangan skor secara spesifik pada masing-masing jenis soal (Wajib, Lemparan 1, Lemparan 2, Rebutan). Total akan terakumulasi otomatis.</em></p>
+
+            <table class="form-table" style="min-width: 1100px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th rowspan="2" width="4%" style="background-color: #0077b6;">NO.</th>
+                        
+                        <!-- Header Utama Tim A -->
+                        <th colspan="4" class="bg-tim-a" style="color: #ffb703; font-size: 16px;">
+                            TIM A <br>
+                            <input type="text" id="nama_tim_a" placeholder="Nama Tim A" style="margin-top: 5px; text-align: center; font-weight: normal; font-size: 13px; color: #0077b6;">
+                        </th>
+                        
+                        <!-- Header Utama Tim B -->
+                        <th colspan="4" class="bg-tim-b" style="color: #d84315; font-size: 16px;">
+                            TIM B <br>
+                            <input type="text" id="nama_tim_b" placeholder="Nama Tim B" style="margin-top: 5px; text-align: center; font-weight: normal; font-size: 13px; color: #d84315;">
+                        </th>
+                        
+                        <!-- Header Utama Tim C -->
+                        <th colspan="4" class="bg-tim-c" style="color: #2e7d32; font-size: 16px;">
+                            TIM C <br>
+                            <input type="text" id="nama_tim_c" placeholder="Nama Tim C" style="margin-top: 5px; text-align: center; font-weight: normal; font-size: 13px; color: #2e7d32;">
+                        </th>
+                    </tr>
+                    <tr>
+                        <!-- Sub Header Tim A -->
+                        <th class="bg-tim-a" style="color: #ffb703; font-size: 12px; padding: 5px;">WAJIB</th>
+                        <th class="bg-tim-a" style="color: #ffb703; font-size: 12px; padding: 5px;">LEMPARAN 1</th>
+                        <th class="bg-tim-a" style="color: #ffb703; font-size: 12px; padding: 5px;">LEMPARAN 2</th>
+                        <th class="bg-tim-a" style="color: #ffb703; font-size: 12px; padding: 5px;">REBUTAN</th>
+                        
+                        <!-- Sub Header Tim B -->
+                        <th class="bg-tim-b" style="color: #d84315; font-size: 12px; padding: 5px;">WAJIB</th>
+                        <th class="bg-tim-b" style="color: #d84315; font-size: 12px; padding: 5px;">LEMPARAN 1</th>
+                        <th class="bg-tim-b" style="color: #d84315; font-size: 12px; padding: 5px;">LEMPARAN 2</th>
+                        <th class="bg-tim-b" style="color: #d84315; font-size: 12px; padding: 5px;">REBUTAN</th>
+                        
+                        <!-- Sub Header Tim C -->
+                        <th class="bg-tim-c" style="color: #2e7d32; font-size: 12px; padding: 5px;">WAJIB</th>
+                        <th class="bg-tim-c" style="color: #2e7d32; font-size: 12px; padding: 5px;">LEMPARAN 1</th>
+                        <th class="bg-tim-c" style="color: #2e7d32; font-size: 12px; padding: 5px;">LEMPARAN 2</th>
+                        <th class="bg-tim-c" style="color: #2e7d32; font-size: 12px; padding: 5px;">REBUTAN</th>
+                    </tr>
+                </thead>
+                <tbody id="sesi-x-body">
+                    <!-- Script akan generate 12 baris ke sini -->
+                </tbody>
+                <tfoot>
+                    <tr style="background-color: #f4f4f4;">
+                        <td style="font-weight: bold; text-align: center; color: #0077b6;">SKOR</td>
+                        <!-- Tim A -->
+                        <td colspan="4"><input type="number" id="total_sesi_a" readonly style="font-size: 20px; color: #0077b6; padding: 10px;"></td>
+                        <!-- Tim B -->
+                        <td colspan="4"><input type="number" id="total_sesi_b" readonly style="font-size: 20px; color: #d84315; padding: 10px;"></td>
+                        <!-- Tim C -->
+                        <td colspan="4"><input type="number" id="total_sesi_c" readonly style="font-size: 20px; color: #2e7d32; padding: 10px;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- REKAP HASIL AKHIR -->
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 20px;">
+                <div style="background: #0077b6; color: white; padding: 15px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <span style="font-size: 14px; display: block; margin-bottom: 5px; font-weight: bold;">TOTAL TIM A</span>
+                    <input type="number" id="display_total_a" readonly style="font-size: 24px; width: 100%; background: transparent; border: none; color: #ffb703; text-align: center;">
+                </div>
+                <div style="background: #d84315; color: white; padding: 15px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <span style="font-size: 14px; display: block; margin-bottom: 5px; font-weight: bold;">TOTAL TIM B</span>
+                    <input type="number" id="display_total_b" readonly style="font-size: 24px; width: 100%; background: transparent; border: none; color: #ffb703; text-align: center;">
+                </div>
+                <div style="background: #2e7d32; color: white; padding: 15px; border-radius: 8px; text-align: center; width: 180px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <span style="font-size: 14px; display: block; margin-bottom: 5px; font-weight: bold;">TOTAL TIM C</span>
+                    <input type="number" id="display_total_c" readonly style="font-size: 24px; width: 100%; background: transparent; border: none; color: #ffb703; text-align: center;">
+                </div>
+            </div>
+
+            <p style="text-align: right; margin-top: 40px; color: #444;">Malang, ________ 2026<br>Dewan Hakim<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer style="background: #005f73;">
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    // GENERATE 12 BARIS TABEL SESI X DENGAN 2 KOLOM LEMPARAN
+    const tbody = document.getElementById('sesi-x-body');
+    let rowsHtml = '';
+    for (let i = 1; i <= 12; i++) {
+        rowsHtml += `
+            <tr>
+                <td style="font-weight:bold; text-align:center; color: #444;">${i}</td>
+                
+                <!-- Tim A -->
+                <td class="bg-tim-a"><input type="number" id="a_w_${i}" style="color: #0077b6;"></td>
+                <td class="bg-tim-a"><input type="number" id="a_l1_${i}" style="color: #0077b6;"></td>
+                <td class="bg-tim-a"><input type="number" id="a_l2_${i}" style="color: #0077b6;"></td>
+                <td class="bg-tim-a"><input type="number" id="a_r_${i}" style="color: #0077b6;"></td>
+                
+                <!-- Tim B -->
+                <td class="bg-tim-b"><input type="number" id="b_w_${i}" style="color: #d84315;"></td>
+                <td class="bg-tim-b"><input type="number" id="b_l1_${i}" style="color: #d84315;"></td>
+                <td class="bg-tim-b"><input type="number" id="b_l2_${i}" style="color: #d84315;"></td>
+                <td class="bg-tim-b"><input type="number" id="b_r_${i}" style="color: #d84315;"></td>
+                
+                <!-- Tim C -->
+                <td class="bg-tim-c"><input type="number" id="c_w_${i}" style="color: #2e7d32;"></td>
+                <td class="bg-tim-c"><input type="number" id="c_l1_${i}" style="color: #2e7d32;"></td>
+                <td class="bg-tim-c"><input type="number" id="c_l2_${i}" style="color: #2e7d32;"></td>
+                <td class="bg-tim-c"><input type="number" id="c_r_${i}" style="color: #2e7d32;"></td>
+            </tr>
+        `;
+    }
+    tbody.innerHTML = rowsHtml;
+
+    // FUNGSI HITUNG PENYISIHAN (40 Soal)
+    function hitungPenyisihan() {
+        let total = 0;
+        let isFilled = false;
+        for (let i = 1; i <= 40; i++) {
+            let val = parseFloat(document.getElementById('p_' + i).value);
+            if (!isNaN(val)) {
+                total += val;
+                isFilled = true;
+            }
+        }
+        document.getElementById('total_penyisihan').value = isFilled ? total : "";
+    }
+
+    // FUNGSI HITUNG SESI X (Cerdas Cermat)
+    function hitungSesiX() {
+        const teams = ['a', 'b', 'c'];
+        teams.forEach(t => {
+            let total = 0;
+            let isFilled = false;
+            
+            for (let i = 1; i <= 12; i++) {
+                let w = parseFloat(document.getElementById(t + '_w_' + i).value) || 0;
+                let l1 = parseFloat(document.getElementById(t + '_l1_' + i).value) || 0;
+                let l2 = parseFloat(document.getElementById(t + '_l2_' + i).value) || 0;
+                let r = parseFloat(document.getElementById(t + '_r_' + i).value) || 0;
+                
+                if (document.getElementById(t + '_w_' + i).value !== "" || 
+                    document.getElementById(t + '_l1_' + i).value !== "" || 
+                    document.getElementById(t + '_l2_' + i).value !== "" || 
+                    document.getElementById(t + '_r_' + i).value !== "") {
+                    isFilled = true;
+                }
+                
+                total += (w + l1 + l2 + r);
+            }
+            
+            // Set Total Keseluruhan
+            document.getElementById('total_sesi_' + t).value = isFilled ? total : "";
+            document.getElementById('display_total_' + t).value = isFilled ? total : "";
+        });
+    }
+
+    // MENGHUBUNGKAN EVENT LISTENER PADA SEMUA INPUT ANGKA
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', () => {
+            hitungPenyisihan();
+            hitungSesiX();
+        });
+    });
+</script>
+</body>
+</html>

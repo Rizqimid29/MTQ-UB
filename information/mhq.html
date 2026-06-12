@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MHQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini */
+    .form-table input[type="number"], 
+    .form-table input[type="text"],
+    .form-table select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom total otomatis */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .participant-info input, .participant-info select {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Hifdzil Qur’an (MHQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Hifzhil Qur'an adalah bidang musabaqah menghafal Al-Qur'an dengan bacaan murottal yang sesuai dengan ilmu baca (tajwid), seni (lagu dan suara) dan etika (adab) yang menggunakan Qira'at Imam Ashim riwayat Hafs serta Mushaf Bahriah (Al-Qur'an Pojok).</p>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Penyisihan:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Selasa, 5 Mei 2026</li>
+                    <li>⏰ : 07.15 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1QbbatKCbk0ywT5lMV8HoBF4jmvmGut2K/view?usp=sharing">FAPET Auditorium Lt. 8 (FAPET)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Final:</h4>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li>📅 : Rabu, 6 Mei 2026</li>
+                    <li>⏰ : 07.15 - selesai</li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1QbbatKCbk0ywT5lMV8HoBF4jmvmGut2K/view?usp=sharing">FAPET Auditorium Lt. 8 (FAPET)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MHQ UB 2026. Silakan isi kolom <strong>KESALAHAN (KALI)</strong>. Sistem akan mengalikannya sesuai rumus yang berlaku. Kolom berwarna abu-abu akan terisi otomatis.</p>
+
+    <form action="#" method="POST">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <div class="participant-info" style="margin-bottom: 0;">
+                <label for="no_peserta">No. Peserta :</label>
+                <input type="text" id="no_peserta" name="no_peserta" placeholder="...">
+                <label for="nama_peserta">Nama Peserta :</label>
+                <input type="text" id="nama_peserta" name="nama_peserta" placeholder="...">
+                <label for="fakultas">Fakultas :</label>
+                <input type="text" id="fakultas" name="fakultas" placeholder="...">
+                <label for="kategori">Kategori :</label>
+                <select id="kategori" name="kategori">
+                    <option value="" disabled selected>Pilih Kategori Hafalan</option>
+                    <option value="5_juz">5 Juz</option>
+                    <option value="10_juz">10 Juz</option>
+                    <option value="20_juz">20 Juz</option>
+                    <option value="30_juz">30 Juz</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">FORMULIR PENILAIAN BIDANG TAHFIDH/KELANCARAN</h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="35%">JENIS YANG DINILAI</th>
+                    <th width="15%">KESALAHAN (KALI)</th>
+                    <th width="10%">RUMUS</th>
+                    <th width="15%">JUMLAH PENGURANGAN</th>
+                    <th width="20%">CATATAN</th>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td style="text-align: left; font-weight: bold;" colspan="5">Muro'atul Ayat</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">a. Tawaqquf</td>
+                    <td><input type="number" id="tawaqquf" min="0"></td>
+                    <td>x 2</td>
+                    <td><input type="number" id="sum_tawaqquf" readonly></td>
+                    <td><input type="text" name="catatan_tawaqquf"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">b. Tarkul Ayat</td>
+                    <td><input type="number" id="tarkul_ayat" min="0"></td>
+                    <td>x 2</td>
+                    <td><input type="number" id="sum_tarkul_ayat" readonly></td>
+                    <td><input type="text" name="catatan_tarkul_ayat"></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td style="text-align: left; font-weight: bold;" colspan="5">Sabqul Lisan</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">a. Tarkul Huruf aw al-Kalimat</td>
+                    <td><input type="number" id="tarkul_huruf" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_tarkul_huruf" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_tarkul_huruf"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">b. Ziyadatul Huruf aw al-Kalimat</td>
+                    <td><input type="number" id="ziyadatul_huruf" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_ziyadatul_huruf" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_ziyadatul_huruf"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">c. Tabdilul Huruf aw al-Kalimat</td>
+                    <td><input type="number" id="tabdilul_huruf" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_tabdilul_huruf" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_tabdilul_huruf"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; padding-left: 20px;">d. Tabdilul Harakat</td>
+                    <td><input type="number" id="tabdilul_harakat" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_tabdilul_harakat" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_tabdilul_harakat"></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td style="text-align: left; font-weight: bold;">Tardidul Kalimat</td>
+                    <td><input type="number" id="tardidul_kalimat" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_tardidul_kalimat" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_tardidul_kalimat"></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td style="text-align: left; font-weight: bold;">Tamamul Qiro'ah</td>
+                    <td colspan="2" style="font-size: 12px; color: #555;">(Input langsung)</td>
+                    <td><input type="number" id="tamamul_qiroah_tahfidh" step="0.5" min="0" max="9"></td>
+                    <td><input type="text" name="catatan_tamamul_qiroah_tahfidh"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai Maximal: 50</td>
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">
+                        <strong>Total Pengurangan = <input type="number" id="total_pengurangan_tahfidh" style="width: 60px;" readonly step="0.5"> | Nilai Akhir: <input type="number" id="nilai_akhir_tahfidh" style="width: 60px;" readonly step="0.5"></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="font-size: 12px; margin-top: 10px;"><em>* Coret yang tidak perlu <br>** Max. dikurangi 9 point pada setiap maqro' </em></p>
+            <p style="text-align: right; margin-top: 20px;">Dewan Hakim<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">FORMULIR PENILAIAN BIDANG FASHOHAH DAN ADAB</h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="35%">JENIS YANG DINILAI</th>
+                    <th width="15%">KESALAHAN (KALI)</th>
+                    <th width="10%">RUMUS</th>
+                    <th width="15%">JUMLAH PENGURANGAN</th>
+                    <th width="20%">CATATAN</th>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td style="text-align: left; font-weight: bold;">Ahkamul Waqfi wal Ibtida'</td>
+                    <td><input type="number" id="ahkamul_waqfi" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_ahkamul_waqfi" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_ahkamul_waqfi"></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td style="text-align: left; font-weight: bold;">Tamamul Harokat</td>
+                    <td><input type="number" id="tamamul_harokat" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_tamamul_harokat" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_tamamul_harokat"></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td style="text-align: left; font-weight: bold;">Suara & Irama</td>
+                    <td colspan="2" style="font-size: 12px; color: #555;">(Input langsung)</td>
+                    <td><input type="number" id="suara_irama_fashohah" step="0.5" min="0" max="3"></td>
+                    <td><input type="text" name="catatan_suara_irama_fashohah"></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td style="text-align: left; font-weight: bold;">Tamamul Qiro'ah</td>
+                    <td colspan="2" style="font-size: 12px; color: #555;">(Input langsung)</td>
+                    <td><input type="number" id="tamamul_qiroah_fashohah" step="0.5" min="0" max="4"></td>
+                    <td><input type="text" name="catatan_tamamul_qiroah_fashohah"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai Maximal: 25</td>
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">
+                        <strong>Total Pengurangan = <input type="number" id="total_pengurangan_fashohah" style="width: 60px;" readonly step="0.5"> | Nilai Akhir: <input type="number" id="nilai_akhir_fashohah" style="width: 60px;" readonly step="0.5"></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="font-size: 12px; margin-top: 10px;"><em>Coret yang tidak perlu <br>Max. dikurangi 3 point dari seluruh maqro<br>Max. dikurangi 4 point dari setiap maqro'</em></p>
+            <p style="text-align: right; margin-top: 20px;">Dewan Hakim<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">FORMULIR PENILAIAN BIDANG TAJWID</h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="35%">JENIS YANG DINILAI</th>
+                    <th width="15%">KESALAHAN (KALI)</th>
+                    <th width="10%">RUMUS</th>
+                    <th width="15%">JUMLAH PENGURANGAN</th>
+                    <th width="20%">CATATAN</th>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td style="text-align: left; font-weight: bold;">Makhorijul Huruf</td>
+                    <td><input type="number" id="makhorijul" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_makhorijul" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_makhorijul"></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td style="text-align: left; font-weight: bold;">Shifatul Huruf</td>
+                    <td><input type="number" id="shifatul" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_shifatul" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_shifatul"></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td style="text-align: left; font-weight: bold;">Ahkamul Huruf</td>
+                    <td><input type="number" id="ahkamul_huruf" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_ahkamul_huruf" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_ahkamul_huruf"></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td style="text-align: left; font-weight: bold;">Ahkamul Madd wal Qoshr</td>
+                    <td><input type="number" id="ahkamul_madd" min="0"></td>
+                    <td>x 0.5</td>
+                    <td><input type="number" id="sum_ahkamul_madd" readonly step="0.5"></td>
+                    <td><input type="text" name="catatan_ahkamul_madd"></td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td style="text-align: left; font-weight: bold;">Tamamul Qiro'ah</td>
+                    <td colspan="2" style="font-size: 12px; color: #555;">(Input langsung)</td>
+                    <td><input type="number" id="tamamul_qiroah_tajwid" step="0.5" min="0" max="4"></td>
+                    <td><input type="text" name="catatan_tamamul_qiroah_tajwid"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai Maximal: 25]</td>
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">
+                        <strong>Total Pengurangan = <input type="number" id="total_pengurangan_tajwid" style="width: 60px;" readonly step="0.5"> | Nilai Akhir: <input type="number" id="nilai_akhir_tajwid" style="width: 60px;" readonly step="0.5"></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="font-size: 12px; margin-top: 10px;"><em>Coret yang tidak perlu <br> Max. dikurangi 4 point pada setiap maqro'</em></p>
+            <p style="text-align: right; margin-top: 20px;">Dewan Hakim<br><br><br><br>( .................................... )</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    // 1. Fungsi untuk menghitung otomatis Bidang Tahfidh
+    function hitungTahfidh() {
+        let total = 0;
+        
+        // Elemen yang dikali 2
+        ['tawaqquf', 'tarkul_ayat'].forEach(id => {
+            let val = parseFloat(document.getElementById(id).value);
+            if (!isNaN(val)) {
+                let sum = val * 2;
+                document.getElementById('sum_' + id).value = sum;
+                total += sum;
+            } else {
+                document.getElementById('sum_' + id).value = "";
+            }
+        });
+
+        // Elemen yang dikali 0.5
+        ['tarkul_huruf', 'ziyadatul_huruf', 'tabdilul_huruf', 'tabdilul_harakat', 'tardidul_kalimat'].forEach(id => {
+            let val = parseFloat(document.getElementById(id).value);
+            if (!isNaN(val)) {
+                let sum = val * 0.5;
+                document.getElementById('sum_' + id).value = sum;
+                total += sum;
+            } else {
+                document.getElementById('sum_' + id).value = "";
+            }
+        });
+
+        // Input Pengurangan Langsung
+        let tamamul = parseFloat(document.getElementById('tamamul_qiroah_tahfidh').value) || 0;
+        total += tamamul;
+
+        // Hasil Total & Nilai Akhir
+        document.getElementById('total_pengurangan_tahfidh').value = total > 0 ? total : "";
+        document.getElementById('nilai_akhir_tahfidh').value = total > 0 ? 50 - total : 50;
+    }
+
+    // 2. Fungsi untuk menghitung otomatis Bidang Fashohah dan Adab
+    function hitungFashohah() {
+        let total = 0;
+
+        // Elemen yang dikali 0.5
+        ['ahkamul_waqfi', 'tamamul_harokat'].forEach(id => {
+            let val = parseFloat(document.getElementById(id).value);
+            if (!isNaN(val)) {
+                let sum = val * 0.5;
+                document.getElementById('sum_' + id).value = sum;
+                total += sum;
+            } else {
+                document.getElementById('sum_' + id).value = "";
+            }
+        });
+
+        // Input Pengurangan Langsung
+        let suaraIrama = parseFloat(document.getElementById('suara_irama_fashohah').value) || 0;
+        let tamamulQiroah = parseFloat(document.getElementById('tamamul_qiroah_fashohah').value) || 0;
+        total += (suaraIrama + tamamulQiroah);
+
+        // Hasil Total & Nilai Akhir
+        document.getElementById('total_pengurangan_fashohah').value = total > 0 ? total : "";
+        document.getElementById('nilai_akhir_fashohah').value = total > 0 ? 25 - total : 25;
+    }
+
+    // 3. Fungsi untuk menghitung otomatis Bidang Tajwid
+    function hitungTajwid() {
+        let total = 0;
+
+        // Elemen yang dikali 0.5
+        ['makhorijul', 'shifatul', 'ahkamul_huruf', 'ahkamul_madd'].forEach(id => {
+            let val = parseFloat(document.getElementById(id).value);
+            if (!isNaN(val)) {
+                let sum = val * 0.5;
+                document.getElementById('sum_' + id).value = sum;
+                total += sum;
+            } else {
+                document.getElementById('sum_' + id).value = "";
+            }
+        });
+
+        // Input Pengurangan Langsung
+        let tamamul = parseFloat(document.getElementById('tamamul_qiroah_tajwid').value) || 0;
+        total += tamamul;
+
+        // Hasil Total & Nilai Akhir
+        document.getElementById('total_pengurangan_tajwid').value = total > 0 ? total : "";
+        document.getElementById('nilai_akhir_tajwid').value = total > 0 ? 25 - total : 25;
+    }
+
+    // Menambahkan Event Listener agar berjalan realtime setiap ada angka dimasukkan
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', () => {
+            hitungTahfidh();
+            hitungFashohah();
+            hitungTajwid();
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Pengajuan Surat - MTQ UB XIX 2026</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS khusus untuk mempercantik tampilan form pengajuan surat */
+    .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 600px;
+        margin: 0 auto 40px auto;
+    }
+
+    .form-container h2 {
+        color: #0077b6;
+        text-align: center;
+        margin-top: 0;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 8px;
+    }
+
+    .form-group input, 
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 14px;
+        color: #333;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus, 
+    .form-group select:focus {
+        outline: none;
+        border-color: #0077b6;
+        box-shadow: 0 0 5px rgba(0, 119, 182, 0.3);
+    }
+
+    .submit-btn {
+        background-color: #0077b6;
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+        background-color: #005f73;
+    }
+    #template-surat {
+        display: none; /* Disembunyikan agar tidak terlihat di layar form */
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>Formulir Pengajuan Surat</h1>
+        <p>Delegasi & Dispensasi MTQ UB XIX 2026</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../information/sop-surat.html">← Kembali ke SOP</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 50px;">
+    
+    <div class="form-container">
+        <h2>Lengkapi Data Berikut</h2>
+        
+        <form action="proses_surat.php" method="POST">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" placeholder="Udin Jamaludin" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nim">NIM</label>
+                <input type="text" id="nim" name="nim" placeholder="Masukkan NIM" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fakultas">Fakultas / Angkatan</label>
+                <input type="text" id="fakultas" name="fakultas" placeholder="FILKOM / 2023" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fakultas">No. HP Aktif</label>
+                <input type="text" id="no-hp" name="no-hp" placeholder="08123456789" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bidang_lomba">Bidang Lomba</label>
+                <select id="bidang_lomba" name="bidang_lomba" required>
+                    <option value="" disabled selected>-- Pilih Cabang Lomba --</option>
+                    <option value="MTQ">Musabaqah Tilawatil Qur’an (MTQ)</option>
+                    <option value="MTrQ">Musabaqah Tartilil Qur’an (MTrQ)</option>
+                    <option value="MHQ">Musabaqah Hifdzil Qur’an (MHQ)</option>
+                    <option value="MSQ">Musabaqah Syarhil Qur’an (MSQ)</option>
+                    <option value="MKQ">Musabaqah Khaththil Qur’an (MKQ)</option>
+                    <option value="MFQ">Musabaqah Fahmil Qur’an (MFQ)</option>
+                    <option value="MKTIQ">Karya Tulis Ilmiah Al-Qur'an (MKTIQ)</option>
+                    <option value="MDAQ">Desain Aplikasi Komputer Al-Qur'an (MDAQ)</option>
+                    <option value="MDIA">Debat Ilmiah Al-Qur'an (MDIA)</option>
+                    <option value="MMN">Musabaqah Maulid Nabi (MMN)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn">Kirim Pengajuan Surat</button>
+        </form>
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+</body>
+</html>

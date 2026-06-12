@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MSQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar form rapi */
+    .form-table input[type="number"], 
+    .form-table input[type="text"],
+    .form-table input[type="date"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom total otomatis */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 10px 15px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .participant-info input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        max-width: 300px;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Syarhil Qur’an (MSQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <!-- INFORMASI UMUM & JADWAL -->
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Syarhil Qur'an adalah bidang musabaqah yang mengungkapkan isi kandungan Al-Qur'an dengan cara menampilkan bacaan, puitisasi/terjemah, dan uraian yang menunjukan kesatuan yang serasi yang pelaksanaannya dilakukan secara beregu.</p>
+        
+        <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Pelaksanaan:</h4>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>📅 : Rabu, 6 Mei 2026</li>
+            <li>⏰ : 08.00 - selesai</li>
+            <li>🏡 : <a href="https://drive.google.com/file/d/1fBGXGKUiXc8c2TG5uqvOly4n39gygg8R/view?usp=sharing">MOVIE ROOM FIB GEDUNG A (FIB)</a></li>
+        </ul>
+    </div>
+
+    <!-- FORMULIR PENILAIAN -->
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MSQ UB 2026[cite: 11]. Silakan isi kolom <strong>Nilai Yang Diperoleh</strong> di bawah ini. Kolom berwarna abu-abu akan terisi otomatis.</p>
+
+    <form action="#" method="POST">
+        <!-- TABEL 1: BIDANG TERJEMAH DAN MATERI -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH SYARHIL QUR'AN<br>BIDANG TERJEMAH DAN MATERI</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_terjemah">No. Urut :</label>
+                <input type="text" id="no_urut_terjemah" name="no_urut_terjemah" placeholder="...">
+                <label for="nama_tim_terjemah">Nama Tim :</label>
+                <input type="text" id="nama_tim_terjemah" name="nama_tim_terjemah" placeholder="...">
+                <label for="asal_fakultas_terjemah">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_terjemah" name="asal_fakultas_terjemah" placeholder="...">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Ketepatan Terjemah</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_terjemah_1" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_terjemah_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Sistematika dan Isi</td>
+                    <td>20</td>
+                    <td>4</td>
+                    <td><input type="number" name="nilai_terjemah_2" min="4" max="20"></td>
+                    <td><input type="text" name="catatan_terjemah_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Kaidah dan gaya bahasa</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_terjemah_3" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_terjemah_3"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">40</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_terjemah" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadzah Dr. Nury Firdausia, M.Pd.I)</p>
+        </div>
+
+        <!-- TABEL 2: BIDANG PENGHAYATAN DAN RETORIKA -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH SYARHIL QUR'AN<br>BIDANG PENGHAYATAN DAN RETORIKA</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_retorika">No. Urut :</label>
+                <input type="text" id="no_urut_retorika" name="no_urut_retorika" placeholder="...">
+                <label for="nama_tim_retorika">Nama Tim :</label>
+                <input type="text" id="nama_tim_retorika" name="nama_tim_retorika" placeholder="...">
+                <label for="asal_fakultas_retorika">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_retorika" name="asal_fakultas_retorika" placeholder="...">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Vokal dan Artikulasi</td>
+                    <td>6</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_retorika_1" min="3" max="6"></td>
+                    <td><input type="text" name="catatan_retorika_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Intonasi</td>
+                    <td>8</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_retorika_2" min="3" max="8"></td>
+                    <td><input type="text" name="catatan_retorika_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Ekspresi</td>
+                    <td>8</td>
+                    <td>2</td>
+                    <td><input type="number" name="nilai_retorika_3" min="2" max="8"></td>
+                    <td><input type="text" name="catatan_retorika_3"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Performance</td>
+                    <td>8</td>
+                    <td>2</td>
+                    <td><input type="number" name="nilai_retorika_4" min="2" max="8"></td>
+                    <td><input type="text" name="catatan_retorika_4"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">30</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_retorika" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Achmad Mubarok, S.Pd)</p>
+        </div>
+
+        <!-- TABEL 3: BIDANG TILAWAH -->
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH SYARHIL QUR'AN<br>BIDANG TILAWAH</h3>
+            
+            <div class="participant-info">
+                <label for="no_urut_tilawah">No. Urut :</label>
+                <input type="text" id="no_urut_tilawah" name="no_urut_tilawah" placeholder="...">
+                <label for="nama_tim_tilawah">Nama Tim :</label>
+                <input type="text" id="nama_tim_tilawah" name="nama_tim_tilawah" placeholder="...">
+                <label for="asal_fakultas_tilawah">Asal Fakultas :</label>
+                <input type="text" id="asal_fakultas_tilawah" name="asal_fakultas_tilawah" placeholder="...">
+            </div>
+
+            <table class="form-table">
+                <tr>
+                    <th>No.</th>
+                    <th>Jenis Yang Dinilai</th>
+                    <th>Nilai Maksimum</th>
+                    <th>Nilai Minimum</th>
+                    <th>Nilai Yang Diperoleh</th>
+                    <th>Catatan Nilai Akhir</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Tajwid</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_tilawah_1" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_tilawah_1"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Fashahah</td>
+                    <td>10</td>
+                    <td>4</td>
+                    <td><input type="number" name="nilai_tilawah_2" min="4" max="10"></td>
+                    <td><input type="text" name="catatan_tilawah_2"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Lagu dan Suara</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td><input type="number" name="nilai_tilawah_3" min="3" max="10"></td>
+                    <td><input type="text" name="catatan_tilawah_3"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
+                    <td style="font-weight: bold;">30</td>
+                    <td style="font-weight: bold;">10</td>
+                    <td><input type="number" name="total_tilawah" readonly></td>
+                    <td></td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Mahbub Ainur Rofiq, M.HI.)</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    // Fungsi untuk menghitung otomatis total Bidang Terjemah dan Materi
+    function hitungTerjemah() {
+        let total = 0;
+        for (let i = 1; i <= 3; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_terjemah_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_terjemah')[0].value = total > 0 ? total : "";
+    }
+
+    // Fungsi untuk menghitung otomatis total Bidang Penghayatan dan Retorika
+    function hitungRetorika() {
+        let total = 0;
+        for (let i = 1; i <= 4; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_retorika_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_retorika')[0].value = total > 0 ? total : "";
+    }
+
+    // Fungsi untuk menghitung otomatis total Bidang Tilawah
+    function hitungTilawah() {
+        let total = 0;
+        for (let i = 1; i <= 3; i++) {
+            let nilai = parseFloat(document.getElementsByName('nilai_tilawah_' + i)[0].value) || 0;
+            total += nilai;
+        }
+        document.getElementsByName('total_tilawah')[0].value = total > 0 ? total : "";
+    }
+
+    // Event listener: hitung ulang tiap ada angka yang dimasukkan juri
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', () => {
+            hitungTerjemah();
+            hitungRetorika();
+            hitungTilawah();
+        });
+    });
+</script>
+</body>
+</html>

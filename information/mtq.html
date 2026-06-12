@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Lomba - MTQ</title>
+<link rel="stylesheet" href="../styles/style.css">
+<style>
+    /* CSS tambahan khusus halaman ini agar input form di dalam tabel rapi */
+    .form-table input[type="number"], 
+    .form-table input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+    }
+    
+    .form-table input[type="text"] {
+        text-align: left;
+    }
+
+    /* Warna abu-abu untuk kolom yang dihitung otomatis oleh sistem */
+    .form-table input[readonly] {
+        background-color: #e9ecef;
+        color: #495057;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        background-color: #006d77;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #023047;
+    }
+
+    .participant-info {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+    }
+    
+    .participant-info label {
+        font-weight: bold;
+        margin-right: 10px;
+        align-self: center;
+    }
+
+    .participant-info input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 150px;
+    }
+</style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Musabaqah Tilawatil Qur’an (MTQ)</h1>
+        <p>Detail Informasi dan Formulir Penilaian</p>
+    </div>
+</header>
+
+<nav>
+    <div class="container">
+        <a href="../pages/index.html">← Kembali ke Home</a>
+    </div>
+</nav>
+
+<section class="container" style="margin-top: 30px;">
+    <h2>Informasi Lomba</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p>Musabaqah Tilawatil Qur'an (MTQ) adalah jenis Musabaqah membaca Al-Qur'an dengan bacaan mujawwad, yaitu bacaan Al-Qur'an yang mengandung nilai ilmu membaca (tajwid), etika (fashohah), dan seni (suara dan lagu).</p>
+        
+        <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Pelaksanaan:</h4>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>📅 : Selasa, 5 Mei 2026</li>
+            <li>⏰ : 08.00 - selesai</li>
+            <li>🏡 : <a href="https://drive.google.com/file/d/1jL7ak_eBJJ89cRN6M6xaSjt1vDIcYKMP/view?usp=sharing">MOVIE ROOM FIB GEDUNG A LT 7 (FIB)</a></li>
+        </ul>
+    </div>
+
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MTQ UB 2026. Silakan isi kolom PENGURANGAN atau KESALAHAN di bawah ini. Kolom berwarna abu-abu akan terisi otomatis.</p>
+
+    <form action="#" method="POST">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <div class="participant-info">
+                <label for="no_urut_suara">NO. URUT PESERTA :</label>
+                <input type="text" id="no_urut_suara" name="no_urut_suara" placeholder="Masukkan No. Urut">
+            </div>
+            <h3 style="text-align: center;">FORMULIR PENILAIAN MTQ - BIDANG SUARA</h3>
+            <table class="form-table">
+                <tr>
+                    <th rowspan="2">No.</th>
+                    <th rowspan="2">MATERI YANG DINILAI</th>
+                    <th colspan="2">NILAI</th>
+                    <th rowspan="2">PENGURANGAN NILAI</th>
+                    <th rowspan="2">JUMLAH</th>
+                    <th rowspan="2">PEROLEHAN</th>
+                    <th rowspan="2">KET.</th>
+                </tr>
+                <tr>
+                    <th>MAX</th>
+                    <th>MIN</th>
+                </tr>
+                <tr>
+                    <td>1.</td>
+                    <td>Vokal dan Keutuhan Suara</td>
+                    <td>3</td><td>1</td>
+                    <td><input type="number" name="pengurangan_suara_1" min="0" max="3"></td>
+                    <td><input type="number" name="jumlah_suara_1" readonly></td>
+                    <td><input type="number" name="perolehan_suara_1" readonly></td>
+                    <td><input type="text" name="ket_suara_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Kejernihan/Kebeningan</td>
+                    <td>3</td><td>1</td>
+                    <td><input type="number" name="pengurangan_suara_2" min="0" max="3"></td>
+                    <td><input type="number" name="jumlah_suara_2" readonly></td>
+                    <td><input type="number" name="perolehan_suara_2" readonly></td>
+                    <td><input type="text" name="ket_suara_2"></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Kehalusan/Kelembutan</td>
+                    <td>3</td><td>1</td>
+                    <td><input type="number" name="pengurangan_suara_3" min="0" max="3"></td>
+                    <td><input type="number" name="jumlah_suara_3" readonly></td>
+                    <td><input type="number" name="perolehan_suara_3" readonly></td>
+                    <td><input type="text" name="ket_suara_3"></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td>Kenyaringan</td>
+                    <td>3</td><td>1</td>
+                    <td><input type="number" name="pengurangan_suara_4" min="0" max="3"></td>
+                    <td><input type="number" name="jumlah_suara_4" readonly></td>
+                    <td><input type="number" name="perolehan_suara_4" readonly></td>
+                    <td><input type="text" name="ket_suara_4"></td>
+                </tr>
+                <tr>
+                    <td>5.</td>
+                    <td>Pengaturan Napas</td>
+                    <td>3</td><td>1</td>
+                    <td><input type="number" name="pengurangan_suara_5" min="0" max="3"></td>
+                    <td><input type="number" name="jumlah_suara_5" readonly></td>
+                    <td><input type="number" name="perolehan_suara_5" readonly></td>
+                    <td><input type="text" name="ket_suara_5"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2"><strong>Nilai Max 15</strong></td>
+                    <td colspan="6" style="text-align: right; padding-right: 20px;">
+                        <strong>NILAI AKHIR = 15 - <input type="number" name="total_pengurangan_suara" style="width: 60px;" readonly> = <input type="number" name="nilai_akhir_suara" style="width: 60px;" readonly></strong>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <div class="participant-info">
+                <label for="no_urut_lagu">NO. URUT PESERTA :</label>
+                <input type="text" id="no_urut_lagu" name="no_urut_lagu" placeholder="Masukkan No. Urut">
+            </div>
+            <h3 style="text-align: center;">FORMULIR PENILAIAN MTQ - BIDANG LAGU</h3>
+            <table class="form-table">
+                <tr>
+                    <th rowspan="2">No.</th>
+                    <th rowspan="2">MATERI YANG DINILAI</th>
+                    <th colspan="2">NILAI</th>
+                    <th rowspan="2">PENGURANGAN NILAI</th>
+                    <th rowspan="2">JUMLAH</th>
+                    <th rowspan="2">PEROLEHAN</th>
+                    <th rowspan="2">KET.</th>
+                </tr>
+                <tr>
+                    <th>MAX</th>
+                    <th>MIN</th>
+                </tr>
+                <tr>
+                    <td>1.</td>
+                    <td>Lagu Pertama dan Penutup</td>
+                    <td>5</td><td>1</td>
+                    <td><input type="number" name="pengurangan_lagu_1" min="0" max="5"></td>
+                    <td><input type="number" name="jumlah_lagu_1" readonly></td>
+                    <td><input type="number" name="perolehan_lagu_1" readonly></td>
+                    <td><input type="text" name="ket_lagu_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Peralihan, Ketukan, dan Tempo Lagu</td>
+                    <td>5</td><td>1</td>
+                    <td><input type="number" name="pengurangan_lagu_2" min="0" max="5"></td>
+                    <td><input type="number" name="jumlah_lagu_2" readonly></td>
+                    <td><input type="number" name="perolehan_lagu_2" readonly></td>
+                    <td><input type="text" name="ket_lagu_2"></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Irama dan Gaya</td>
+                    <td>5</td><td>1</td>
+                    <td><input type="number" name="pengurangan_lagu_3" min="0" max="5"></td>
+                    <td><input type="number" name="jumlah_lagu_3" readonly></td>
+                    <td><input type="number" name="perolehan_lagu_3" readonly></td>
+                    <td><input type="text" name="ket_lagu_3"></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td>Variasi</td>
+                    <td>5</td><td>1</td>
+                    <td><input type="number" name="pengurangan_lagu_4" min="0" max="5"></td>
+                    <td><input type="number" name="jumlah_lagu_4" readonly></td>
+                    <td><input type="number" name="perolehan_lagu_4" readonly></td>
+                    <td><input type="text" name="ket_lagu_4"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2"><strong>Nilai Max 25</strong></td>
+                    <td colspan="6" style="text-align: right; padding-right: 20px;">
+                        <strong>NILAI AKHIR = 25 - <input type="number" name="total_pengurangan_lagu" style="width: 60px;" readonly> = <input type="number" name="nilai_akhir_lagu" style="width: 60px;" readonly></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">MALANG, 5 MEI 2026<br>DEWAN JURI<br><br><br>(Ustadzah Siti Aisyah Aziz)</p>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <div class="participant-info">
+                <label for="no_urut_fashohah">NO. URUT PESERTA :</label>
+                <input type="text" id="no_urut_fashohah" name="no_urut_fashohah" placeholder="Masukkan No. Urut">
+            </div>
+            <h3 style="text-align: center;">FORMULIR PENILAIAN MTQ - BIDANG FASHOHAH</h3>
+            <table class="form-table">
+                <tr>
+                    <th rowspan="2">NO.</th>
+                    <th rowspan="2">JENIS YANG DINILAI</th>
+                    <th colspan="2">SALAH JALI</th>
+                    <th colspan="2">SALAH KHAFI</th>
+                    <th rowspan="2">JUMLAH PENGURANGAN JALI+KHAFI</th>
+                    <th rowspan="2">NILAI AKHIR</th>
+                    <th rowspan="2">KET</th>
+                </tr>
+                <tr>
+                    <th>BERAPA KALI</th>
+                    <th>JUMLAH</th>
+                    <th>BERAPA KALI</th>
+                    <th>JUMLAH</th>
+                </tr>
+                <tr>
+                    <td>1.</td>
+                    <td>Ahkam Al Waqf wa Al Ibtida’</td>
+                    <td><input type="number" name="jali_kali_fashohah_1" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_fashohah_1" readonly></td>
+                    <td><input type="number" name="khafi_kali_fashohah_1" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_fashohah_1" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_fashohah_1" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_fashohah_1" step="0.5"></td>
+                    <td><input type="text" name="ket_fashohah_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Mura’at Al Huruf wa Al harokat</td>
+                    <td><input type="number" name="jali_kali_fashohah_2" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_fashohah_2" readonly></td>
+                    <td><input type="number" name="khafi_kali_fashohah_2" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_fashohah_2" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_fashohah_2" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_fashohah_2" step="0.5"></td>
+                    <td><input type="text" name="ket_fashohah_2"></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Mura’at Al Kalimat wa Al Ayat</td>
+                    <td><input type="number" name="jali_kali_fashohah_3" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_fashohah_3" readonly></td>
+                    <td><input type="number" name="khafi_kali_fashohah_3" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_fashohah_3" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_fashohah_3" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_fashohah_3" step="0.5"></td>
+                    <td><input type="text" name="ket_fashohah_3"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2"><strong>Nilai Max: 30</strong></td>
+                    <td colspan="7" style="text-align: right; padding-right: 20px;">
+                        <strong>Total Nilai: 30 - <input type="number" name="total_pengurangan_fashohah" style="width: 60px;" step="0.5" readonly> = <input type="number" name="total_nilai_akhir_fashohah" style="width: 60px;" step="0.5" readonly></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">MALANG, 5 MEI 2026<br>DEWAN HAKIM<br><br><br>(Ust. M. Fakhrur Rozi)</p>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+            <div class="participant-info">
+                <label for="no_urut_tajwid">NO. URUT PESERTA :</label>
+                <input type="text" id="no_urut_tajwid" name="no_urut_tajwid" placeholder="Masukkan No. Urut">
+            </div>
+            <h3 style="text-align: center;">FORMULIR PENILAIAN MTQ - BIDANG TAJWID</h3>
+            <table class="form-table">
+                <tr>
+                    <th rowspan="2">NO.</th>
+                    <th rowspan="2">JENIS YANG DINILAI</th>
+                    <th colspan="2">SALAH JALI</th>
+                    <th colspan="2">SALAH KHAFI</th>
+                    <th rowspan="2">JUMLAH PENGURANGAN JALI+KHAFI</th>
+                    <th rowspan="2">NILAI AKHIR</th>
+                    <th rowspan="2">KET</th>
+                </tr>
+                <tr>
+                    <th>BERAPA KALI</th>
+                    <th>JUMLAH</th>
+                    <th>BERAPA KALI</th>
+                    <th>JUMLAH</th>
+                </tr>
+                <tr>
+                    <td>1.</td>
+                    <td>Makhorijul Huruf</td>
+                    <td><input type="number" name="jali_kali_tajwid_1" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_tajwid_1" readonly></td>
+                    <td><input type="number" name="khafi_kali_tajwid_1" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_tajwid_1" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_tajwid_1" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_tajwid_1" step="0.5"></td>
+                    <td><input type="text" name="ket_tajwid_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Sifat Al Huruf</td>
+                    <td><input type="number" name="jali_kali_tajwid_2" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_tajwid_2" readonly></td>
+                    <td><input type="number" name="khafi_kali_tajwid_2" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_tajwid_2" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_tajwid_2" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_tajwid_2" step="0.5"></td>
+                    <td><input type="text" name="ket_tajwid_2"></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Ahkam Al Huruf</td>
+                    <td><input type="number" name="jali_kali_tajwid_3" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_tajwid_3" readonly></td>
+                    <td><input type="number" name="khafi_kali_tajwid_3" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_tajwid_3" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_tajwid_3" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_tajwid_3" step="0.5"></td>
+                    <td><input type="text" name="ket_tajwid_3"></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td>Ahkam Al Mad wa Al Qashar</td>
+                    <td><input type="number" name="jali_kali_tajwid_4" style="width: 60px;" min="0"> x 1</td>
+                    <td><input type="number" name="jali_jumlah_tajwid_4" readonly></td>
+                    <td><input type="number" name="khafi_kali_tajwid_4" style="width: 60px;" min="0"> x 1/2</td>
+                    <td><input type="number" name="khafi_jumlah_tajwid_4" step="0.5" readonly></td>
+                    <td><input type="number" name="jumlah_pengurangan_tajwid_4" step="0.5" readonly></td>
+                    <td><input type="number" name="nilai_akhir_tajwid_4" step="0.5"></td>
+                    <td><input type="text" name="ket_tajwid_4"></td>
+                </tr>
+                <tr style="background: #f4f4f4;">
+                    <td colspan="2"><strong>Nilai Max: 30</strong></td>
+                    <td colspan="7" style="text-align: right; padding-right: 20px;">
+                        <strong>Total Nilai: 30 - <input type="number" name="total_pengurangan_tajwid" style="width: 60px;" step="0.5" readonly> = <input type="number" name="total_nilai_akhir_tajwid" style="width: 60px;" step="0.5" readonly></strong>
+                    </td>
+                </tr>
+            </table>
+            <p style="text-align: right; margin-top: 20px;">MALANG, 5 MEI 2026<br>DEWAN HAKIM<br><br><br>(Ustadzah Luluk Ernawati)</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+    </form>
+</section>
+
+<footer>
+    <p>© 2026 MTQ Universitas Brawijaya XIX</p>
+</footer>
+
+<script>
+    // 1. Fungsi untuk menghitung Bidang Suara (Max baris: 3, Max total: 15)
+    function hitungSuara() {
+        let totalPengurangan = 0;
+        for (let i = 1; i <= 5; i++) {
+            let inputElemen = document.getElementsByName('pengurangan_suara_' + i)[0];
+            let pengurangan = parseFloat(inputElemen.value);
+            
+            // Cek apakah input valid dan tidak kosong
+            if (!isNaN(pengurangan)) {
+                let jumlah = 3 - pengurangan;
+                document.getElementsByName('jumlah_suara_' + i)[0].value = jumlah;
+                document.getElementsByName('perolehan_suara_' + i)[0].value = jumlah;
+                totalPengurangan += pengurangan;
+            } else {
+                document.getElementsByName('jumlah_suara_' + i)[0].value = "";
+                document.getElementsByName('perolehan_suara_' + i)[0].value = "";
+            }
+        }
+        document.getElementsByName('total_pengurangan_suara')[0].value = totalPengurangan;
+        document.getElementsByName('nilai_akhir_suara')[0].value = 15 - totalPengurangan;
+    }
+
+    // 2. Fungsi untuk menghitung Bidang Lagu (Max baris: 5, Max total: 25)
+    function hitungLagu() {
+        let totalPengurangan = 0;
+        for (let i = 1; i <= 4; i++) {
+            let inputElemen = document.getElementsByName('pengurangan_lagu_' + i)[0];
+            let pengurangan = parseFloat(inputElemen.value);
+            
+            // Cek apakah input valid dan tidak kosong
+            if (!isNaN(pengurangan)) {
+                let jumlah = 5 - pengurangan;
+                document.getElementsByName('jumlah_lagu_' + i)[0].value = jumlah;
+                document.getElementsByName('perolehan_lagu_' + i)[0].value = jumlah;
+                totalPengurangan += pengurangan;
+            } else {
+                document.getElementsByName('jumlah_lagu_' + i)[0].value = "";
+                document.getElementsByName('perolehan_lagu_' + i)[0].value = "";
+            }
+        }
+        document.getElementsByName('total_pengurangan_lagu')[0].value = totalPengurangan;
+        document.getElementsByName('nilai_akhir_lagu')[0].value = 25 - totalPengurangan;
+    }
+
+    // 3. Fungsi untuk menghitung Bidang Fashohah (Total Max: 30)
+    function hitungFashohah() {
+        let totalPengurangan = 0;
+        for (let i = 1; i <= 3; i++) {
+            let jaliInput = document.getElementsByName('jali_kali_fashohah_' + i)[0].value;
+            let khafiInput = document.getElementsByName('khafi_kali_fashohah_' + i)[0].value;
+            
+            let jaliKali = parseFloat(jaliInput) || 0;
+            let khafiKali = parseFloat(khafiInput) || 0;
+
+            let jaliJumlah = jaliKali * 1;
+            let khafiJumlah = khafiKali * 0.5;
+
+            // Update kolom kali poin jika pengguna telah mengetik sesuatu
+            document.getElementsByName('jali_jumlah_fashohah_' + i)[0].value = (jaliInput !== "") ? jaliJumlah : "";
+            document.getElementsByName('khafi_jumlah_fashohah_' + i)[0].value = (khafiInput !== "") ? khafiJumlah : "";
+
+            let barisPengurangan = 0;
+            if (jaliInput !== "" || khafiInput !== "") {
+                barisPengurangan = jaliJumlah + khafiJumlah;
+                document.getElementsByName('jumlah_pengurangan_fashohah_' + i)[0].value = barisPengurangan;
+            } else {
+                document.getElementsByName('jumlah_pengurangan_fashohah_' + i)[0].value = "";
+            }
+
+            totalPengurangan += barisPengurangan;
+        }
+        // Pengurangan total di baris paling bawah
+        document.getElementsByName('total_pengurangan_fashohah')[0].value = totalPengurangan;
+        document.getElementsByName('total_nilai_akhir_fashohah')[0].value = 30 - totalPengurangan;
+    }
+
+    // 4. Fungsi untuk menghitung Bidang Tajwid (Total Max: 30)
+    function hitungTajwid() {
+        let totalPengurangan = 0;
+        for (let i = 1; i <= 4; i++) {
+            let jaliInput = document.getElementsByName('jali_kali_tajwid_' + i)[0].value;
+            let khafiInput = document.getElementsByName('khafi_kali_tajwid_' + i)[0].value;
+            
+            let jaliKali = parseFloat(jaliInput) || 0;
+            let khafiKali = parseFloat(khafiInput) || 0;
+
+            let jaliJumlah = jaliKali * 1;
+            let khafiJumlah = khafiKali * 0.5;
+
+            // Update kolom kali poin jika pengguna telah mengetik sesuatu
+            document.getElementsByName('jali_jumlah_tajwid_' + i)[0].value = (jaliInput !== "") ? jaliJumlah : "";
+            document.getElementsByName('khafi_jumlah_tajwid_' + i)[0].value = (khafiInput !== "") ? khafiJumlah : "";
+
+            let barisPengurangan = 0;
+            if (jaliInput !== "" || khafiInput !== "") {
+                barisPengurangan = jaliJumlah + khafiJumlah;
+                document.getElementsByName('jumlah_pengurangan_tajwid_' + i)[0].value = barisPengurangan;
+            } else {
+                document.getElementsByName('jumlah_pengurangan_tajwid_' + i)[0].value = "";
+            }
+
+            totalPengurangan += barisPengurangan;
+        }
+        // Pengurangan total di baris paling bawah
+        document.getElementsByName('total_pengurangan_tajwid')[0].value = totalPengurangan;
+        document.getElementsByName('total_nilai_akhir_tajwid')[0].value = 30 - totalPengurangan;
+    }
+
+    // 5. Menjalankan semua fungsi secara otomatis setiap kali Juri mengetik angka
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', () => {
+            hitungSuara();
+            hitungLagu();
+            hitungFashohah();
+            hitungTajwid();
+        });
+    });
+</script>
+</body>
+</html>
+
+```
