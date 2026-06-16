@@ -3,77 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detail Lomba - MMN</title>
+<title>Rekapitulasi Penilaian MMN</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* CSS tambahan khusus halaman ini agar form rapi */
+    /* ========================================== */
+    /* STYLE UNTUK TAMPILAN WEB (FORMULIR JURI)   */
+    /* ========================================== */
+    .form-table {
+        width: 100%; border-collapse: collapse; margin-bottom: 20px;
+    }
+    .form-table th, .form-table td {
+        border: 1px solid #ccc; padding: 8px; text-align: center;
+    }
+    .form-table th { background: #006d77; color: white; }
+    
     .form-table input[type="number"], 
     .form-table input[type="text"] {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 6px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        text-align: center;
+        width: 100%; box-sizing: border-box; padding: 6px;
+        border: 1px solid #ccc; border-radius: 4px; text-align: center;
     }
     
-    .form-table input[type="text"] {
-        text-align: left;
-    }
+    .form-table input[type="text"] { text-align: left; }
 
-    /* Warna abu-abu untuk kolom total otomatis */
     .form-table input[readonly] {
-        background-color: #e9ecef;
-        color: #495057;
-        cursor: not-allowed;
-        font-weight: bold;
+        background-color: #e9ecef; color: #495057; cursor: not-allowed; font-weight: bold;
     }
 
     .submit-btn {
-        background-color: #006d77;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        display: block;
-        margin: 20px auto;
-        transition: background-color 0.3s;
-        font-weight: bold;
+        background-color: #006d77; color: white; padding: 15px 25px; border: none;
+        border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
     }
+    .submit-btn:hover { background-color: #023047; }
+    .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-    .submit-btn:hover {
-        background-color: #023047;
+    .action-btn-container {
+        display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .action-btn-container .submit-btn {
+        flex: 1; min-width: 200px; margin: 0;
     }
 
     .participant-info {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        gap: 10px 15px;
-        margin-bottom: 20px;
-        align-items: center;
+        display: grid; grid-template-columns: max-content 1fr max-content 1fr; gap: 15px; background: #f4f4f4;
+        padding: 20px; border-radius: 8px; border-left: 5px solid #006d77; margin-bottom: 30px; align-items: center;
     }
-    
-    .participant-info label {
-        font-weight: bold;
-        text-align: right;
-    }
+    @media (max-width: 768px) { .participant-info { grid-template-columns: 1fr; } }
+    .participant-info label { font-weight: bold; color: #023047; }
+    .participant-info input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; text-align: left; }
 
-    .participant-info input {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 100%;
-        max-width: 300px;
+    .panel-penilaian { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto; border-top: 4px solid #006d77; }
+    .sub-header-row { background-color: #f8f9fa; font-weight: bold; text-align: left; }
+
+    #template-pdf { display: none; }
+
+    /* ========================================== */
+    /* ATURAN KHUSUS SAAT DICETAK KELUAR (PRINT)  */
+    /* ========================================== */
+    @media print {
+        header, nav, section, footer, .action-btn-container { display: none !important; }
+        
+        #template-pdf { 
+            display: block !important; 
+            position: absolute; left: 0; top: 0; width: 100%; background: white;
+            color: black; font-family: 'Times New Roman', Times, serif; font-size: 12pt; 
+            box-sizing: border-box;
+        }
+        #template-pdf * { box-sizing: border-box !important; }
+        
+        html body #template-pdf div[style*="display: flex"] {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+
+        @page { size: A4 portrait; margin: 1.5cm; }
+        body { background: white !important; margin: 0 !important; padding: 0 !important; }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../connector/supabase_connector.js"></script>
+
 </head>
 <body>
+
 <header>
     <div class="container">
         <h1>Musabaqah Maulid Nabi (MMN)</h1>
-        <p>Detail Informasi dan Formulir Penilaian</p>
+        <p>Formulir Rekapitulasi Penilaian Dewan Hakim</p>
     </div>
 </header>
 
@@ -86,9 +102,8 @@
 <section class="container" style="margin-top: 30px;">
     <h2>Informasi Lomba</h2>
     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-        <p>Musabaqah Maulid Nabi (MMN) merupakan cabang lomba membaca kitab maulid yang menampilkan bacaan kitab menggunakan irama (langgam) yang diikuti dengan mahalul qiyam dan lagu islami yang mengutamakan seni islami, kaidah bacaan, keindahan, keserasian, kekompakan, ukhuwah.</p>
-        
-        <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Pelaksanaan:</h4>
+        <p>Musabaqah Maulid Nabi (MMN) menilai performa pembacaan kitab maulid, mencakup ketepatan kaedah bacaan, keserasian regu/kostum, serta keindahan variasi seni lagu dan vokal suara.</p>
+        <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Pelaksanaan Lomba:</h4>
         <ul style="list-style: none; padding-left: 0;">
             <li>📅 : Rabu, 6 Mei 2026</li>
             <li>⏰ : 09.00 - selesai</li>
@@ -97,263 +112,379 @@
     </div>
 
     <h2>Formulir Penilaian Dewan Hakim</h2>
-    <p>LEMBAR PENILAIAN MUSABAQAH MAULID NABI MTQ UB 2026. Silakan masukkan nilai pada kolom yang tersedia. Kolom berwarna abu-abu akan terhitung dan terisi secara otomatis oleh sistem.</p>
+    <p style="margin-bottom: 20px;">Silakan masukkan nilai atau rincian kesalahan. Sistem kalkulator otomatis akan menghitung nilai akhir secara *real-time*.</p>
 
-    <form action="#" method="POST">
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-            <div class="participant-info" style="margin-bottom: 0;">
-                <label for="nama_juri">Nama Dewan Juri :</label>
-                <input type="text" id="nama_juri" name="nama_juri" placeholder="...">
-                <label for="no_peserta">Nomor Peserta (Tim) :</label>
-                <input type="text" id="no_peserta" name="no_peserta" placeholder="...">
+    <form id="form-penilaian-mmn">
+        
+        <div class="participant-info">
+            <label for="nama_juri">Nama Dewan Juri :</label>
+            <input type="text" id="nama_juri" name="nama_juri" placeholder="Masukkan nama dewan juri" required>
+            
+            <label for="no_peserta">Nomor Peserta :</label>
+            <input type="text" id="no_peserta" name="no_peserta" placeholder="Masukkan nomor peserta" required>
+        </div>
+
+        <div class="panel-penilaian">
+            <h3 style="color: #006d77; margin-top: 0;">1. BIDANG KAEDAH BACAAN (Max 40 | Min 10)</h3>
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="35%">Jenis Yang Dinilai</th>
+                    <th width="15%">Salah Jali (x1)</th>
+                    <th width="15%">Salah Khafi (x0.5)</th>
+                    <th width="30%">Jumlah Pengurangan</th>
+                </tr>
+                <tr>
+                    <td>1</td><td style="text-align: left;">Mura'atul Kalimah</td>
+                    <td><input type="number" id="jali_1" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="khafi_1" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="sub_1" readonly></td>
+                </tr>
+                <tr>
+                    <td>2</td><td style="text-align: left;">Mura'atul Huruf</td>
+                    <td><input type="number" id="jali_2" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="khafi_2" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="sub_2" readonly></td>
+                </tr>
+                <tr>
+                    <td>3</td><td style="text-align: left;">Mura'atul Harakat</td>
+                    <td><input type="number" id="jali_3" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="khafi_3" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="sub_3" readonly></td>
+                </tr>
+                <tr>
+                    <td>4</td><td style="text-align: left;">Kefasihan melafadzkan huruf</td>
+                    <td><input type="number" id="jali_4" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="khafi_4" oninput="hitungMMN()" min="0" placeholder="Kali"></td>
+                    <td><input type="number" id="sub_4" readonly></td>
+                </tr>
+                <tr style="background: #e9ecef; font-weight: bold;">
+                    <td colspan="4" style="text-align: right; padding-right: 15px;">TOTAL PENGURANGAN POIN</td>
+                    <td><input type="number" id="total_pengurangan" readonly value="0"></td>
+                </tr>
+                <tr style="background: #cce3de; font-weight: bold;">
+                    <td colspan="4" style="text-align: right; padding-right: 15px; color: #006d77;">NILAI AKHIR KAEDAH BACAAN (40 - Total)</td>
+                    <td><input type="number" id="nilai_akhir_kaedah" readonly value="40"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="panel-penilaian">
+            <h3 style="color: #006d77; margin-top: 0;">2. BIDANG KESERASIAN (Max 30 | Min 9)</h3>
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th><th width="55%">Materi Yang Dinilai</th><th width="15%">Skor Max</th><th width="25%">Nilai Diperoleh</th>
+                </tr>
+                <tr>
+                    <td>1</td><td style="text-align: left;">Kekhusyu'an dalam membaca</td><td>10</td>
+                    <td><input type="number" id="keserasian_1" oninput="hitungMMN()" min="3" max="10" placeholder="Skor (3-10)"></td>
+                </tr>
+                <tr>
+                    <td>2</td><td style="text-align: left;">Kekompakan dan keserasian suara</td><td>10</td>
+                    <td><input type="number" id="keserasian_2" oninput="hitungMMN()" min="3" max="10" placeholder="Skor (3-10)"></td>
+                </tr>
+                <tr>
+                    <td>3</td><td style="text-align: left;">Keserasian dan keindahan kostum</td><td>10</td>
+                    <td><input type="number" id="keserasian_3" oninput="hitungMMN()" min="3" max="10" placeholder="Skor (3-10)"></td>
+                </tr>
+                <tr style="background: #e9ecef; font-weight: bold;">
+                    <td colspan="3" style="text-align: right; padding-right: 15px; color: #006d77;">TOTAL NILAI BIDANG KESERASIAN</td>
+                    <td><input type="number" id="total_keserasian" readonly value="0"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="panel-penilaian">
+            <h3 style="color: #006d77; margin-top: 0;">3. BIDANG LAGU DAN SUARA (Max 30)</h3>
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th><th width="55%">Materi Yang Dinilai</th><th width="15%">Skor Max</th><th width="25%">Nilai Diperoleh</th>
+                </tr>
+                <tr>
+                    <td>1</td><td style="text-align: left;">Keindahan Suara</td><td>10</td>
+                    <td><input type="number" id="lagu_1" oninput="hitungMMN()" min="0" max="10" placeholder="Skor (0-10)"></td>
+                </tr>
+                <tr>
+                    <td>2</td><td style="text-align: left;">Variasi Lagu</td><td>10</td>
+                    <td><input type="number" id="lagu_2" oninput="hitungMMN()" min="0" max="10" placeholder="Skor (0-10)"></td>
+                </tr>
+                <tr>
+                    <td>3</td><td style="text-align: left;">Pengaturan Napas</td><td>10</td>
+                    <td><input type="number" id="lagu_3" oninput="hitungMMN()" min="0" max="10" placeholder="Skor (0-10)"></td>
+                </tr>
+                <tr style="background: #e9ecef; font-weight: bold;">
+                    <td colspan="3" style="text-align: right; padding-right: 15px; color: #006d77;">TOTAL NILAI BIDANG LAGU & SUARA</td>
+                    <td><input type="number" id="total_lagu" readonly value="0"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background: #023047; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 4px solid #ffb703;">
+            <h2 style="margin: 0;">GRAND TOTAL NILAI AKHIR (MAKS 100)</h2>
+            <div style="font-size: 40px; font-weight: bold; margin-top: 10px;">
+                <span id="display_grand_total">40.0</span> / 100
             </div>
         </div>
 
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px; text-align: center;">FORMULIR PENILAIAN BIDANG KAEDAH BACAAN</h3>
-            
-            <table class="form-table">
-                <tr>
-                    <th rowspan="2" width="5%">No</th>
-                    <th rowspan="2" width="30%">Jenis yang dinilai</th>
-                    <th colspan="2" width="20%">Salah jali</th>
-                    <th colspan="2" width="20%">Salah khafi</th>
-                    <th rowspan="2" width="10%">Jumlah pengurangan jali + khafi</th>
-                    <th rowspan="2" width="15%">Catatan</th>
-                </tr>
-                <tr>
-                    <th>Berapa Kali</th>
-                    <th>Jumlah</th>
-                    <th>Berapa Kali</th>
-                    <th>Jumlah</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td style="text-align: left; font-weight: bold;">Mura'atul Kalimah</td>
-                    <td><input type="number" id="jali_kali_1" min="0" style="width: 60px;"> x 1</td>
-                    <td><input type="number" id="jali_jumlah_1" readonly></td>
-                    <td><input type="number" id="khafi_kali_1" min="0" style="width: 60px;"> x ½</td>
-                    <td><input type="number" id="khafi_jumlah_1" readonly step="0.5"></td>
-                    <td><input type="number" id="pengurangan_1" readonly step="0.5"></td>
-                    <td><input type="text" name="catatan_kaidah_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td style="text-align: left; font-weight: bold;">Mura'atul Huruf</td>
-                    <td><input type="number" id="jali_kali_2" min="0" style="width: 60px;"> x 1</td>
-                    <td><input type="number" id="jali_jumlah_2" readonly></td>
-                    <td><input type="number" id="khafi_kali_2" min="0" style="width: 60px;"> x ½</td>
-                    <td><input type="number" id="khafi_jumlah_2" readonly step="0.5"></td>
-                    <td><input type="number" id="pengurangan_2" readonly step="0.5"></td>
-                    <td><input type="text" name="catatan_kaidah_2"></td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td style="text-align: left; font-weight: bold;">Mura'atul Harakat</td>
-                    <td><input type="number" id="jali_kali_3" min="0" style="width: 60px;"> x 1</td>
-                    <td><input type="number" id="jali_jumlah_3" readonly></td>
-                    <td><input type="number" id="khafi_kali_3" min="0" style="width: 60px;"> x ½</td>
-                    <td><input type="number" id="khafi_jumlah_3" readonly step="0.5"></td>
-                    <td><input type="number" id="pengurangan_3" readonly step="0.5"></td>
-                    <td><input type="text" name="catatan_kaidah_3"></td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td style="text-align: left; font-weight: bold;">Kefasihan dalam melafadzkan huruf</td>
-                    <td><input type="number" id="jali_kali_4" min="0" style="width: 60px;"> x 1</td>
-                    <td><input type="number" id="jali_jumlah_4" readonly></td>
-                    <td><input type="number" id="khafi_kali_4" min="0" style="width: 60px;"> x ½</td>
-                    <td><input type="number" id="khafi_jumlah_4" readonly step="0.5"></td>
-                    <td><input type="number" id="pengurangan_4" readonly step="0.5"></td>
-                    <td><input type="text" name="catatan_kaidah_4"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai maks 40 | Min 10</td>
-                    <td colspan="5" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 15px;">
-                        Nilai Akhir = 40 - <input type="number" id="total_pengurangan" readonly style="width: 60px; font-weight: bold;" step="0.5"> = <input type="number" id="nilai_akhir_kaedah" readonly style="width: 60px; font-weight: bold;" step="0.5">
-                    </td>
-                </tr>
-            </table>
+        <div class="action-btn-container">
+            <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
+            <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
+            <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetLomba()">Nilai Peserta Selanjutnya</button>
         </div>
 
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px; text-align: center;">FORMULIR PENILAIAN BIDANG KESERASIAN</h3>
-            
-            <table class="form-table">
-                <tr>
-                    <th rowspan="2" width="5%">No</th>
-                    <th rowspan="2" width="45%">Materi yang dinilai</th>
-                    <th colspan="2" width="20%">Keterangan Nilai</th>
-                    <th rowspan="2" width="10%">Nilai</th>
-                    <th rowspan="2" width="20%">Catatan</th>
-                </tr>
-                <tr>
-                    <th>MAK</th>
-                    <th>MIN</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td style="text-align: left; font-weight: bold;">Kekhusyu'an dalam membaca</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_keserasian_1" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_keserasian_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td style="text-align: left; font-weight: bold;">Kekompakan dan keserasian suara</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_keserasian_2" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_keserasian_2"></td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td style="text-align: left; font-weight: bold;">Keserasian dan keindahan kostum</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_keserasian_3" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_keserasian_3"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai maksimal: 30 | Nilai minimal: 9</td>
-                    <td colspan="2" style="text-align: left; font-weight: bold; padding-left: 20px; font-size: 15px;">
-                        Nilai Akhir = <input type="number" id="total_keserasian" readonly style="width: 60px; font-weight: bold;">
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px; text-align: center;">FORMULIR PENILAIAN BIDANG LAGU DAN SUARA</h3>
-            
-            <table class="form-table">
-                <tr>
-                    <th rowspan="2" width="5%">No</th>
-                    <th rowspan="2" width="45%">Materi yang dinilai</th>
-                    <th colspan="2" width="20%">Keterangan Nilai</th>
-                    <th rowspan="2" width="10%">Nilai</th>
-                    <th rowspan="2" width="20%">Catatan</th>
-                </tr>
-                <tr>
-                    <th>MAK</th>
-                    <th>MIN</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td style="text-align: left; font-weight: bold;">Vokal</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_lagu_1" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_lagu_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td style="text-align: left; font-weight: bold;">Pengaturan nafas</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_lagu_2" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_lagu_2"></td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td style="text-align: left; font-weight: bold;">Keindahan/kejernihan suara</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" id="nilai_lagu_3" min="3" max="10" placeholder="Skor"></td>
-                    <td><input type="text" name="catatan_lagu_3"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">Nilai maksimal: 30 | Nilai minimal: 9</td>
-                    <td colspan="2" style="text-align: left; font-weight: bold; padding-left: 20px; font-size: 15px;">
-                        Nilai Akhir = <input type="number" id="total_lagu" readonly style="width: 60px; font-weight: bold;">
-                    </td>
-                </tr>
-            </table>
-
-            <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-                <div style="background: #023047; color: white; padding: 15px 25px; border-radius: 8px; text-align: center;">
-                    <span style="font-size: 14px; display: block; margin-bottom: 5px;">Total Nilai Keseluruhan (Maks. 100)</span>
-                    <input type="number" id="grand_total" readonly style="font-size: 24px; font-weight: bold; width: 120px; background: transparent; border: none; color: #ffb703; text-align: center;">
-                </div>
-            </div>
-
-            <p style="text-align: right; margin-top: 40px;">Malang, 06 Mei 2026<br>Juri Penilai<br><br><br><br>( .................................... )</p>
-        </div>
-
-        <button type="submit" class="submit-btn">Kirim Penilaian</button>
     </form>
 </section>
 
-<footer>
+<div id="template-pdf">
+    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
+        <h2 style="margin: 0; font-size: 14pt;">PANITIA PELAKSANA & DEWAN HAKIM</h2>
+        <h1 style="margin: 5px 0; font-size: 16pt;">MUSABAQAH MAULID NABI (MMN) XIX</h1>
+        <h2 style="margin: 0; font-size: 14pt;">UNIVERSITAS BRAWIJAYA 2026</h2>
+    </div>
+    
+    <h3 style="text-align: center; text-decoration: underline; font-size: 14pt; margin-bottom: 25px;">LEMBAR REKAPITULASI PENILAIAN DEWAN HAKIM</h3>
+    
+    <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 12pt;">
+        <div>
+            <div style="display: flex; margin-bottom: 8px;">
+                <div style="width: 150px; font-weight: bold;">Nomor Peserta</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold;"><span id="pdf_no_peserta">-</span></div>
+            </div>
+            <div style="display: flex;">
+                <div style="width: 150px; font-weight: bold;">Nama Dewan Juri</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold;"><span id="pdf_nama_juri">-</span></div>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <div style="display: flex;">
+                <div style="width: 100px; font-weight: bold; text-align: left;">Tanggal</div>
+                <div style="width: 20px; text-align: left;">:</div>
+                <div style="font-weight: bold; text-align: left;"><span id="pdf_tanggal">-</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 100%; font-size: 12pt; border-left: 1px solid black !important; margin-bottom: 25px;">
+        
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold; text-align: center; background: #f5f5f4;">
+            <div style="flex: 3; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Bidang Penilaian</div>
+            <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Nilai Maksimal</div>
+            <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Nilai Diperoleh</div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;">
+                <strong>1. Bidang Kaedah Bacaan</strong><br>
+                <span style="font-size: 10pt; color: #444;">(Mura'atul Kalimah, Huruf, Harakat, Kefasihan)</span>
+            </div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;">40</div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;"><strong id="pdf_kaedah" style="font-size: 13pt;">40.0</strong></div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;">
+                <strong>2. Bidang Keserasian</strong><br>
+                <span style="font-size: 10pt; color: #444;">(Kekhusyu'an, Kekompakan Suara, Keindahan Kostum)</span>
+            </div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;">30</div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;"><strong id="pdf_keserasian" style="font-size: 13pt;">0.0</strong></div>
+        </div>
+
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;">
+                <strong>3. Bidang Lagu dan Suara</strong><br>
+                <span style="font-size: 10pt; color: #444;">(Keindahan Suara, Variasi Lagu, Pengaturan Napas)</span>
+            </div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;">30</div>
+            <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display: flex; align-items: center; justify-content: center;"><strong id="pdf_lagu" style="font-size: 13pt;">0.0</strong></div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold; background: #fafaf9;">
+            <div style="flex: 4; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; padding-right: 15px;">GRAND TOTAL NILAI AKHIR</div>
+            <div style="flex: 1; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; font-size: 15pt; color: #023047;"><strong id="pdf_grand_total">40.0</strong></div>
+        </div>
+    </div>
+
+    <div style="border: 1px solid black; padding: 15px; min-height: 120px; margin-bottom: 30px;">
+        <h4 style="margin-top: 0; margin-bottom: 8px;">Rincian Detil Penilaian & Kesalahan:</h4>
+        <p id="pdf_detail" style="font-size: 11pt; text-align: justify; margin: 0; line-height: 1.6;">Kaedah Bacaan: Sempurna (Tidak ada pengurangan)</p>
+    </div>
+    
+    <div style="text-align: right; margin-top: 50px; margin-right: 20px;">
+        <p style="margin: 2px 0;">Malang, <span id="pdf_tanggal_footer"></span></p>
+        <p style="margin: 2px 0; font-weight: bold;">Juri Penilai Kitab Maulid,</p>
+        <br><br><br><br>
+        <p style="margin: 2px 0;">( ........................................ )</p>
+    </div>
+</div>
+
+<footer style="margin-top: 30px;">
     <p>© 2026 MTQ Universitas Brawijaya XIX</p>
 </footer>
 
 <script>
+    // ==========================================
+    // LOGIKA PERHITUNGAN MATEMATIKA REAL-TIME (SINKRON)
+    // ==========================================
     function hitungMMN() {
-        // --- 1. Perhitungan Bidang Kaedah Bacaan ---
+        // --- 1. Bidang Kaedah Bacaan ---
         let totalPengurangan = 0;
-        
-        for (let i = 1; i <= 4; i++) {
-            let jaliKali = parseFloat(document.getElementById('jali_kali_' + i).value) || 0;
-            let khafiKali = parseFloat(document.getElementById('khafi_kali_' + i).value) || 0;
+        for (let i = 1; i <= 40; i++) {
+            let jali = parseFloat(document.getElementById('jali_' + i)?.value) || 0;
+            let khafi = parseFloat(document.getElementById('khafi_' + i)?.value) || 0;
             
-            // Rumus: Jali dikali 1, Khafi dikali 0.5
-            let jaliJumlah = jaliKali * 1;
-            let khafiJumlah = khafiKali * 0.5;
-            let jumlahPenguranganBaris = jaliJumlah + khafiJumlah;
-
-            // Masukkan ke kolom readonly jika ada input
-            document.getElementById('jali_jumlah_' + i).value = (jaliKali > 0) ? jaliJumlah : "";
-            document.getElementById('khafi_jumlah_' + i).value = (khafiKali > 0) ? khafiJumlah : "";
-            document.getElementById('pengurangan_' + i).value = (jumlahPenguranganBaris > 0) ? jumlahPenguranganBaris : "";
-
-            totalPengurangan += jumlahPenguranganBaris;
-        }
-
-        // Tampilkan total pengurangan dan nilai akhir
-        document.getElementById('total_pengurangan').value = (totalPengurangan > 0) ? totalPengurangan : "";
-        let nilaiAkhirKaedah = 40 - totalPengurangan;
-        document.getElementById('nilai_akhir_kaedah').value = nilaiAkhirKaedah;
-
-        // --- 2. Perhitungan Bidang Keserasian ---
-        let totalKeserasian = 0;
-        let isKeserasianFilled = false;
-        for (let i = 1; i <= 3; i++) {
-            let skor = parseFloat(document.getElementById('nilai_keserasian_' + i).value);
-            if (!isNaN(skor)) {
-                totalKeserasian += skor;
-                isKeserasianFilled = true;
+            let subtotal = (jali * 1) + (khafi * 0.5);
+            if (document.getElementById('sub_' + i)) {
+                document.getElementById('sub_' + i).value = subtotal > 0 ? subtotal : "";
             }
+            totalPengurangan += subtotal;
         }
-        document.getElementById('total_keserasian').value = isKeserasianFilled ? totalKeserasian : "";
+        document.getElementById('total_pengurangan').value = totalPengurangan;
+        
+        let finalKaedah = 40 - totalPengurangan;
+        if (finalKaedah < 10) finalKaedah = 10; // Batas Nilai Minimal 10
+        document.getElementById('nilai_akhir_kaedah').value = finalKaedah;
 
-        // --- 3. Perhitungan Bidang Lagu dan Suara ---
-        let totalLagu = 0;
-        let isLaguFilled = false;
-        for (let i = 1; i <= 3; i++) {
-            let skor = parseFloat(document.getElementById('nilai_lagu_' + i).value);
-            if (!isNaN(skor)) {
-                totalLagu += skor;
-                isLaguFilled = true;
-            }
-        }
-        document.getElementById('total_lagu').value = isLaguFilled ? totalLagu : "";
+        // --- 2. Bidang Keserasian ---
+        let k1 = parseFloat(document.getElementById('keserasian_1').value) || 0;
+        let k2 = parseFloat(document.getElementById('keserasian_2').value) || 0;
+        let k3 = parseFloat(document.getElementById('keserasian_3').value) || 0;
+        
+        // Proteksi batas minimum (3) & maksimum (10) per kriteria
+        if (document.getElementById('keserasian_1').value !== "" && k1 < 3) { document.getElementById('keserasian_1').value = 3; k1 = 3; }
+        if (k1 > 10) { document.getElementById('keserasian_1').value = 10; k1 = 10; }
+        if (document.getElementById('keserasian_2').value !== "" && k2 < 3) { document.getElementById('keserasian_2').value = 3; k2 = 3; }
+        if (k2 > 10) { document.getElementById('keserasian_2').value = 10; k2 = 10; }
+        if (document.getElementById('keserasian_3').value !== "" && k3 < 3) { document.getElementById('keserasian_3').value = 3; k3 = 3; }
+        if (k3 > 10) { document.getElementById('keserasian_3').value = 10; k3 = 10; }
 
-        // --- 4. GRAND TOTAL ---
-        // Jika ada salah satu field yang diisi, jumlahkan total keseluruhan
-        if (totalPengurangan > 0 || isKeserasianFilled || isLaguFilled) {
-            let grandTotal = nilaiAkhirKaedah + totalKeserasian + totalLagu;
-            document.getElementById('grand_total').value = grandTotal;
-        } else {
-            document.getElementById('grand_total').value = "";
-        }
+        let totalKeserasian = k1 + k2 + k3;
+        document.getElementById('total_keserasian').value = totalKeserasian;
+
+        // --- 3. Bidang Lagu dan Suara ---
+        let l1 = parseFloat(document.getElementById('lagu_1').value) || 0;
+        let l2 = parseFloat(document.getElementById('lagu_2').value) || 0;
+        let l3 = parseFloat(document.getElementById('lagu_3').value) || 0;
+
+        if (l1 > 10) { document.getElementById('lagu_1').value = 10; l1 = 10; }
+        if (l2 > 10) { document.getElementById('lagu_2').value = 10; l2 = 10; }
+        if (l3 > 10) { document.getElementById('lagu_3').value = 10; l3 = 10; }
+
+        let totalLagu = l1 + l2 + l3;
+        document.getElementById('total_lagu').value = totalLagu;
+
+        // --- 4. Grand Total Akumulasi ---
+        let grandTotal = finalKaedah + totalKeserasian + totalLagu;
+        document.getElementById('display_grand_total').innerText = grandTotal.toFixed(1);
     }
 
-    // Mengaktifkan pemicu hitung otomatis saat angka di-input
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('input', hitungMMN);
+    // ==========================================
+    // FUNGSI MENYALIN DATA FORM KE REKAP PDF
+    // ==========================================
+    function siapkanDataPDF() {
+        let dewanJuri = document.getElementById('nama_juri').value || "-";
+        let noPeserta = document.getElementById('no_peserta').value || "-";
+
+        let kaedah = parseFloat(document.getElementById('nilai_akhir_kaedah').value) || 40;
+        let keserasian = parseFloat(document.getElementById('total_keserasian').value) || 0;
+        let lagu = parseFloat(document.getElementById('total_lagu').value) || 0;
+        let grandTotalStr = (kaedah + keserasian + lagu).toFixed(1);
+
+        // Ekstrak Rincian Kesalahan
+        let detailArr = [];
+        let labels = ["Mura'atul Kalimah", "Mura'atul Huruf", "Mura'atul Harakat", "Kefasihan"];
+        for(let i=1; i<=4; i++) {
+            let j = document.getElementById('jali_'+i).value;
+            let k = document.getElementById('khafi_'+i).value;
+            if(j || k) detailArr.push(`${labels[i-1]} (Jali:${j||0}, Khafi:${k||0})`);
+        }
+        if(keserasian > 0) detailArr.push(`Skor Keserasian: ${keserasian}`);
+        if(lagu > 0) detailArr.push(`Skor Lagu & Suara: ${lagu}`);
+
+        let rincianText = detailArr.length > 0 ? detailArr.join(' | ') : "Kaedah Bacaan: Sempurna (Tidak ada pengurangan)";
+
+        // Injeksi teks murni ke elemen PDF
+        document.getElementById('pdf_nama_juri').innerText = dewanJuri;
+        document.getElementById('pdf_no_peserta').innerText = noPeserta;
+        
+        document.getElementById('pdf_kaedah').innerText = kaedah.toFixed(1);
+        document.getElementById('pdf_keserasian').innerText = keserasian.toFixed(1);
+        document.getElementById('pdf_lagu').innerText = lagu.toFixed(1);
+        document.getElementById('pdf_grand_total').innerText = grandTotalStr;
+        document.getElementById('pdf_detail').innerText = rincianText;
+
+        const today = new Date();
+        const tglStr = today.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('pdf_tanggal').innerText = tglStr;
+        document.getElementById('pdf_tanggal_footer').innerText = tglStr;
+
+        return { rincianText, dewanJuri, noPeserta, kaedah, keserasian, lagu, grandTotalStr };
+    }
+
+    // ==========================================
+    // 1. LOGIKA SIMPAN KE DATABASE SUPABASE
+    // ==========================================
+    document.getElementById('form-penilaian-mmn').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        let btn = document.getElementById('btn-submit');
+        btn.innerText = "Menyimpan Data...";
+        btn.disabled = true;
+
+        try {
+            let info = siapkanDataPDF();
+
+            let payload = {
+                nama_juri: info.dewanJuri,
+                no_peserta: info.noPeserta,
+                nilai_kaedah: info.kaedah,
+                nilai_keserasian: info.keserasian,
+                nilai_lagu: info.lagu,
+                grand_total: parseFloat(info.grandTotalStr),
+                rincian_penilaian: info.rincianText
+            };
+
+            const { error } = await supabaseClient
+                .from('nilai_mmn')
+                .insert([ payload ]);
+
+            if (error) throw new Error(error.message);
+
+            btn.innerText = "Data Tersimpan ✓";
+            alert("Alhamdulillah! Rekap penilaian MMN berhasil disimpan ke database Supabase.");
+
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi Kesalahan Database: \n" + (err.message || err));
+            btn.innerText = "1. Simpan ke Database";
+            btn.disabled = false;
+        }
     });
+
+    // ==========================================
+    // 2. LOGIKA CETAK PDF RESMI KROMIUM (window.print)
+    // ==========================================
+    function cetakPDF() {
+        siapkanDataPDF();
+        window.print();
+    }
+
+    // ==========================================
+    // 3. LOGIKA RESET FORM UNTUK PESERTA SELANJUTNYA
+    // ==========================================
+    function resetLomba() {
+        document.getElementById('form-penilaian-mmn').reset();
+        hitungMMN();
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "1. Simpan ke Database";
+        btnSubmit.disabled = false;
+        
+        document.getElementById('nama_juri').focus();
+        window.scrollTo(0, 0);
+    }
 </script>
 </body>
 </html>

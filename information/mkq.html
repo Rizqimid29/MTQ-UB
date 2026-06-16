@@ -3,13 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detail Lomba - MKQ</title>
+<title>Rekapitulasi Penilaian MKQ</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* CSS tambahan khusus halaman ini agar form rapi */
+    /* ========================================== */
+    /* STYLE UNTUK TAMPILAN WEB (FORMULIR JURI)   */
+    /* ========================================== */
+    .form-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .form-table th, .form-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    .form-table th { background: #006d77; color: white; }
+    
     .form-table input[type="number"], 
     .form-table input[type="text"],
-    .form-table input[type="date"] {
+    .form-table select {
         width: 100%;
         box-sizing: border-box;
         padding: 5px;
@@ -18,11 +32,8 @@
         text-align: center;
     }
     
-    .form-table input[type="text"] {
-        text-align: left;
-    }
+    .form-table input[type="text"] { text-align: left; }
 
-    /* Warna abu-abu untuk kolom total otomatis */
     .form-table input[readonly] {
         background-color: #e9ecef;
         color: #495057;
@@ -33,64 +44,79 @@
     .submit-btn {
         background-color: #006d77;
         color: white;
-        padding: 12px 25px;
+        padding: 15px 25px;
         border: none;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        display: block;
-        margin: 20px auto;
         transition: background-color 0.3s;
         font-weight: bold;
     }
+    .submit-btn:hover { background-color: #023047; }
+    .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-    .submit-btn:hover {
-        background-color: #023047;
+    .action-btn-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .action-btn-container .submit-btn {
+        flex: 1;
+        min-width: 200px;
+        margin: 0;
     }
 
     .participant-info {
         display: grid;
-        grid-template-columns: max-content 1fr;
-        gap: 10px 15px;
-        margin-bottom: 20px;
-        align-items: center;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        background: #f4f4f4;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 5px solid #006d77;
+        margin-bottom: 30px;
     }
-    
-    .participant-info label {
-        font-weight: bold;
-        text-align: right;
-    }
+    @media (max-width: 768px) { .participant-info { grid-template-columns: 1fr; } }
+    .participant-info label { font-weight: bold; display: block; margin-bottom: 5px; color: #023047; }
+    .participant-info input, .participant-info select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box;}
 
-    .participant-info input {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 100%;
-        max-width: 300px;
-    }
+    .panel-penilaian { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto; border-top: 4px solid #006d77; display: none;}
+    .panel-penilaian.active { display: block; }
 
-    .judges-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        text-align: center;
-        margin-top: 30px;
-    }
+    .sub-table-header { background-color: #f4f4f4; font-weight: bold; text-align: left; padding: 10px; border: 1px solid #ccc; }
 
-    .sub-table-header {
-        background-color: #f4f4f4;
-        font-weight: bold;
-        text-align: left;
-        padding: 10px;
-        border: 1px solid #ccc;
+    #template-pdf { display: none; }
+
+    /* ========================================== */
+    /* ATURAN KHUSUS SAAT DICETAK KELUAR (PRINT)  */
+    /* ========================================== */
+    @media print {
+        body *, header, nav, section, footer, .action-btn-container {
+            display: none !important;
+        }
+        #template-pdf, #template-pdf * {
+            display: block !important;
+        }
+        @page { size: A4 portrait; margin: 1.5cm; }
+        body { background: white !important; margin: 0 !important; padding: 0 !important; }
+        #template-pdf {
+            position: absolute; left: 0; top: 0; width: 100%; background: white;
+            color: black; font-family: 'Times New Roman', Times, serif; font-size: 12pt; 
+        }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../connector/supabase_connector.js"></script>
+
 </head>
 <body>
+
 <header>
     <div class="container">
         <h1>Musabaqah Khaththil Qur’an (MKQ)</h1>
-        <p>Detail Informasi dan Formulir Penilaian</p>
+        <p>Formulir Rekapitulasi Penilaian Dewan Hakim</p>
     </div>
 </header>
 
@@ -101,10 +127,9 @@
 </nav>
 
 <section class="container" style="margin-top: 30px;">
-    <!-- INFORMASI UMUM & JADWAL -->
     <h2>Informasi Lomba</h2>
     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-        <p>Musabaqah Khaththil Qur'an adalah cabang Musabaqah Al-Qur'an yang menekankan kepada kemahiran menulis dan melukis ayat-ayat dengan nilai seni yang indah sesuai dengan kebenaran dan keindahan tulisan menurut kaidah khaththil yang baku. Dimana golongan yang dimusabaqahkan yaitu golongan Dekorasi dan golongan Kontemporer.</p>
+        <p>Musabaqah Khaththil Qur'an adalah cabang Musabaqah Al-Qur'an yang menekankan kemahiran menulis dan melukis ayat-ayat dengan nilai seni yang indah. Terdiri dari Golongan Dekorasi dan Golongan Kontemporer.</p>
         
         <h4 style="color: #006d77; margin-bottom: 5px;">Jadwal Pelaksanaan:</h4>
         <ul style="list-style: none; padding-left: 0;">
@@ -114,369 +139,415 @@
         </ul>
     </div>
 
-    <!-- FORMULIR PENILAIAN -->
     <h2>Formulir Penilaian Dewan Hakim</h2>
-    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MKQ UB 2026. Terdapat dua form terpisah untuk cabang <strong>Dekorasi</strong> dan <strong>Kontemporer</strong> Silakan isi nilai pada kolom yang tersedia.</p>
+    <p style="margin-bottom: 20px;">Silakan pilih <strong>Cabang Lomba</strong> terlebih dahulu, lalu isi kolom nilai sesuai karya peserta.</p>
 
-    <form action="#" method="POST">
-        <!-- ============================================== -->
-        <!-- BAGIAN 1: CABANG DEKORASI -->
-        <!-- ============================================== -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px; overflow-x: auto;">
-            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">FORMULIR PENILAIAN MUSABAQAH KHATHTHIL QUR’AN (MKQ)<br>Cabang Dekorasi</h3>
-            
-            <div class="participant-info">
-                <label for="no_peserta_dek">Nomor Peserta :</label>
-                <input type="text" id="no_peserta_dek" name="no_peserta_dek" placeholder="...">
-                <label for="tanggal_dek">Tanggal :</label>
-                <input type="date" id="tanggal_dek" name="tanggal_dek">
+    <form id="form-penilaian-mkq">
+        
+        <div class="participant-info">
+            <div>
+                <label for="no_peserta">Nomor Peserta :</label>
+                <input type="text" id="no_peserta" name="no_peserta" placeholder="Masukkan Nomor" required>
             </div>
-
-            <table class="form-table">
-                <!-- Tabel A -->
-                <tr>
-                    <td colspan="4" class="sub-table-header">Nilai Maksimal : 60 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Bentuk dan Proporsi Huruf</td>
-                    <td>25 point</td>
-                    <td><input type="number" id="dek_a_1" min="0" max="25"></td>
-                    <td><input type="text" name="catatan_dek_a_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Jarak Spasi dan Letak Huruf</td>
-                    <td>15 point</td>
-                    <td><input type="number" id="dek_a_2" min="0" max="15"></td>
-                    <td><input type="text" name="catatan_dek_a_2"></td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Keserasian dan Komposis Antar Huruf</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="dek_a_3" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_dek_a_3"></td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td>Kebenaran dan Kesesuaian Tulisan</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="dek_a_4" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_dek_a_4"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (A)</td>
-                    <td><input type="number" id="dek_total_a" readonly></td>
-                    <td></td>
-                </tr>
-
-                <!-- Tabel B -->
-                <tr>
-                    <td colspan="4" class="sub-table-header" style="margin-top: 20px;">Nilai Maksimal: 20 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Kreatifitas</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="dek_b_1" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_dek_b_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Kebersihan dan Kerapian</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="dek_b_2" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_dek_b_2"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (B)</td>
-                    <td><input type="number" id="dek_total_b" readonly></td>
-                    <td></td>
-                </tr>
-
-                <!-- Tabel C -->
-                <tr>
-                    <td colspan="4" class="sub-table-header" style="margin-top: 20px;">Nilai Maksimal: 20 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Komposisi Warna</td>
-                    <td>15 point</td>
-                    <td><input type="number" id="dek_c_1" min="0" max="15"></td>
-                    <td><input type="text" name="catatan_dek_c_1"></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Keserasian Format</td>
-                    <td>5 point</td>
-                    <td><input type="number" id="dek_c_2" min="0" max="5"></td>
-                    <td><input type="text" name="catatan_dek_c_2"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (C)</td>
-                    <td><input type="number" id="dek_total_c" readonly></td>
-                    <td></td>
-                </tr>
-
-                <!-- GRAND TOTAL -->
-                <tr style="background: #e2e8f0;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 16px;">Total Keseluruhan Nilai (A+B+C) =</td>
-                    <td colspan="2"><input type="number" id="dek_grand_total" readonly style="font-size: 16px; font-weight: bold;"></td>
-                </tr>
-            </table>
-
-            <div class="judges-grid">
-                <div>
-                    <strong>Dewan Juri I</strong><br><br><br><br>
-                    <p>Ust. H. Misbachul Munir</p>
-                </div>
-                <div>
-                    <strong>Dewan Juri II</strong><br><br><br><br>
-                    <p>Ust. Imron Fathoni, S. Hi</p>
-                </div>
-                <div>
-                    <strong>Dewan Juri III</strong><br><br><br><br>
-                    <p>Ust. Ahmad Rodhi, S.Pd.I</p>
-                </div>
+            <div>
+                <label for="cabang_lomba">Cabang Lomba :</label>
+                <select id="cabang_lomba" name="cabang_lomba" required onchange="ubahCabangLomba()">
+                    <option value="" disabled selected>-- Pilih Cabang --</option>
+                    <option value="dekorasi">Golongan Dekorasi</option>
+                    <option value="kontemporer">Golongan Kontemporer</option>
+                </select>
             </div>
         </div>
 
-        <!-- ============================================== -->
-        <!-- BAGIAN 2: CABANG KONTEMPORER -->
-        <!-- ============================================== -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">FORMULIR PENILAIAN MUSABAQAH KHATHTHIL QUR’AN (MKQ)<br>Cabang Kontemporer</h3>
-            
-            <div class="participant-info">
-                <label for="no_peserta_kon">Nomor Peserta :</label>
-                <input type="text" id="no_peserta_kon" name="no_peserta_kon" placeholder="...">
-                <label for="tanggal_kon">Tanggal :</label>
-                <input type="date" id="tanggal_kon" name="tanggal_kon">
-            </div>
-
+        <div id="panel-dekorasi" class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0;">FORMULIR PENILAIAN CABANG DEKORASI</h3>
             <table class="form-table">
-                <!-- Tabel A -->
+                <tr><td colspan="5" class="sub-table-header">A. Nilai Maksimal : 60 Point</td></tr>
                 <tr>
-                    <td colspan="4" class="sub-table-header">Nilai Maksimum: 60 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
+                    <th width="5%">No.</th><th width="40%">Bidang Kaidah</th><th width="15%">Max</th><th width="15%">Nilai Diperoleh</th><th width="25%">Catatan</th>
                 </tr>
                 <tr>
-                    <td>1.</td>
-                    <td>Bentuk dan Proporsi Huruf</td>
-                    <td>25 point</td>
-                    <td><input type="number" id="kon_a_1" min="0" max="25"></td>
-                    <td><input type="text" name="catatan_kon_a_1"></td>
+                    <td>1.</td><td style="text-align: left;">Bentuk dan Proporsi Huruf</td><td>25</td>
+                    <td><input type="number" id="dek_a_1" class="calc-dek" min="0" max="25" step="0.5"></td>
+                    <td><input type="text" id="cd_a_1"></td>
                 </tr>
                 <tr>
-                    <td>2.</td>
-                    <td>Jarak Spasi dan Letak Huruf</td>
-                    <td>15 point</td>
-                    <td><input type="number" id="kon_a_2" min="0" max="15"></td>
-                    <td><input type="text" name="catatan_kon_a_2"></td>
+                    <td>2.</td><td style="text-align: left;">Jarak Spasi dan Letak Huruf</td><td>15</td>
+                    <td><input type="number" id="dek_a_2" class="calc-dek" min="0" max="15" step="0.5"></td>
+                    <td><input type="text" id="cd_a_2"></td>
                 </tr>
                 <tr>
-                    <td>3.</td>
-                    <td>Keserasian dan Komposisi Antar Huruf</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="kon_a_3" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_kon_a_3"></td>
+                    <td>3.</td><td style="text-align: left;">Keserasian dan Komposisi Antar Huruf</td><td>10</td>
+                    <td><input type="number" id="dek_a_3" class="calc-dek" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="cd_a_3"></td>
                 </tr>
                 <tr>
-                    <td>4.</td>
-                    <td>Kebenaran dan Kesesuaian Tulisan</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="kon_a_4" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_kon_a_4"></td>
+                    <td>4.</td><td style="text-align: left;">Kebenaran dan Kesesuaian Tulisan</td><td>10</td>
+                    <td><input type="number" id="dek_a_4" class="calc-dek" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="cd_a_4"></td>
                 </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (A)</td>
-                    <td><input type="number" id="kon_total_a" readonly></td>
-                    <td></td>
-                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (A)</td><td><input type="number" id="dek_total_a" readonly value="0"></td><td></td></tr>
 
-                <!-- Tabel B -->
+                <tr><td colspan="5" class="sub-table-header" style="margin-top: 20px;">B. Nilai Maksimal : 20 Point</td></tr>
                 <tr>
-                    <td colspan="4" class="sub-table-header" style="margin-top: 20px;">Nilai Maksimal: 20 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
+                    <td>1.</td><td style="text-align: left;">Kreatifitas</td><td>10</td>
+                    <td><input type="number" id="dek_b_1" class="calc-dek" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="cd_b_1"></td>
                 </tr>
                 <tr>
-                    <td>1.</td>
-                    <td>Keindahan Imajinasi</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="kon_b_1" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_kon_b_1"></td>
+                    <td>2.</td><td style="text-align: left;">Kebersihan dan Kerapian</td><td>10</td>
+                    <td><input type="number" id="dek_b_2" class="calc-dek" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="cd_b_2"></td>
                 </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Kebersihan dan Kerapian</td>
-                    <td>10 point</td>
-                    <td><input type="number" id="kon_b_2" min="0" max="10"></td>
-                    <td><input type="text" name="catatan_kon_b_2"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (B)</td>
-                    <td><input type="number" id="kon_total_b" readonly></td>
-                    <td></td>
-                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (B)</td><td><input type="number" id="dek_total_b" readonly value="0"></td><td></td></tr>
 
-                <!-- Tabel C -->
+                <tr><td colspan="5" class="sub-table-header" style="margin-top: 20px;">C. Nilai Maksimal : 20 Point</td></tr>
                 <tr>
-                    <td colspan="4" class="sub-table-header" style="margin-top: 20px;">Nilai Maksimal: 20 Point</td>
-                </tr>
-                <tr>
-                    <th width="5%">No.</th>
-                    <th width="45%">Bidang Kaidah</th>
-                    <th width="15%">Nilai Maksimal</th>
-                    <th width="15%">Nilai</th>
-                    <th width="20%">Catatan</th>
+                    <td>1.</td><td style="text-align: left;">Komposisi Warna</td><td>15</td>
+                    <td><input type="number" id="dek_c_1" class="calc-dek" min="0" max="15" step="0.5"></td>
+                    <td><input type="text" id="cd_c_1"></td>
                 </tr>
                 <tr>
-                    <td>1.</td>
-                    <td>Kekayaan Imajinasi dan Tata Warna</td>
-                    <td>15 point</td>
-                    <td><input type="number" id="kon_c_1" min="0" max="15"></td>
-                    <td><input type="text" name="catatan_kon_c_1"></td>
+                    <td>2.</td><td style="text-align: left;">Keserasian Format</td><td>5</td>
+                    <td><input type="number" id="dek_c_2" class="calc-dek" min="0" max="5" step="0.5"></td>
+                    <td><input type="text" id="cd_c_2"></td>
                 </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Keserasian Format</td>
-                    <td>5 point</td>
-                    <td><input type="number" id="kon_c_2" min="0" max="5"></td>
-                    <td><input type="text" name="catatan_kon_c_2"></td>
-                </tr>
-                <tr style="background: #fcfcfc;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px;">Total Nilai (C)</td>
-                    <td><input type="number" id="kon_total_c" readonly></td>
-                    <td></td>
-                </tr>
-
-                <!-- GRAND TOTAL -->
-                <tr style="background: #e2e8f0;">
-                    <td colspan="3" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 16px;">Total Keseluruhan Nilai (A+B+C) =</td>
-                    <td colspan="2"><input type="number" id="kon_grand_total" readonly style="font-size: 16px; font-weight: bold;"></td>
-                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (C)</td><td><input type="number" id="dek_total_c" readonly value="0"></td><td></td></tr>
             </table>
+        </div>
 
-            <div class="judges-grid">
-                <div>
-                    <strong>Dewan Juri I</strong><br><br><br><br>
-                    <p>Ust. H. Misbachul Munir[cite: 12]</p>
-                </div>
-                <div>
-                    <strong>Dewan Juri II</strong><br><br><br><br>
-                    <p>Ust. Imron Fathoni, S. Hi[cite: 12]</p>
-                </div>
-                <div>
-                    <strong>Dewan Juri III</strong><br><br><br><br>
-                    <p>Ust. Ahmad Rodhi, S.Pd.I[cite: 12]</p>
-                </div>
+        <div id="panel-kontemporer" class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0;">FORMULIR PENILAIAN CABANG KONTEMPORER</h3>
+            <table class="form-table">
+                <tr><td colspan="5" class="sub-table-header">A. Nilai Maksimal : 60 Point</td></tr>
+                <tr>
+                    <th width="5%">No.</th><th width="40%">Bidang Kaidah</th><th width="15%">Max</th><th width="15%">Nilai Diperoleh</th><th width="25%">Catatan</th>
+                </tr>
+                <tr>
+                    <td>1.</td><td style="text-align: left;">Bentuk dan Proporsi Huruf</td><td>25</td>
+                    <td><input type="number" id="kon_a_1" class="calc-kon" min="0" max="25" step="0.5"></td>
+                    <td><input type="text" id="ck_a_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td><td style="text-align: left;">Jarak Spasi dan Letak Huruf</td><td>15</td>
+                    <td><input type="number" id="kon_a_2" class="calc-kon" min="0" max="15" step="0.5"></td>
+                    <td><input type="text" id="ck_a_2"></td>
+                </tr>
+                <tr>
+                    <td>3.</td><td style="text-align: left;">Keserasian dan Komposisi Antar Huruf</td><td>10</td>
+                    <td><input type="number" id="kon_a_3" class="calc-kon" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="ck_a_3"></td>
+                </tr>
+                <tr>
+                    <td>4.</td><td style="text-align: left;">Kebenaran dan Kesesuaian Tulisan</td><td>10</td>
+                    <td><input type="number" id="kon_a_4" class="calc-kon" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="ck_a_4"></td>
+                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (A)</td><td><input type="number" id="kon_total_a" readonly value="0"></td><td></td></tr>
+
+                <tr><td colspan="5" class="sub-table-header" style="margin-top: 20px;">B. Nilai Maksimal : 20 Point</td></tr>
+                <tr>
+                    <td>1.</td><td style="text-align: left;">Keindahan Imajinasi</td><td>10</td>
+                    <td><input type="number" id="kon_b_1" class="calc-kon" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="ck_b_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td><td style="text-align: left;">Kebersihan dan Kerapian</td><td>10</td>
+                    <td><input type="number" id="kon_b_2" class="calc-kon" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" id="ck_b_2"></td>
+                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (B)</td><td><input type="number" id="kon_total_b" readonly value="0"></td><td></td></tr>
+
+                <tr><td colspan="5" class="sub-table-header" style="margin-top: 20px;">C. Nilai Maksimal : 20 Point</td></tr>
+                <tr>
+                    <td>1.</td><td style="text-align: left;">Kekayaan Imajinasi dan Tata Warna</td><td>15</td>
+                    <td><input type="number" id="kon_c_1" class="calc-kon" min="0" max="15" step="0.5"></td>
+                    <td><input type="text" id="ck_c_1"></td>
+                </tr>
+                <tr>
+                    <td>2.</td><td style="text-align: left;">Keserasian Format</td><td>5</td>
+                    <td><input type="number" id="kon_c_2" class="calc-kon" min="0" max="5" step="0.5"></td>
+                    <td><input type="text" id="ck_c_2"></td>
+                </tr>
+                <tr style="background: #e9ecef;"><td colspan="3" style="text-align: right; font-weight: bold;">Total Nilai (C)</td><td><input type="number" id="kon_total_c" readonly value="0"></td><td></td></tr>
+            </table>
+        </div>
+
+        <div style="background: #023047; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 4px solid #ffb703;">
+            <h2 style="margin: 0;">TOTAL KESELURUHAN (A+B+C)</h2>
+            <div style="font-size: 40px; font-weight: bold; margin-top: 10px;">
+                <span id="display_grand_total">0</span> / 100
             </div>
         </div>
 
-        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+        <div class="action-btn-container">
+            <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
+            <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
+            <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetPeserta()">Nilai Peserta Selanjutnya</button>
+        </div>
+
     </form>
 </section>
 
-<footer>
+<div id="template-pdf">
+    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
+        <h2 style="margin: 0; font-size: 14pt;">PANITIA PELAKSANA & DEWAN HAKIM</h2>
+        <h1 style="margin: 5px 0; font-size: 16pt;">MUSABAQAH KHATHTHIL QUR'AN (MKQ) XIX</h1>
+        <h2 style="margin: 0; font-size: 14pt;">UNIVERSITAS BRAWIJAYA 2026</h2>
+    </div>
+    
+    <h3 style="text-align: center; text-decoration: underline; font-size: 14pt; margin-bottom: 25px;">LEMBAR REKAPITULASI PENILAIAN</h3>
+    
+    <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 12pt;">
+        <div style="display: flex !important; flex-direction: row !important; margin-bottom: 8px;">
+            <div style="width: 160px !important; font-weight: bold;">No. Peserta</div>
+            <div style="width: 20px !important; text-align: left;">:</div>
+            <div style="font-weight: bold; text-align: left;"><span id="pdf_no_peserta">-</span></div>
+        </div>
+        <div style="display: flex !important; flex-direction: row !important; margin-bottom: 8px;">
+            <div style="width: 160px !important; font-weight: bold;">Cabang</div>
+            <div style="width: 20px !important; text-align: left;">:</div>
+            <div style="font-weight: bold; text-align: left;"><span id="pdf_cabang">-</span></div>
+        </div>
+    </div>
+
+    <div style="width: 100%; margin-bottom: 20px; font-size: 12pt;">
+        
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold; text-align: center; background: #fdfdfd;">
+            <div style="flex: 2; border: 1px solid black; padding: 10px;">Bidang / Kriteria Nilai</div>
+            <div style="flex: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; display:flex; align-items:center; justify-content:center;">Nilai Maksimal</div>
+            <div style="flex: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; display:flex; align-items:center; justify-content:center;">Nilai Diperoleh</div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">A. Total Nilai Kaidah (Bentuk, Spasi, Komposisi)</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">60</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_total_a">0</strong></div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">B. Total Nilai Estetika (Kreatifitas & Kerapian)</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">20</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_total_b">0</strong></div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">C. Total Nilai Pewarnaan & Format</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">20</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_total_c">0</strong></div>
+        </div>
+        
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold;">
+            <div style="flex: 2; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center; padding-right: 15px;">TOTAL KESELURUHAN NILAI (A+B+C)</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center;">100</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center; font-size: 14pt;"><strong id="pdf_grand_total">0</strong></div>
+        </div>
+    </div>
+
+    <div style="border: 1px solid black; padding: 15px; min-height: 120px; margin-bottom: 30px;">
+        <h4 style="margin-top: 0; margin-bottom: 8px;">Rincian Penilaian & Catatan Juri:</h4>
+        <p id="pdf_detail" style="font-size: 11pt; text-align: justify; margin: 0; line-height: 1.6;">-</p>
+    </div>
+    
+    <div style="text-align: right; margin-top: 40px; margin-right: 20px;">
+        <p style="margin: 2px 0;">Malang, <span id="pdf_tanggal"></span></p>
+        <p style="margin: 2px 0; font-weight: bold;">Koordinator Dewan Hakim,</p>
+        <br><br><br><br>
+        <p style="margin: 2px 0;">( ........................................ )</p>
+    </div>
+</div>
+
+<footer style="margin-top: 30px;">
     <p>© 2026 MTQ Universitas Brawijaya XIX</p>
 </footer>
 
 <script>
-    // FUNGSI HITUNG CABANG DEKORASI
-    function hitungDekorasi() {
-        // Tabel A
-        let a1 = parseFloat(document.getElementById('dek_a_1').value) || 0;
-        let a2 = parseFloat(document.getElementById('dek_a_2').value) || 0;
-        let a3 = parseFloat(document.getElementById('dek_a_3').value) || 0;
-        let a4 = parseFloat(document.getElementById('dek_a_4').value) || 0;
-        let totalA = a1 + a2 + a3 + a4;
-        document.getElementById('dek_total_a').value = totalA > 0 ? totalA : "";
-
-        // Tabel B
-        let b1 = parseFloat(document.getElementById('dek_b_1').value) || 0;
-        let b2 = parseFloat(document.getElementById('dek_b_2').value) || 0;
-        let totalB = b1 + b2;
-        document.getElementById('dek_total_b').value = totalB > 0 ? totalB : "";
-
-        // Tabel C
-        let c1 = parseFloat(document.getElementById('dek_c_1').value) || 0;
-        let c2 = parseFloat(document.getElementById('dek_c_2').value) || 0;
-        let totalC = c1 + c2;
-        document.getElementById('dek_total_c').value = totalC > 0 ? totalC : "";
-
-        // Grand Total
-        let grandTotal = totalA + totalB + totalC;
-        document.getElementById('dek_grand_total').value = grandTotal > 0 ? grandTotal : "";
+    // ==========================================
+    // LOGIKA PERGANTIAN CABANG (SHOW/HIDE)
+    // ==========================================
+    function ubahCabangLomba() {
+        let cabang = document.getElementById('cabang_lomba').value;
+        document.getElementById('panel-dekorasi').classList.remove('active');
+        document.getElementById('panel-kontemporer').classList.remove('active');
+        
+        if (cabang === 'dekorasi') {
+            document.getElementById('panel-dekorasi').classList.add('active');
+        } else if (cabang === 'kontemporer') {
+            document.getElementById('panel-kontemporer').classList.add('active');
+        }
+        
+        hitungSemua(); // Reset hitungan saat pindah cabang
     }
 
-    // FUNGSI HITUNG CABANG KONTEMPORER
-    function hitungKontemporer() {
-        // Tabel A
-        let a1 = parseFloat(document.getElementById('kon_a_1').value) || 0;
-        let a2 = parseFloat(document.getElementById('kon_a_2').value) || 0;
-        let a3 = parseFloat(document.getElementById('kon_a_3').value) || 0;
-        let a4 = parseFloat(document.getElementById('kon_a_4').value) || 0;
-        let totalA = a1 + a2 + a3 + a4;
-        document.getElementById('kon_total_a').value = totalA > 0 ? totalA : "";
+    // ==========================================
+    // LOGIKA PERHITUNGAN MATEMATIKA OTOMATIS
+    // ==========================================
+    function hitungSemua() {
+        let cabang = document.getElementById('cabang_lomba').value;
+        let gTotal = 0;
 
-        // Tabel B
-        let b1 = parseFloat(document.getElementById('kon_b_1').value) || 0;
-        let b2 = parseFloat(document.getElementById('kon_b_2').value) || 0;
-        let totalB = b1 + b2;
-        document.getElementById('kon_total_b').value = totalB > 0 ? totalB : "";
+        if (cabang === 'dekorasi') {
+            let a1 = parseFloat(document.getElementById('dek_a_1').value)||0, a2 = parseFloat(document.getElementById('dek_a_2').value)||0, a3 = parseFloat(document.getElementById('dek_a_3').value)||0, a4 = parseFloat(document.getElementById('dek_a_4').value)||0;
+            let totalA = a1+a2+a3+a4; document.getElementById('dek_total_a').value = totalA;
+            
+            let b1 = parseFloat(document.getElementById('dek_b_1').value)||0, b2 = parseFloat(document.getElementById('dek_b_2').value)||0;
+            let totalB = b1+b2; document.getElementById('dek_total_b').value = totalB;
+            
+            let c1 = parseFloat(document.getElementById('dek_c_1').value)||0, c2 = parseFloat(document.getElementById('dek_c_2').value)||0;
+            let totalC = c1+c2; document.getElementById('dek_total_c').value = totalC;
+            
+            gTotal = totalA + totalB + totalC;
+            
+        } else if (cabang === 'kontemporer') {
+            let a1 = parseFloat(document.getElementById('kon_a_1').value)||0, a2 = parseFloat(document.getElementById('kon_a_2').value)||0, a3 = parseFloat(document.getElementById('kon_a_3').value)||0, a4 = parseFloat(document.getElementById('kon_a_4').value)||0;
+            let totalA = a1+a2+a3+a4; document.getElementById('kon_total_a').value = totalA;
+            
+            let b1 = parseFloat(document.getElementById('kon_b_1').value)||0, b2 = parseFloat(document.getElementById('kon_b_2').value)||0;
+            let totalB = b1+b2; document.getElementById('kon_total_b').value = totalB;
+            
+            let c1 = parseFloat(document.getElementById('kon_c_1').value)||0, c2 = parseFloat(document.getElementById('kon_c_2').value)||0;
+            let totalC = c1+c2; document.getElementById('kon_total_c').value = totalC;
+            
+            gTotal = totalA + totalB + totalC;
+        }
 
-        // Tabel C
-        let c1 = parseFloat(document.getElementById('kon_c_1').value) || 0;
-        let c2 = parseFloat(document.getElementById('kon_c_2').value) || 0;
-        let totalC = c1 + c2;
-        document.getElementById('kon_total_c').value = totalC > 0 ? totalC : "";
-
-        // Grand Total
-        let grandTotal = totalA + totalB + totalC;
-        document.getElementById('kon_grand_total').value = grandTotal > 0 ? grandTotal : "";
+        document.getElementById('display_grand_total').innerText = gTotal;
     }
 
-    // Event listener: hitung ulang tiap ada angka yang dimasukkan juri
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('input', () => {
-            hitungDekorasi();
-            hitungKontemporer();
-        });
+    document.querySelectorAll('.calc-dek, .calc-kon').forEach(input => {
+        input.addEventListener('input', hitungSemua);
     });
+
+    // ==========================================
+    // FUNGSI MENYALIN DATA FORM KE PDF REKAP
+    // ==========================================
+    function siapkanDataPDF() {
+        let noPeserta = document.getElementById('no_peserta').value || "-";
+        let selectCabang = document.getElementById('cabang_lomba');
+        let textCabang = selectCabang.options[selectCabang.selectedIndex]?.text || "-";
+        let valCabang = selectCabang.value;
+
+        let tA = 0, tB = 0, tC = 0, gTotal = 0;
+        let detailArr = [];
+
+        let extract = (prefix, id_val, id_cat, label) => {
+            let v = document.getElementById(id_val)?.value;
+            let c = document.getElementById(id_cat)?.value;
+            if(v || c) detailArr.push(`${prefix}-${label}: ${v||0} ${c ? `(Ket: ${c})`:""}`);
+        };
+
+        if (valCabang === 'dekorasi') {
+            tA = parseFloat(document.getElementById('dek_total_a').value) || 0;
+            tB = parseFloat(document.getElementById('dek_total_b').value) || 0;
+            tC = parseFloat(document.getElementById('dek_total_c').value) || 0;
+            gTotal = tA + tB + tC;
+
+            extract("A", "dek_a_1", "cd_a_1", "Proporsi Huruf"); extract("A", "dek_a_2", "cd_a_2", "Spasi");
+            extract("A", "dek_a_3", "cd_a_3", "Keserasian"); extract("A", "dek_a_4", "cd_a_4", "Kesesuaian Tulisan");
+            extract("B", "dek_b_1", "cd_b_1", "Kreatifitas"); extract("B", "dek_b_2", "cd_b_2", "Kebersihan");
+            extract("C", "dek_c_1", "cd_c_1", "Komposisi Warna"); extract("C", "dek_c_2", "cd_c_2", "Format");
+
+        } else if (valCabang === 'kontemporer') {
+            tA = parseFloat(document.getElementById('kon_total_a').value) || 0;
+            tB = parseFloat(document.getElementById('kon_total_b').value) || 0;
+            tC = parseFloat(document.getElementById('kon_total_c').value) || 0;
+            gTotal = tA + tB + tC;
+
+            extract("A", "kon_a_1", "ck_a_1", "Proporsi Huruf"); extract("A", "kon_a_2", "ck_a_2", "Spasi");
+            extract("A", "kon_a_3", "ck_a_3", "Keserasian"); extract("A", "kon_a_4", "ck_a_4", "Kesesuaian Tulisan");
+            extract("B", "kon_b_1", "ck_b_1", "Imajinasi"); extract("B", "kon_b_2", "ck_b_2", "Kebersihan");
+            extract("C", "kon_c_1", "ck_c_1", "Tata Warna"); extract("C", "kon_c_2", "ck_c_2", "Format");
+        }
+
+        let rincianText = detailArr.length > 0 ? detailArr.join(' | ') : "Belum ada rincian yang diisi.";
+
+        // INJEKSI KE PDF
+        document.getElementById('pdf_no_peserta').innerText = noPeserta;
+        document.getElementById('pdf_cabang').innerText = textCabang;
+        
+        document.getElementById('pdf_total_a').innerText = tA;
+        document.getElementById('pdf_total_b').innerText = tB;
+        document.getElementById('pdf_total_c').innerText = tC;
+        document.getElementById('pdf_grand_total').innerText = gTotal;
+        document.getElementById('pdf_detail').innerText = rincianText;
+        
+        const today = new Date();
+        document.getElementById('pdf_tanggal').innerText = today.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        return { rincian: rincianText, cabangText: textCabang, tA, tB, tC, gTotal };
+    }
+
+    // ==========================================
+    // 1. LOGIKA SIMPAN KE DATABASE SUPABASE
+    // ==========================================
+    document.getElementById('form-penilaian-mkq').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if(!document.getElementById('cabang_lomba').value) {
+            alert("Harap pilih Cabang Lomba terlebih dahulu!");
+            return;
+        }
+
+        let btn = document.getElementById('btn-submit');
+        btn.innerText = "Menyimpan Data...";
+        btn.disabled = true;
+
+        try {
+            let info = siapkanDataPDF();
+
+            let payload = {
+                no_peserta: document.getElementById('no_peserta').value,
+                cabang_lomba: info.cabangText,
+                total_a: info.tA,
+                total_b: info.tB,
+                total_c: info.tC,
+                grand_total: info.gTotal,
+                rincian_penilaian: info.rincian
+            };
+
+            const { error } = await supabaseClient
+                .from('nilai_mkq')
+                .insert([ payload ]);
+
+            if (error) throw new Error(error.message);
+
+            btn.innerText = "Data Tersimpan ✓";
+            alert("Alhamdulillah! Rekap penilaian MKQ berhasil disimpan ke database Supabase.");
+
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi Kesalahan Database: \n" + (err.message || err));
+            btn.innerText = "1. Simpan ke Database";
+            btn.disabled = false;
+        }
+    });
+
+    // ==========================================
+    // 2. LOGIKA CETAK PDF RESMI KROMIUM
+    // ==========================================
+    function cetakPDF() {
+        if(!document.getElementById('cabang_lomba').value) {
+            alert("Harap pilih Cabang Lomba sebelum mencetak!");
+            return;
+        }
+        siapkanDataPDF();
+        window.print();
+    }
+
+    // ==========================================
+    // 3. LOGIKA RESET FORM UNTUK PESERTA SELANJUTNYA
+    // ==========================================
+    function resetPeserta() {
+        document.getElementById('form-penilaian-mkq').reset();
+        ubahCabangLomba(); // Sembunyikan panel kembali
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "1. Simpan ke Database";
+        btnSubmit.disabled = false;
+        
+        document.getElementById('no_peserta').focus();
+        window.scrollTo(0, 0);
+    }
 </script>
 </body>
 </html>

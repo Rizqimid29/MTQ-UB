@@ -3,13 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detail Lomba - MTrQ</title>
+<title>Rekapitulasi Penilaian MTrQ</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* CSS tambahan khusus halaman ini agar form rapi */
+    /* ========================================== */
+    /* STYLE UNTUK TAMPILAN WEB (FORMULIR JURI)   */
+    /* ========================================== */
+    .form-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .form-table th, .form-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    .form-table th { background: #006d77; color: white; }
+    
     .form-table input[type="number"], 
-    .form-table input[type="text"],
-    .form-table input[type="date"] {
+    .form-table input[type="text"] {
         width: 100%;
         box-sizing: border-box;
         padding: 5px;
@@ -18,11 +31,8 @@
         text-align: center;
     }
     
-    .form-table input[type="text"] {
-        text-align: left;
-    }
+    .form-table input[type="text"] { text-align: left; }
 
-    /* Warna abu-abu untuk kolom total otomatis */
     .form-table input[readonly] {
         background-color: #e9ecef;
         color: #495057;
@@ -33,48 +43,94 @@
     .submit-btn {
         background-color: #006d77;
         color: white;
-        padding: 12px 25px;
+        padding: 15px 25px;
         border: none;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        display: block;
-        margin: 20px auto;
         transition: background-color 0.3s;
         font-weight: bold;
     }
+    .submit-btn:hover { background-color: #023047; }
+    .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-    .submit-btn:hover {
-        background-color: #023047;
+    .action-btn-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .action-btn-container .submit-btn {
+        flex: 1;
+        min-width: 200px;
+        margin: 0;
     }
 
     .participant-info {
         display: grid;
-        grid-template-columns: max-content 1fr;
-        gap: 10px 15px;
-        margin-bottom: 20px;
-        align-items: center;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+        background: #f4f4f4;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 5px solid #006d77;
+        margin-bottom: 30px;
     }
-    
-    .participant-info label {
-        font-weight: bold;
-        text-align: right;
+    @media (max-width: 768px) {
+        .participant-info { grid-template-columns: 1fr; }
     }
+    .participant-info label { font-weight: bold; display: block; margin-bottom: 5px; color: #023047; }
+    .participant-info input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box;}
 
-    .participant-info input {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 100%;
-        max-width: 300px;
+    .panel-penilaian { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto; border-top: 4px solid #006d77;}
+
+    #template-pdf { display: none; }
+
+    /* ========================================== */
+    /* ATURAN KHUSUS SAAT DICETAK KELUAR (PRINT)  */
+    /* ========================================== */
+    @media print {
+        body *, header, nav, section, footer, .action-btn-container {
+            display: none !important;
+        }
+        #template-pdf, #template-pdf * {
+            display: block !important;
+        }
+        
+        @page {
+            size: A4 portrait;
+            margin: 1.5cm;
+        }
+        
+        body {
+            background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #template-pdf {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: white;
+            color: black;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt; 
+        }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../connector/supabase_connector.js"></script>
+
 </head>
 <body>
+
 <header>
     <div class="container">
         <h1>Musabaqah Tartilil Qur’an (MTrQ)</h1>
-        <p>Detail Informasi dan Formulir Penilaian</p>
+        <p>Formulir Rekapitulasi Penilaian Dewan Hakim</p>
     </div>
 </header>
 
@@ -85,10 +141,10 @@
 </nav>
 
 <section class="container" style="margin-top: 30px;">
-    <!-- INFORMASI UMUM & JADWAL -->
+    
     <h2>Informasi Lomba</h2>
     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-        <p>Musabaqah Tartilil Qur'an (MTrQ) adalah bidang lomba membaca Al-Qur'an dengan bacaan tartil (murottal), yaitu membaca Al-Qur'an dengan kecepatan bacaan sedang (tidak terlalu perlahan dan tidak terlalu cepat) serta mengikuti kaidah-kaidah ilmu bacaan (tajwid), fashohah (adab), dan seni (lagu dan suara) dalam melantunkan ayat Al-Qur'an.</p>
+        <p>Musabaqah Tartilil Qur'an (MTrQ) adalah bidang lomba membaca Al-Qur'an dengan bacaan tartil (murottal), yaitu membaca Al-Qur'an dengan kecepatan bacaan sedang serta mengikuti kaidah tajwid, fashohah, dan seni lagu/suara.</p>
         
         <div style="display: flex; gap: 40px; flex-wrap: wrap;">
             <div>
@@ -109,244 +165,379 @@
             </div>
         </div>
     </div>
-
-    <!-- FORMULIR PENILAIAN -->
+    
     <h2>Formulir Penilaian Dewan Hakim</h2>
-    <p>Data pedoman penilaian ini sesuai dengan standar penjurian MTrQ UB 2026. Silakan isi kolom <strong>Nilai Yang Diperoleh</strong> di bawah ini. Kolom berwarna abu-abu akan terisi otomatis.</p>
+    <p style="margin-bottom: 20px;">Silakan isi kolom <strong>Nilai Diperoleh</strong> di bawah ini sesuai perolehan peserta. Kolom berwarna abu-abu (Total) akan terhitung otomatis.</p>
 
-    <form action="#" method="POST">
-        <!-- TABEL 1: BIDANG TAJWID -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG TAJWID</h3>
-            
-            <div class="participant-info">
-                <label for="no_urut_tajwid">No. Urut :</label>
-                <input type="text" id="no_urut_tajwid" name="no_urut_tajwid" placeholder="...">
-                <label for="nama_peserta_tajwid">Nama Peserta :</label>
-                <input type="text" id="nama_peserta_tajwid" name="nama_peserta_tajwid" placeholder="...">
-                <label for="asal_fakultas_tajwid">Asal Fakultas :</label>
-                <input type="text" id="asal_fakultas_tajwid" name="asal_fakultas_tajwid" placeholder="...">
-                <label for="tanggal_tajwid">Tanggal :</label>
-                <input type="date" id="tanggal_tajwid" name="tanggal_tajwid">
+    <form id="form-penilaian-mtrq">
+        
+        <div class="participant-info">
+            <div>
+                <label>No. Urut Peserta:</label>
+                <input type="text" id="global_no_urut" placeholder="Masukkan No. Urut" required>
             </div>
+            <div>
+                <label>Nama Peserta:</label>
+                <input type="text" id="global_nama" placeholder="Masukkan Nama Peserta" required>
+            </div>
+            <div>
+                <label>Asal Fakultas:</label>
+                <input type="text" id="global_fakultas" placeholder="Contoh: FILKOM" required>
+            </div>
+        </div>
 
+        <div class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0;">1. BIDANG TAJWID (Max 40)</h3>
             <table class="form-table">
                 <tr>
                     <th>No.</th>
                     <th>Jenis Yang Dinilai</th>
-                    <th>Nilai Maksimum</th>
-                    <th>Nilai Minimum</th>
-                    <th>Nilai Yang Diperoleh</th>
-                    <th>Catatan Nilai Akhir</th>
+                    <th>Max</th>
+                    <th>Min</th>
+                    <th style="width: 15%;">Nilai Diperoleh</th>
+                    <th>Catatan (Opsional)</th>
                 </tr>
                 <tr>
-                    <td>1</td>
-                    <td>Makharijul Huruf</td>
-                    <td>20</td>
-                    <td>4</td>
-                    <td><input type="number" name="nilai_tajwid_1" min="4" max="20"></td>
-                    <td><input type="text" name="catatan_tajwid_1"></td>
+                    <td>1</td><td style="text-align: left;">Makharijul Huruf</td><td>20</td><td>4</td>
+                    <td><input type="number" name="nilai_tajwid_1" min="0" max="20" step="0.5"></td>
+                    <td><input type="text" name="catatan_tajwid_1" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>Sifat Huruf</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_tajwid_2" min="3" max="10"></td>
-                    <td><input type="text" name="catatan_tajwid_2"></td>
+                    <td>2</td><td style="text-align: left;">Sifat Huruf</td><td>10</td><td>3</td>
+                    <td><input type="number" name="nilai_tajwid_2" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" name="catatan_tajwid_2" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>3</td>
-                    <td>Ahkamul Huruf</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_tajwid_3" min="3" max="10"></td>
-                    <td><input type="text" name="catatan_tajwid_3"></td>
+                    <td>3</td><td style="text-align: left;">Ahkamul Huruf</td><td>10</td><td>3</td>
+                    <td><input type="number" name="nilai_tajwid_3" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" name="catatan_tajwid_3" placeholder="..."></td>
                 </tr>
-                <tr style="background: #f4f4f4;">
-                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
-                    <td style="font-weight: bold;">40</td>
-                    <td style="font-weight: bold;">10</td>
-                    <td><input type="number" name="total_tajwid" readonly></td>
+                <tr style="background: #e9ecef; font-weight: bold; font-size: 18px;">
+                    <td colspan="4" style="text-align: right; padding-right: 15px;">Total Tajwid:</td>
+                    <td><input type="number" id="total_tajwid" readonly value="0"></td>
                     <td></td>
                 </tr>
             </table>
-            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Muhammad Irham, S.Pd.I)</p>
         </div>
 
-        <!-- TABEL 2: BIDANG LAGU DAN IRAMA -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG LAGU DAN IRAMA</h3>
-            
-            <div class="participant-info">
-                <label for="no_urut_lagu">No. Urut :</label>
-                <input type="text" id="no_urut_lagu" name="no_urut_lagu" placeholder="...">
-                <label for="nama_peserta_lagu">Nama Peserta :</label>
-                <input type="text" id="nama_peserta_lagu" name="nama_peserta_lagu" placeholder="...">
-                <label for="asal_fakultas_lagu">Asal Fakultas :</label>
-                <input type="text" id="asal_fakultas_lagu" name="asal_fakultas_lagu" placeholder="...">
-                <label for="tanggal_lagu">Tanggal :</label>
-                <input type="date" id="tanggal_lagu" name="tanggal_lagu">
-            </div>
-
+        <div class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0;">2. BIDANG LAGU DAN IRAMA (Max 30)</h3>
             <table class="form-table">
                 <tr>
                     <th>No.</th>
                     <th>Jenis Yang Dinilai</th>
-                    <th>Nilai Maksimum</th>
-                    <th>Nilai Minimum</th>
-                    <th>Nilai Yang Diperoleh</th>
-                    <th>Catatan Nilai Akhir</th>
+                    <th>Max</th>
+                    <th>Min</th>
+                    <th style="width: 15%;">Nilai Diperoleh</th>
+                    <th>Catatan (Opsional)</th>
                 </tr>
                 <tr>
-                    <td>1</td>
-                    <td>Variasi & Keindahan Irama</td>
-                    <td>6</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_lagu_1" min="3" max="6"></td>
-                    <td><input type="text" name="catatan_lagu_1"></td>
+                    <td>1</td><td style="text-align: left;">Variasi & Keindahan Irama</td><td>6</td><td>3</td>
+                    <td><input type="number" name="nilai_lagu_1" min="0" max="6" step="0.5"></td>
+                    <td><input type="text" name="catatan_lagu_1" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>Volume</td>
-                    <td>8</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_lagu_2" min="3" max="8"></td>
-                    <td><input type="text" name="catatan_lagu_2"></td>
+                    <td>2</td><td style="text-align: left;">Volume</td><td>8</td><td>3</td>
+                    <td><input type="number" name="nilai_lagu_2" min="0" max="8" step="0.5"></td>
+                    <td><input type="text" name="catatan_lagu_2" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>3</td>
-                    <td>Kebersihan</td>
-                    <td>8</td>
-                    <td>2</td>
-                    <td><input type="number" name="nilai_lagu_3" min="2" max="8"></td>
-                    <td><input type="text" name="catatan_lagu_3"></td>
+                    <td>3</td><td style="text-align: left;">Kebersihan</td><td>8</td><td>2</td>
+                    <td><input type="number" name="nilai_lagu_3" min="0" max="8" step="0.5"></td>
+                    <td><input type="text" name="catatan_lagu_3" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>4</td>
-                    <td>Pengaturan Napas</td>
-                    <td>8</td>
-                    <td>2</td>
-                    <td><input type="number" name="nilai_lagu_4" min="2" max="8"></td>
-                    <td><input type="text" name="catatan_lagu_4"></td>
+                    <td>4</td><td style="text-align: left;">Pengaturan Napas</td><td>8</td><td>2</td>
+                    <td><input type="number" name="nilai_lagu_4" min="0" max="8" step="0.5"></td>
+                    <td><input type="text" name="catatan_lagu_4" placeholder="..."></td>
                 </tr>
-                <tr style="background: #f4f4f4;">
-                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
-                    <td style="font-weight: bold;">30</td>
-                    <td style="font-weight: bold;">10</td>
-                    <td><input type="number" name="total_lagu" readonly></td>
+                <tr style="background: #e9ecef; font-weight: bold; font-size: 18px;">
+                    <td colspan="4" style="text-align: right; padding-right: 15px;">Total Lagu & Irama:</td>
+                    <td><input type="number" id="total_lagu" readonly value="0"></td>
                     <td></td>
                 </tr>
             </table>
-            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Thusan Hamidi, M.Pd)</p>
         </div>
 
-        <!-- TABEL 3: BIDANG FASHOHAH -->
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
-            <h3 style="text-align: center; border-bottom: 2px solid #006d77; padding-bottom: 10px; margin-bottom: 20px;">LEMBAR PENILAIAN MUSABAQAH TARTILIL QUR’AN<br>BIDANG FASHOHAH</h3>
-            
-            <div class="participant-info">
-                <label for="no_urut_fashohah">No. Urut :</label>
-                <input type="text" id="no_urut_fashohah" name="no_urut_fashohah" placeholder="...">
-                <label for="nama_peserta_fashohah">Nama Peserta :</label>
-                <input type="text" id="nama_peserta_fashohah" name="nama_peserta_fashohah" placeholder="...">
-                <label for="asal_fakultas_fashohah">Asal Fakultas :</label>
-                <input type="text" id="asal_fakultas_fashohah" name="asal_fakultas_fashohah" placeholder="...">
-                <label for="tanggal_fashohah">Tanggal :</label>
-                <input type="date" id="tanggal_fashohah" name="tanggal_fashohah">
-            </div>
-
+        <div class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0;">3. BIDANG FASHOHAH (Max 30)</h3>
             <table class="form-table">
                 <tr>
                     <th>No.</th>
                     <th>Jenis Yang Dinilai</th>
-                    <th>Nilai Maksimum</th>
-                    <th>Nilai Minimum</th>
-                    <th>Nilai Yang Diperoleh</th>
-                    <th>Catatan Nilai Akhir</th>
+                    <th>Max</th>
+                    <th>Min</th>
+                    <th style="width: 15%;">Nilai Diperoleh</th>
+                    <th>Catatan (Opsional)</th>
                 </tr>
                 <tr>
-                    <td>1</td>
-                    <td>Adab</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_fashohah_1" min="3" max="10"></td>
-                    <td><input type="text" name="catatan_fashohah_1"></td>
+                    <td>1</td><td style="text-align: left;">Adab</td><td>10</td><td>3</td>
+                    <td><input type="number" name="nilai_fashohah_1" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" name="catatan_fashohah_1" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>Kelancaran</td>
-                    <td>10</td>
-                    <td>4</td>
-                    <td><input type="number" name="nilai_fashohah_2" min="4" max="10"></td>
-                    <td><input type="text" name="catatan_fashohah_2"></td>
+                    <td>2</td><td style="text-align: left;">Kelancaran</td><td>10</td><td>4</td>
+                    <td><input type="number" name="nilai_fashohah_2" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" name="catatan_fashohah_2" placeholder="..."></td>
                 </tr>
                 <tr>
-                    <td>3</td>
-                    <td>Waqaf wal Ibtida’</td>
-                    <td>10</td>
-                    <td>3</td>
-                    <td><input type="number" name="nilai_fashohah_3" min="3" max="10"></td>
-                    <td><input type="text" name="catatan_fashohah_3"></td>
+                    <td>3</td><td style="text-align: left;">Waqaf wal Ibtida’</td><td>10</td><td>3</td>
+                    <td><input type="number" name="nilai_fashohah_3" min="0" max="10" step="0.5"></td>
+                    <td><input type="text" name="catatan_fashohah_3" placeholder="..."></td>
                 </tr>
-                <tr style="background: #f4f4f4;">
-                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px;">Jumlah</td>
-                    <td style="font-weight: bold;">30</td>
-                    <td style="font-weight: bold;">10</td>
-                    <td><input type="number" name="total_fashohah" readonly></td>
+                <tr style="background: #e9ecef; font-weight: bold; font-size: 18px;">
+                    <td colspan="4" style="text-align: right; padding-right: 15px;">Total Fashohah:</td>
+                    <td><input type="number" id="total_fashohah" readonly value="0"></td>
                     <td></td>
                 </tr>
             </table>
-            <p style="text-align: right; margin-top: 20px;">Malang, ________ 2026<br>Juri Penilai<br><br><br><br>(Ustadz Misbah Husolli.)</p>
         </div>
 
-        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+        <div style="background: #023047; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 4px solid #ffb703;">
+            <h2 style="margin: 0;">GRAND TOTAL NILAI AKHIR</h2>
+            <div style="font-size: 40px; font-weight: bold; margin-top: 10px;">
+                <span id="display_grand_total">0</span> / 100
+            </div>
+        </div>
+
+        <div class="action-btn-container">
+            <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
+            <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
+            <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetPeserta()">Nilai Peserta Selanjutnya</button>
+        </div>
+
     </form>
 </section>
 
-<footer>
+<!-- ====================================================================== -->
+<!-- TEMPLATE REKAPITULASI 1 HALAMAN (MENGGUNAKAN FLEXBOX ANTI-ERROR)       -->
+<!-- ====================================================================== -->
+<div id="template-pdf">
+    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
+        <h2 style="margin: 0; font-size: 14pt;">PANITIA PELAKSANA & DEWAN HAKIM</h2>
+        <h1 style="margin: 5px 0; font-size: 16pt;">MUSABAQAH TARTILIL QUR'AN (MTrQ) XIX</h1>
+        <h2 style="margin: 0; font-size: 14pt;">UNIVERSITAS BRAWIJAYA 2026</h2>
+    </div>
+    
+    <h3 style="text-align: center; text-decoration: underline; font-size: 14pt; margin-bottom: 25px;">LEMBAR REKAPITULASI PENILAIAN</h3>
+    
+    <!-- Identitas Flexbox -->
+    <div style="margin-bottom: 25px; font-size: 12pt;">
+        <div style="display: flex !important; flex-direction: row !important; margin-bottom: 8px;">
+            <div style="width: 160px !important; font-weight: bold;">No. Urut Peserta</div>
+            <div style="width: 20px !important; text-align: left;">:</div>
+            <div style="font-weight: bold; text-align: left;"><span id="pdf_no_urut">-</span></div>
+        </div>
+        <div style="display: flex !important; flex-direction: row !important; margin-bottom: 8px;">
+            <div style="width: 160px !important; font-weight: bold;">Nama Peserta</div>
+            <div style="width: 20px !important; text-align: left;">:</div>
+            <div style="font-weight: bold; text-align: left;"><span id="pdf_nama">-</span></div>
+        </div>
+        <div style="display: flex !important; flex-direction: row !important;">
+            <div style="width: 160px !important; font-weight: bold;">Asal Fakultas</div>
+            <div style="width: 20px !important; text-align: left;">:</div>
+            <div style="font-weight: bold; text-align: left;"><span id="pdf_fakultas">-</span></div>
+        </div>
+    </div>
+
+    <!-- Tabel Berbentuk Vertikal 3 Kolom Murni Menggunakan Flexbox -->
+    <div style="width: 100%; border-top: 1px solid black; border-left: 1px solid black; margin-bottom: 20px; font-size: 12pt;">
+        
+        <!-- Header -->
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold; text-align: center; background: #fdfdfd;">
+            <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Bidang Penilaian</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Nilai Maksimal</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Nilai Diperoleh</div>
+        </div>
+        
+        <!-- Baris 1: Tajwid -->
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">1. Bidang Tajwid</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">40</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_tajwid">0</strong></div>
+        </div>
+        
+        <!-- Baris 2: Lagu -->
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">2. Bidang Lagu dan Irama</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">30</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_lagu">0</strong></div>
+        </div>
+        
+        <!-- Baris 3: Fashohah -->
+        <div style="display: flex !important; flex-direction: row !important; text-align: center;">
+            <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">3. Bidang Fashohah</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">30</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_fashohah">0</strong></div>
+        </div>
+        
+        <!-- Grand Total -->
+        <div style="display: flex !important; flex-direction: row !important; font-weight: bold;">
+            <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: right; padding-right: 15px;">GRAND TOTAL NILAI AKHIR :</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center;">100</div>
+            <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center; font-size: 14pt;"><strong id="pdf_grand_total">0</strong></div>
+        </div>
+    </div>
+
+    <!-- Rincian Penilaian (Akan berisi seluruh catatan detail dari juri) -->
+    <div style="border: 1px solid black; padding: 15px; min-height: 150px; margin-bottom: 30px;">
+        <h4 style="margin-top: 0; margin-bottom: 8px;">Rincian Penilaian & Catatan Juri:</h4>
+        <p id="pdf_detail" style="font-size: 11pt; text-align: justify; margin: 0; line-height: 1.6;">-</p>
+    </div>
+    
+    <div style="text-align: right; margin-top: 40px; margin-right: 20px;">
+        <p style="margin: 2px 0;">Malang, <span id="pdf_tanggal"></span></p>
+        <p style="margin: 2px 0; font-weight: bold;">Koordinator Dewan Hakim,</p>
+        <br><br><br><br>
+        <p style="margin: 2px 0;">( ........................................ )</p>
+    </div>
+</div>
+
+<footer style="margin-top: 30px;">
     <p>© 2026 MTQ Universitas Brawijaya XIX</p>
 </footer>
 
 <script>
-    // Fungsi untuk menghitung otomatis total Bidang Tajwid
-    function hitungTajwid() {
-        let total = 0;
-        for (let i = 1; i <= 3; i++) {
-            let nilai = parseFloat(document.getElementsByName('nilai_tajwid_' + i)[0].value) || 0;
-            total += nilai;
-        }
-        document.getElementsByName('total_tajwid')[0].value = total > 0 ? total : "";
+    // ==========================================
+    // LOGIKA PERHITUNGAN MATEMATIKA OTOMATIS
+    // ==========================================
+    function hitungSemua() {
+        let sumTajwid = 0;
+        for(let i=1; i<=3; i++) sumTajwid += parseFloat(document.getElementsByName('nilai_tajwid_'+i)[0].value) || 0;
+        document.getElementById('total_tajwid').value = sumTajwid;
+
+        let sumLagu = 0;
+        for(let i=1; i<=4; i++) sumLagu += parseFloat(document.getElementsByName('nilai_lagu_'+i)[0].value) || 0;
+        document.getElementById('total_lagu').value = sumLagu;
+
+        let sumFashohah = 0;
+        for(let i=1; i<=3; i++) sumFashohah += parseFloat(document.getElementsByName('nilai_fashohah_'+i)[0].value) || 0;
+        document.getElementById('total_fashohah').value = sumFashohah;
+
+        let grandTotal = sumTajwid + sumLagu + sumFashohah;
+        document.getElementById('display_grand_total').innerText = grandTotal;
     }
 
-    // Fungsi untuk menghitung otomatis total Bidang Lagu dan Irama
-    function hitungLagu() {
-        let total = 0;
-        for (let i = 1; i <= 4; i++) {
-            let nilai = parseFloat(document.getElementsByName('nilai_lagu_' + i)[0].value) || 0;
-            total += nilai;
-        }
-        document.getElementsByName('total_lagu')[0].value = total > 0 ? total : "";
-    }
-
-    // Fungsi untuk menghitung otomatis total Bidang Fashohah
-    function hitungFashohah() {
-        let total = 0;
-        for (let i = 1; i <= 3; i++) {
-            let nilai = parseFloat(document.getElementsByName('nilai_fashohah_' + i)[0].value) || 0;
-            total += nilai;
-        }
-        document.getElementsByName('total_fashohah')[0].value = total > 0 ? total : "";
-    }
-
-    // Event listener: hitung ulang tiap ada angka yang dimasukkan juri
     document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('input', () => {
-            hitungTajwid();
-            hitungLagu();
-            hitungFashohah();
-        });
+        input.addEventListener('input', hitungSemua);
     });
+
+    // ==========================================
+    // FUNGSI MENYALIN DATA FORM KE PDF REKAP
+    // ==========================================
+    function siapkanDataPDF() {
+        let noUrut = document.getElementById('global_no_urut').value || "-";
+        let nama = document.getElementById('global_nama').value || "-";
+        let fakultas = document.getElementById('global_fakultas').value || "-";
+        
+        let nTajwid = parseFloat(document.getElementById('total_tajwid').value) || 0;
+        let nLagu = parseFloat(document.getElementById('total_lagu').value) || 0;
+        let nFashohah = parseFloat(document.getElementById('total_fashohah').value) || 0;
+        let gTotal = nTajwid + nLagu + nFashohah;
+
+        let detailArr = [];
+        let lblTajwid = ["Makharijul Huruf", "Sifat Huruf", "Ahkamul Huruf"];
+        for(let i=1; i<=3; i++) { 
+            let v = document.getElementsByName('nilai_tajwid_'+i)[0].value;
+            let c = document.getElementsByName('catatan_tajwid_'+i)[0].value;
+            if(v || c) { detailArr.push(`Tajwid-${lblTajwid[i-1]}: ${v||0} ${c ? `(Ket: ${c})`:""}`); }
+        }
+        
+        let lblLagu = ["Variasi & Keindahan", "Volume", "Kebersihan", "Pengaturan Napas"];
+        for(let i=1; i<=4; i++) { 
+            let v = document.getElementsByName('nilai_lagu_'+i)[0].value; 
+            let c = document.getElementsByName('catatan_lagu_'+i)[0].value;
+            if(v || c) { detailArr.push(`Lagu-${lblLagu[i-1]}: ${v||0} ${c ? `(Ket: ${c})`:""}`); }
+        }
+        
+        let lblFash = ["Adab", "Kelancaran", "Waqaf wal Ibtida'"];
+        for(let i=1; i<=3; i++) { 
+            let v = document.getElementsByName('nilai_fashohah_'+i)[0].value; 
+            let c = document.getElementsByName('catatan_fashohah_'+i)[0].value;
+            if(v || c) { detailArr.push(`Fashohah-${lblFash[i-1]}: ${v||0} ${c ? `(Ket: ${c})`:""}`); }
+        }
+
+        let rincianText = detailArr.length > 0 ? detailArr.join(' | ') : "Tidak ada rincian penilaian yang diisi.";
+
+        document.getElementById('pdf_no_urut').innerText = noUrut;
+        document.getElementById('pdf_nama').innerText = nama;
+        document.getElementById('pdf_fakultas').innerText = fakultas;
+        
+        document.getElementById('pdf_tajwid').innerText = nTajwid;
+        document.getElementById('pdf_lagu').innerText = nLagu;
+        document.getElementById('pdf_fashohah').innerText = nFashohah;
+        document.getElementById('pdf_grand_total').innerText = gTotal;
+        document.getElementById('pdf_detail').innerText = rincianText;
+        
+        const today = new Date();
+        document.getElementById('pdf_tanggal').innerText = today.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        return rincianText;
+    }
+
+    // ==========================================
+    // 1. LOGIKA SIMPAN KE DATABASE SUPABASE
+    // ==========================================
+    document.getElementById('form-penilaian-mtrq').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        let btn = document.getElementById('btn-submit');
+        btn.innerText = "Menyimpan Data...";
+        btn.disabled = true;
+
+        try {
+            let rincianText = siapkanDataPDF();
+
+            let payload = {
+                no_urut: document.getElementById('global_no_urut').value,
+                nama_peserta: document.getElementById('global_nama').value,
+                asal_fakultas: document.getElementById('global_fakultas').value,
+                nilai_tajwid: parseFloat(document.getElementById('total_tajwid').value) || 0,
+                nilai_lagu: parseFloat(document.getElementById('total_lagu').value) || 0,
+                nilai_fashohah: parseFloat(document.getElementById('total_fashohah').value) || 0,
+                grand_total: parseFloat(document.getElementById('display_grand_total').innerText) || 0,
+                rincian_penilaian: rincianText
+            };
+
+            const { error } = await supabaseClient
+                .from('nilai_mtrq')
+                .insert([ payload ]);
+
+            if (error) throw new Error(error.message);
+
+            btn.innerText = "Data Tersimpan ✓";
+            alert("Alhamdulillah! Penilaian MTrQ berhasil disimpan ke database Supabase.");
+
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi Kesalahan Database: \n" + (err.message || err));
+            btn.innerText = "1. Simpan ke Database";
+            btn.disabled = false;
+        }
+    });
+
+    // ==========================================
+    // 2. LOGIKA CETAK PDF RESMI KROMIUM
+    // ==========================================
+    function cetakPDF() {
+        siapkanDataPDF();
+        window.print();
+    }
+
+    // ==========================================
+    // 3. LOGIKA RESET FORM UNTUK PESERTA SELANJUTNYA
+    // ==========================================
+    function resetPeserta() {
+        document.getElementById('form-penilaian-mtrq').reset();
+        hitungSemua(); 
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "1. Simpan ke Database";
+        btnSubmit.disabled = false;
+        
+        document.getElementById('global_no_urut').focus();
+        window.scrollTo(0, 0);
+    }
 </script>
 </body>
 </html>

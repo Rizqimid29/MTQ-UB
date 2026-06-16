@@ -3,86 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detail Lomba - MDIA</title>
+<title>Rekapitulasi Penilaian MDIA</title>
 <link rel="stylesheet" href="../styles/style.css">
 <style>
-    /* CSS tambahan khusus halaman ini agar form rapi */
+    /* ========================================== */
+    /* STYLE UNTUK TAMPILAN WEB (FORMULIR JURI)   */
+    /* ========================================== */
+    .form-table {
+        width: 100%; border-collapse: collapse; margin-bottom: 20px;
+    }
+    .form-table th, .form-table td {
+        border: 1px solid #ccc; padding: 8px; text-align: center;
+    }
+    .form-table th { background: #006d77; color: white; }
+    
     .form-table input[type="number"], 
     .form-table input[type="text"],
-    .form-table input[type="date"] {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 6px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        text-align: center;
+    .form-table input[type="date"],
+    .form-table select {
+        width: 100%; box-sizing: border-box; padding: 6px;
+        border: 1px solid #ccc; border-radius: 4px; text-align: center;
     }
     
-    .form-table input[type="text"] {
-        text-align: left;
-    }
+    .form-table input[type="text"] { text-align: left; }
 
-    /* Warna abu-abu untuk kolom total otomatis */
     .form-table input[readonly] {
-        background-color: #e9ecef;
-        color: #495057;
-        cursor: not-allowed;
-        font-weight: bold;
+        background-color: #e9ecef; color: #495057; cursor: not-allowed; font-weight: bold;
     }
 
     .submit-btn {
-        background-color: #006d77;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        display: block;
-        margin: 20px auto;
-        transition: background-color 0.3s;
-        font-weight: bold;
+        background-color: #006d77; color: white; padding: 15px 25px; border: none;
+        border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; transition: background-color 0.3s;
     }
+    .submit-btn:hover { background-color: #023047; }
+    .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-    .submit-btn:hover {
-        background-color: #023047;
+    .action-btn-container {
+        display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .action-btn-container .submit-btn {
+        flex: 1; min-width: 200px; margin: 0;
     }
 
     .participant-info {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        gap: 10px 15px;
-        margin-bottom: 20px;
-        align-items: center;
+        display: grid; grid-template-columns: max-content 1fr max-content 1fr; gap: 15px; background: #f4f4f4;
+        padding: 20px; border-radius: 8px; border-left: 5px solid #006d77; margin-bottom: 30px; align-items: center;
     }
+    @media (max-width: 768px) { .participant-info { grid-template-columns: 1fr; } }
+    .participant-info label { font-weight: bold; color: #023047; }
+    .participant-info input, .participant-info select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; box-sizing: border-box; text-align: left; }
+
+    .panel-penilaian { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto; border-top: 4px solid #006d77; display: none; }
+    .panel-penilaian.active { display: block; }
     
-    .participant-info label {
-        font-weight: bold;
-        text-align: right;
-    }
+    .arabic-text { font-size: 18px; font-weight: bold; color: #006d77; margin-bottom: 5px; display: block; }
+    
+    #template-pdf { display: none; }
 
-    .participant-info input {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        width: 100%;
-        max-width: 300px;
-    }
+    /* ========================================== */
+    /* ATURAN KHUSUS SAAT DICETAK KELUAR (PRINT)  */
+    /* ========================================== */
+    @media print {
+        header, nav, section, footer, .action-btn-container { display: none !important; }
+        
+        #template-pdf { 
+            display: block !important; 
+            position: absolute; left: 0; top: 0; width: 100%; background: white;
+            color: black; font-family: 'Times New Roman', Times, serif; font-size: 12pt; 
+            box-sizing: border-box;
+        }
+        #template-pdf * { box-sizing: border-box !important; }
+        
+        html body #template-pdf div[style*="display: flex"] {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+        
+        #template-pdf .hidden-print { display: none !important; }
 
-    .arabic-text {
-        font-size: 18px;
-        font-weight: bold;
-        color: #006d77;
-        margin-bottom: 5px;
-        display: block;
+        @page { size: A4 portrait; margin: 1.5cm; }
+        body { background: white !important; margin: 0 !important; padding: 0 !important; }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../connector/supabase_connector.js"></script>
+
 </head>
 <body>
+
 <header>
     <div class="container">
         <h1>Musabaqah Debat Ilmiah Kandungan Al-Qur'an (MDIA)</h1>
-        <p>Detail Informasi dan Formulir Penilaian</p>
+        <p>Formulir Rekapitulasi Penilaian Dewan Hakim</p>
     </div>
 </header>
 
@@ -95,7 +108,7 @@
 <section class="container" style="margin-top: 30px;">
     <h2>Informasi Lomba</h2>
     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-        <p>Musabaqah Debat Ilmiah Kandungan Al-Qur'an (MDIA) merupakan kegiatan bertukar pendapat atau argumentasi yang diwakilkan dengan 2 tim yakni tim afirmatif (mendukung topik) dan tim oposisi (menentang topik) terhadap suatu permasalahan yang dibahas berkaitan dengan Al- Qur'an, Hadist Nabi, dan Ijtihad para Ulama'.</p>
+        <p>Musabaqah Debat Ilmiah Kandungan Al-Qur'an (MDIA) merupakan kegiatan bertukar pendapat atau argumentasi terhadap suatu permasalahan yang dibahas berkaitan dengan Al-Qur'an, Hadist Nabi, dan Ijtihad para Ulama'.</p>
         
         <div style="display: flex; gap: 40px; flex-wrap: wrap;">
             <div>
@@ -117,25 +130,44 @@
         </div>
     </div>
 
-    <h2>Formulir Penilaian Dewan Hakim (Bahasa Arab)</h2>
-    <p>Silakan masukkan nilai peserta pada kolom <strong>Nilai Yang Diperoleh</strong> sesuai dengan rubrik dan batas maksimal. Kolom abu-abu akan menjumlahkan secara otomatis.</p>
+    <h2>Formulir Penilaian Dewan Hakim</h2>
+    <p style="margin-bottom: 20px;">Silakan pilih <strong>Kategori Bahasa Debat</strong> terlebih dahulu untuk memunculkan rubrik yang sesuai.</p>
 
-    <form action="#" method="POST">
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-            <div class="participant-info" style="margin-bottom: 0;">
-                <label for="tanggal">Tanggal (التاريخ) :</label>
-                <input type="date" id="tanggal" name="tanggal">
-                <label for="nama_peserta">Nama (الاسم) :</label>
-                <input type="text" id="nama_peserta" name="nama_peserta" placeholder="...">
-                <label for="tim">Tim (الفريق) :</label>
-                <input type="text" id="tim" name="tim" placeholder="...">
-                <label for="fakultas">Jurusan & Fakultas (القسم والكلية) :</label>
-                <input type="text" id="fakultas" name="fakultas" placeholder="...">
-            </div>
+    <form id="form-penilaian-mdia">
+        
+        <!-- SMART SWITCH KATEGORI BAHASA -->
+        <div class="participant-info" style="border-left: 5px solid #d84315; grid-template-columns: max-content 1fr;">
+            <label for="kategori_bahasa" style="color: #d84315;">Bahasa Lomba :</label>
+            <select id="kategori_bahasa" required onchange="ubahKategoriBahasa()" style="color: #d84315; font-weight: bold;">
+                <option value="" disabled selected>-- Pilih Bahasa Debat --</option>
+                <option value="arab">Debat Bahasa Arab</option>
+                <option value="inggris">Debat Bahasa Inggris</option>
+            </select>
         </div>
 
-        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; overflow-x: auto;">
+        <!-- INFO IDENTITAS GLOBAL PESERTA -->
+        <div class="participant-info">
+            <label for="tanggal">Tanggal Pertandingan :</label>
+            <input type="date" id="tanggal" name="tanggal" required>
             
+            <label for="nama_peserta">Nama Pembicara :</label>
+            <input type="text" id="nama_peserta" name="nama_peserta" placeholder="Nama Lengkap Peserta" required>
+            
+            <label for="tim">Nama / Posisi Tim :</label>
+            <input type="text" id="tim" name="tim" placeholder="Misal: Tim Afirmatif / Opening Government" required>
+            
+            <label for="fakultas">Jurusan & Fakultas :</label>
+            <input type="text" id="fakultas" name="fakultas" placeholder="Contoh: Sastra Inggris, FIB" required>
+
+            <label for="mosi" id="lbl_mosi" style="display:none;">Mosi Debat (Motion) :</label>
+            <input type="text" id="mosi" name="mosi" placeholder="Masukkan topik mosi perdebatan" style="display:none; grid-column: span 3;">
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PANEL RUBRIK DEBAT BAHASA ARAB                 -->
+        <!-- ============================================== -->
+        <div id="panel-arab" class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0; color: #006d77;">RUBRIK PENILAIAN DEBAT BAHASA ARAB</h3>
             <table class="form-table">
                 <tr>
                     <th width="5%">No</th>
@@ -151,23 +183,21 @@
                         a. Argumen (الحجة)
                     </td>
                     <td>20</td>
-                    <td><input type="number" id="nilai_argumen" min="0" max="20" placeholder="Skor (0-20)"></td>
+                    <td><input type="number" id="nilai_argumen" oninput="hitungTotal()" min="0" max="20" placeholder="Skor (0-20)"></td>
                 </tr>
                 <tr>
-                    <td style="text-align: left;">
-                        b. Bantahan (التفنيد)
-                    </td>
-                    <td>20</td>
-                    <td><input type="number" id="nilai_bantahan" min="0" max="20" placeholder="Skor (0-20)"></td>
+                    <td style="text-align: left;">b. Bantahan (التفنيد)</td>
+                    <td style="text-align: center;">20</td>
+                    <td><input type="number" id="nilai_bantahan" oninput="hitungTotal()" min="0" max="20" placeholder="Skor (0-20)"></td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td style="text-align: left;">
-                        <span class="arabic-text">أُسْلُوبُ الإِلْقَاءِ</span>
+                        <span class="arabic-text">أُسْلُوبُ Edِلْقَاءِ</span>
                         <strong>Gaya Penyampaian</strong>
                     </td>
                     <td>40</td>
-                    <td><input type="number" id="nilai_gaya" min="0" max="40" placeholder="Skor (0-40)"></td>
+                    <td><input type="number" id="nilai_gaya" oninput="hitungTotal()" min="0" max="40" placeholder="Skor (0-40)"></td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -176,63 +206,392 @@
                         <strong>Strategi Tim</strong>
                     </td>
                     <td>20</td>
-                    <td><input type="number" id="nilai_strategi" min="0" max="20" placeholder="Skor (0-20)"></td>
-                </tr>
-                <tr style="background: #023047; color: white;">
-                    <td colspan="2" style="text-align: right; font-weight: bold; padding-right: 20px; font-size: 16px;">
-                        <span style="color: #ffb703;">الدَّرَجَةُ</span> | TOTAL NILAI
-                    </td>
-                    <td style="font-weight: bold; font-size: 16px;">100</td>
-                    <td>
-                        <input type="number" id="total_nilai" readonly style="font-size: 18px; font-weight: bold; background: #ffb703; border: none; color: #023047;">
-                    </td>
+                    <td><input type="number" id="nilai_strategi" oninput="hitungTotal()" min="0" max="20" placeholder="Skor (0-20)"></td>
                 </tr>
             </table>
-
-            <p style="text-align: right; margin-top: 40px;">تَحْرِيرٌ فِي مالانج، 6 مايو 2026<br>Malang, 6 Mei 2026<br>الحاكمة (Dewan Juri)<br><br><br><br>( .................................... )</p>
         </div>
 
-        <button type="submit" class="submit-btn">Kirim Penilaian</button>
+        <!-- ============================================== -->
+        <!-- PANEL RUBRIK DEBAT BAHASA INGGRIS              -->
+        <!-- ============================================== -->
+        <div id="panel-inggris" class="panel-penilaian">
+            <h3 style="text-align: center; margin-top: 0; color: #006d77;">RUBRIK PENILAIAN DEBAT BAHASA INGGRIS</h3>
+            <table class="form-table">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="50%">Assessment Criteria</th>
+                    <th width="20%">Maximum Score</th>
+                    <th width="25%">Score Obtained</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td style="text-align: left;">
+                        <strong>Matter (40%)</strong><br>
+                        <span style="font-size: 13px; color: #555;">Substance, arguments, logical proofs, and evidence quality regarding the Islamic Al-Qur'an context.</span>
+                    </td>
+                    <td>40</td>
+                    <td><input type="number" id="nilai_matter" oninput="hitungTotal()" min="0" max="40" placeholder="Score (0-40)"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td style="text-align: left;">
+                        <strong>Method (30%)</strong><br>
+                        <span style="font-size: 13px; color: #555;">Structure of speech, dynamic response to opponent, team consistency, and time management.</span>
+                    </td>
+                    <td>30</td>
+                    <td><input type="number" id="nilai_method" oninput="hitungTotal()" min="0" max="30" placeholder="Score (0-30)"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td style="text-align: left;">
+                        <strong>Manner (30%)</strong><br>
+                        <span style="font-size: 13px; color: #555;">Style of delivery, elocution, voice articulation, body language, and linguistic fluency.</span>
+                    </td>
+                    <td>30</td>
+                    <td><input type="number" id="nilai_manner" oninput="hitungTotal()" min="0" max="30" placeholder="Score (0-30)"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- KALKULATOR TOTAL RESMI -->
+        <div style="background: #023047; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 4px solid #ffb703;">
+            <h2 style="margin: 0; text-transform: uppercase;" id="txt_total_label">TOTAL NILAI HAKIM</h2>
+            <div style="font-size: 40px; font-weight: bold; margin-top: 10px;">
+                <span id="display_total">0</span> / 100
+            </div>
+            <!-- Hidden Input Untuk Menyimpan Total Nilai Angka -->
+            <input type="hidden" id="total_nilai" value="0">
+        </div>
+
+        <!-- ACTION UTAMA TOMBOL -->
+        <div class="action-btn-container">
+            <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
+            <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
+            <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetLomba()">Nilai Peserta Selanjutnya</button>
+        </div>
+
     </form>
 </section>
 
-<footer>
+<!-- ====================================================================== -->
+<!-- TEMPLATE REKAPITULASI 1 HALAMAN PDF (PORTRAIT FLEXBOX TIPE MTQ_11)     -->
+<!-- ====================================================================== -->
+<div id="template-pdf">
+    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
+        <h2 style="margin: 0; font-size: 14pt;">PANITIA PELAKSANA & DEWAN HAKIM</h2>
+        <h1 id="pdf_main_title" style="margin: 5px 0; font-size: 15pt;">MUSABAQAH DEBAT ILMIAH KANDUNGAN AL-QUR'AN (MDIA)</h1>
+        <h2 style="margin: 0; font-size: 14pt;">UNIVERSITAS BRAWIJAYA 2026</h2>
+    </div>
+    
+    <h3 id="pdf_sub_title" style="text-align: center; text-decoration: underline; font-size: 14pt; margin-bottom: 25px;">LEMBAR REKAPITULASI PENILAIAN</h3>
+    
+    <!-- Identitas Susunan Kerja Flexbox Menyamping -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 12pt;">
+        <div>
+            <div style="display: flex; margin-bottom: 6px;">
+                <div style="width: 170px; font-weight: bold;">Nama Peserta</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold;"><span id="pdf_nama">-</span></div>
+            </div>
+            <div style="display: flex; margin-bottom: 6px;">
+                <div style="width: 170px; font-weight: bold;">Tim / Regu</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold;"><span id="pdf_tim">-</span></div>
+            </div>
+            <div style="display: flex; margin-bottom: 6px;">
+                <div style="width: 170px; font-weight: bold;">Jurusan & Fakultas</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold;"><span id="pdf_fakultas">-</span></div>
+            </div>
+            <div style="display: flex;" id="pdf_row_mosi">
+                <div style="width: 170px; font-weight: bold;">Mosi (Motion)</div>
+                <div style="width: 20px;">:</div>
+                <div style="font-weight: bold; text-align: justify; padding-right: 10px;"><span id="pdf_mosi_text">-</span></div>
+            </div>
+        </div>
+        <div style="text-align: right; min-width: 200px;">
+            <div style="display: flex;">
+                <div style="width: 100px; font-weight: bold; text-align: left;">Tanggal</div>
+                <div style="width: 20px; text-align: left;">:</div>
+                <div style="font-weight: bold; text-align: left;"><span id="pdf_tanggal_top">-</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Rekapitulasi Pembentuk Baris Fleksibel (Secure dari Bug Garis Atas Chrome) -->
+    <div style="width: 100%; font-size: 12pt; border-left: 1px solid black !important; margin-bottom: 25px;">
+        <div id="pdf_table_content">
+            <!-- Isi tabel portrait dirender dinamis via JS bergantung pilihan bahasa -->
+        </div>
+    </div>
+    
+    <!-- Tanda Tangan Juri -->
+    <div style="text-align: right; margin-top: 50px; margin-right: 20px;">
+        <p style="margin: 2px 0;" id="pdf_place_date">Malang, 6 Mei 2026</p>
+        <p style="margin: 2px 0; font-weight: bold;" id="pdf_juri_title">Dewan Juri / Adjudicator,</p>
+        <br><br><br><br>
+        <p style="margin: 2px 0;">( ........................................ )</p>
+    </div>
+</div>
+
+<footer style="margin-top: 30px;">
     <p>© 2026 MTQ Universitas Brawijaya XIX</p>
 </footer>
 
 <script>
-    function hitungMDIA() {
-        // Ambil nilai dari masing-masing input, gunakan 0 jika kosong
-        let nilaiArgumen = parseFloat(document.getElementById('nilai_argumen').value) || 0;
-        let nilaiBantahan = parseFloat(document.getElementById('nilai_bantahan').value) || 0;
-        let nilaiGaya = parseFloat(document.getElementById('nilai_gaya').value) || 0;
-        let nilaiStrategi = parseFloat(document.getElementById('nilai_strategi').value) || 0;
+    // ==========================================
+    // LOGIKA SWITCH LAYOUT BAHASA
+    // ==========================================
+    function ubahKategoriBahasa() {
+        let bahasa = document.getElementById('kategori_bahasa').value;
+        
+        document.getElementById('panel-arab').classList.remove('active');
+        document.getElementById('panel-inggris').classList.remove('active');
+        
+        let mosiLbl = document.getElementById('lbl_mosi');
+        let mosiInp = document.getElementById('mosi');
 
-        // Validasi agar nilai tidak melebihi maksimal per baris
-        if (nilaiArgumen > 20) { document.getElementById('nilai_argumen').value = 20; nilaiArgumen = 20; }
-        if (nilaiBantahan > 20) { document.getElementById('nilai_bantahan').value = 20; nilaiBantahan = 20; }
-        if (nilaiGaya > 40) { document.getElementById('nilai_gaya').value = 40; nilaiGaya = 40; }
-        if (nilaiStrategi > 20) { document.getElementById('nilai_strategi').value = 20; nilaiStrategi = 20; }
-
-        // Cek apakah ada inputan yang diisi
-        let inputAda = document.getElementById('nilai_argumen').value !== "" || 
-                       document.getElementById('nilai_bantahan').value !== "" || 
-                       document.getElementById('nilai_gaya').value !== "" || 
-                       document.getElementById('nilai_strategi').value !== "";
-
-        // Hitung dan tampilkan total jika ada isian
-        if (inputAda) {
-            let total = nilaiArgumen + nilaiBantahan + nilaiGaya + nilaiStrategi;
-            document.getElementById('total_nilai').value = total;
-        } else {
-            document.getElementById('total_nilai').value = "";
+        if (bahasa === 'arab') {
+            document.getElementById('panel-arab').classList.add('active');
+            mosiLbl.style.display = 'none'; mosiInp.style.display = 'none'; mosiInp.required = false;
+            document.getElementById('txt_total_label').innerText = "الدَّرَجَةُ | TOTAL NILAI";
+        } else if (bahasa === 'inggris') {
+            document.getElementById('panel-inggris').classList.add('active');
+            mosiLbl.style.display = 'block'; mosiInp.style.display = 'block'; mosiInp.required = true;
+            document.getElementById('txt_total_label').innerText = "TOTAL ADJUDICATION SCORE";
         }
+        
+        hitungTotal(); // Reset hitungan
     }
 
-    // Mengaktifkan pemicu hitung otomatis saat angka di-input
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('input', hitungMDIA);
+    // ==========================================
+    // LOGIKA PERHITUNGAN MATEMATIKA REAL-TIME (FIXED)
+    // ==========================================
+    function hitungTotal() {
+        let bahasa = document.getElementById('kategori_bahasa').value;
+        let total = 0;
+
+        if (bahasa === 'arab') {
+            let arg = parseFloat(document.getElementById('nilai_argumen').value) || 0;
+            let bnt = parseFloat(document.getElementById('nilai_bantahan').value) || 0;
+            let gy = parseFloat(document.getElementById('nilai_gaya').value) || 0;
+            let str = parseFloat(document.getElementById('nilai_strategi').value) || 0;
+
+            // Proteksi batas max angka input
+            if (arg > 20) { document.getElementById('nilai_argumen').value = 20; arg = 20; }
+            if (bnt > 20) { document.getElementById('nilai_bantahan').value = 20; bnt = 20; }
+            if (gy > 40) { document.getElementById('nilai_gaya').value = 40; gy = 40; }
+            if (str > 20) { document.getElementById('nilai_strategi').value = 20; str = 20; }
+
+            total = arg + bnt + gy + str;
+
+        } else if (bahasa === 'inggris') {
+            let mat = parseFloat(document.getElementById('nilai_matter').value) || 0;
+            let met = parseFloat(document.getElementById('nilai_method').value) || 0;
+            let mnr = parseFloat(document.getElementById('nilai_manner').value) || 0;
+
+            // Proteksi batas max angka input
+            if (mat > 40) { document.getElementById('nilai_matter').value = 40; mat = 40; }
+            if (met > 30) { document.getElementById('nilai_method').value = 30; met = 30; }
+            if (mnr > 30) { document.getElementById('nilai_manner').value = 30; mnr = 30; }
+
+            total = mat + met + mnr;
+        }
+
+        // Tembakkan nilai langsung secara sinkron ke elemen DOM banner UI
+        document.getElementById('total_nilai').value = total;
+        document.getElementById('display_total').innerText = total;
+    }
+
+    // ==========================================
+    // FUNGSI INJEKSI DATA KE TEMPLATE PDF
+    // ==========================================
+    function siapkanDataPDF() {
+        let bahasa = document.getElementById('kategori_bahasa').value || "arab";
+        
+        let tglInput = document.getElementById('tanggal').value;
+        let tglFormatted = "-";
+        if(tglInput) {
+            let dateObj = new Date(tglInput);
+            tglFormatted = dateObj.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        let nama = document.getElementById('nama_peserta').value || "-";
+        let tim = document.getElementById('tim').value || "-";
+        let Corporate = document.getElementById('fakultas').value || "-";
+        let mosiText = document.getElementById('mosi').value || "-";
+        let totalScore = document.getElementById('total_nilai').value || "0";
+
+        // Injeksi Identitas Tekstual ke PDF
+        document.getElementById('pdf_nama').innerText = nama;
+        document.getElementById('pdf_tim').innerText = tim;
+        document.getElementById('pdf_fakultas').innerText = Corporate;
+        document.getElementById('pdf_tanggal_top').innerText = tglFormatted;
+
+        let tableHTML = "";
+
+        if (bahasa === 'arab') {
+            document.getElementById('pdf_main_title').innerText = "MUSABAQAH DEBAT ILMIAH KANDUNGAN AL-QUR'AN (MDIA)";
+            document.getElementById('pdf_sub_title').innerText = "LEMBAR REKAPITULASI PENILAIAN (BAHASA ARAB)";
+            document.getElementById('pdf_row_mosi').style.display = 'none';
+            document.getElementById('pdf_place_date').innerHTML = `تَحْرِيرٌ فِي مالانج، ${tglFormatted}<br>Malang, ${tglFormatted}`;
+            document.getElementById('pdf_juri_title').innerText = "الحاكمة (Dewan Juri),";
+
+            let arg = document.getElementById('nilai_argumen').value || "0";
+            let bnt = document.getElementById('nilai_bantahan').value || "0";
+            let gy = document.getElementById('nilai_gaya').value || "0";
+            let str = document.getElementById('nilai_strategi').value || "0";
+
+            tableHTML = `
+                <div style="display: flex !important; font-weight: bold; text-align: center; background: #f5f5f4;">
+                    <div style="flex: 3; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Kriteria Penilaian (معايير التقييم)</div>
+                    <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Nilai Maks</div>
+                    <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Nilai Diperoleh</div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>1. Isi Penyampaian Debat (مُحْتَوَى الخِطَابِ)</strong><br><span style="padding-left:12px; font-size:10pt; color:#444;">a. Argumen (الحجة)</span></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">20</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${arg}</strong></div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><span style="padding-left:12px; font-size:10pt; color:#444;">b. Bantahan (التفنيد)</span></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">20</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${bnt}</strong></div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>2. Gaya Penyampaian (أُسْلُوبُ الإِلْقَاءِ)</strong></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">40</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${gy}</strong></div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>3. Strategi Tim (اسْتِرَاتِيجِيَّةُ الفَرِيقِ)</strong></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">20</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${str}</strong></div>
+                </div>
+                <div style="display: flex !important; font-weight: bold; background: #fafaf9;">
+                    <div style="flex: 4; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; padding-right: 15px;">الدَّرَجَةُ | TOTAL KESELURUHAN NILAI</div>
+                    <div style="flex: 1; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; font-size: 14pt; color:#023047;"><strong>${totalScore}</strong></div>
+                </div>
+            `;
+        } else if (bahasa === 'inggris') {
+            document.getElementById('pdf_main_title').innerText = "MUSABAQAH DEBAT ILMIAH KANDUNGAN AL-QUR'AN (MDIA)";
+            document.getElementById('pdf_sub_title').innerText = "ADJUDICATION SCORE SHEET (ENGLISH DEBATE)";
+            document.getElementById('pdf_row_mosi').style.display = 'flex';
+            document.getElementById('pdf_mosi_text').innerText = mosiText;
+            document.getElementById('pdf_place_date').innerText = `Malang, ${tglFormatted}`;
+            document.getElementById('pdf_juri_title').innerText = "Adjudicator Signature,";
+
+            let mat = document.getElementById('nilai_matter').value || "0";
+            let met = document.getElementById('nilai_method').value || "0";
+            let mnr = document.getElementById('nilai_manner').value || "0";
+
+            tableHTML = `
+                <div style="display: flex !important; font-weight: bold; text-align: center; background: #f5f5f4;">
+                    <div style="flex: 3; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Assessment Core Criteria</div>
+                    <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Max Weight</div>
+                    <div style="flex: 1; border-top: 1px solid black !important; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 10px;">Score Given</div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>1. Matter (40%)</strong><br><span style="font-size:10pt; color:#555;">(Arguments substance, logical proof, evidence quality within Qur'an context)</span></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">40</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${mat}</strong></div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>2. Method (30%)</strong><br><span style="font-size:10pt; color:#555;">(Structure of speech, dynamic response to opponents, time management)</span></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">30</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${met}</strong></div>
+                </div>
+                <div style="display: flex !important;">
+                    <div style="flex: 3; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; text-align: left; padding-left: 15px;"><strong>3. Manner (30%)</strong><br><span style="font-size:10pt; color:#555;">(Delivery style, articulation, elocution, body language, fluency)</span></div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;">30</div>
+                    <div style="flex: 1; border-bottom: 1px solid black !important; border-right: 1px solid black !important; padding: 10px; display:flex; align-items:center; justify-content:center;"><strong>${mnr}</strong></div>
+                </div>
+                <div style="display: flex !important; font-weight: bold; background: #fafaf9;">
+                    <div style="flex: 4; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; padding-right: 15px;">TOTAL ACCUMULATED SCORE</div>
+                    <div style="flex: 1; border-right: 1px solid black !important; border-bottom: 1px solid black !important; padding: 12px; text-align: center; font-size: 14pt; color:#023047;"><strong>${totalScore}</strong></div>
+                </div>
+            `;
+        }
+
+        document.getElementById('pdf_table_content').innerHTML = tableHTML;
+        return { tglInput, nama, tim, Corporate, mosiText, totalScore, bahasa };
+    }
+
+    // ==========================================
+    // 1. LOGIKA SIMPAN KE DATABASE SUPABASE
+    // ==========================================
+    document.getElementById('form-penilaian-mdia').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        let btn = document.getElementById('btn-submit');
+        btn.innerText = "Menyimpan Data...";
+        btn.disabled = true;
+
+        try {
+            let info = siapkanDataPDF();
+
+            let payload = {
+                tanggal: info.tglInput,
+                kategori_bahasa: info.bahasa === 'arab' ? "Arab" : "Inggris",
+                mosi: info.bahasa === 'inggris' ? info.mosiText : null,
+                nama_peserta: info.nama,
+                tim: info.tim,
+                asal_fakultas: info.Corporate,
+                
+                nilai_argumen: info.bahasa === 'arab' ? parseFloat(document.getElementById('nilai_argumen').value)||0 : null,
+                nilai_bantahan: info.bahasa === 'arab' ? parseFloat(document.getElementById('nilai_bantahan').value)||0 : null,
+                nilai_gaya: info.bahasa === 'arab' ? parseFloat(document.getElementById('nilai_gaya').value)||0 : null,
+                nilai_strategi: info.bahasa === 'arab' ? parseFloat(document.getElementById('nilai_strategi').value)||0 : null,
+                
+                nilai_matter: info.bahasa === 'inggris' ? parseFloat(document.getElementById('nilai_matter').value)||0 : null,
+                nilai_method: info.bahasa === 'inggris' ? parseFloat(document.getElementById('nilai_method').value)||0 : null,
+                nilai_manner: info.bahasa === 'inggris' ? parseFloat(document.getElementById('nilai_manner').value)||0 : null,
+                
+                total_nilai: parseFloat(info.totalScore)
+            };
+
+            const { error } = await supabaseClient
+                .from('nilai_mdia')
+                .insert([ payload ]);
+
+            if (error) throw new Error(error.message);
+
+            btn.innerText = "Data Tersimpan ✓";
+            alert("Alhamdulillah! Rekap penilaian MDIA berhasil disimpan ke database Supabase.");
+
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi Kesalahan Database: \n" + (err.message || err));
+            btn.innerText = "1. Simpan ke Database";
+            btn.disabled = false;
+        }
     });
+
+    // ==========================================
+    // 2. Tombol Cetak PDF Berfungsi Penuh (UNBLOCKED)
+    // ==========================================
+    function cetakPDF() {
+        if(!document.getElementById('kategori_bahasa').value) {
+            alert("Harap tentukan Bahasa Debat terlebih dahulu!");
+            return;
+        }
+        siapkanDataPDF();
+        window.print();
+    }
+
+    // ==========================================
+    // 3. LOGIKA RESET FORM UNTUK PESERTA SELANJUTNYA
+    // ==========================================
+    function resetLomba() {
+        document.getElementById('form-penilaian-mdia').reset();
+        ubahKategoriBahasa();
+        
+        const btnSubmit = document.getElementById('btn-submit');
+        btnSubmit.innerText = "1. Simpan ke Database";
+        btnSubmit.disabled = false;
+        
+        window.scrollTo(0, 0);
+    }
 </script>
 </body>
 </html>
