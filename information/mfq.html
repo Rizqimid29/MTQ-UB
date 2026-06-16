@@ -108,6 +108,22 @@
 </head>
 <body>
 
+<div id="auth-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f4f4; z-index: 99999; display: flex; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; border-top: 5px solid #006d77;">
+        <h2 style="color: #006d77; margin-top: 0;">🔒 Akses Terkunci</h2>
+        <p style="color: #555; margin-bottom: 20px;">Silakan masukkan kata sandi (password) untuk mengakses formulir penilaian lomba ini.</p>
+        
+        <div style="position: relative; width: 100%; margin-bottom: 20px;">
+            <input type="password" id="juri_password" placeholder="Masukkan Password..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; text-align: center; padding-right: 40px;">
+            <span id="toggle_password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" onclick="togglePassword()">👁️</span>
+        </div>
+        
+        <button onclick="verifikasiPassword()" style="background: #006d77; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;">Buka Formulir</button>
+        
+        <p id="auth-error" style="color: red; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">❌ Password Salah!</p>
+    </div>
+</div>
+
 <header>
     <div class="container">
         <h1>Musabaqah Fahmil Qur'an (MFQ)</h1>
@@ -596,6 +612,89 @@
         btnSubmit.innerText = "1. Simpan ke Database";
         btnSubmit.disabled = false;
         window.scrollTo(0, 0);
+    }
+    // =======================================================
+    // LOGIKA KEAMANAN PASSWORD (DATABASE AUTHENTICATION)
+    // =======================================================
+    
+    // 1. KODE LOMBA (Harus sama persis dengan kolom 'cabang_lomba' di Supabase)
+    const KODE_LOMBA = "MFQ"; 
+    
+    // 2. NAMA SESI (Agar tidak bentrok antar tab lomba)
+    const NAMA_SESI = "auth_mfq"; 
+
+    // Cek apakah juri sudah login sebelumnya di browser ini
+    if (sessionStorage.getItem(NAMA_SESI) === "sudah_login") {
+        document.getElementById('auth-overlay').style.display = 'none';
+    } else {
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    // FUNGSI VERIFIKASI KE DATABASE SUPABASE
+    async function verifikasiPassword() {
+        let inputPass = document.getElementById('juri_password').value;
+        let btnSubmit = document.querySelector('#auth-overlay button');
+        
+        if (!inputPass) {
+            alert("Harap masukkan password terlebih dahulu!");
+            return;
+        }
+
+        // Ubah tombol jadi loading agar juri tahu sistem sedang mengecek DB
+        btnSubmit.innerText = "Memverifikasi ke Database...";
+        btnSubmit.disabled = true;
+
+        try {
+            // Mencari kecocokan cabang lomba dan password di tabel Supabase
+            const { data, error } = await supabaseClient
+                .from('password_form')
+                .select('*')
+                .eq('cabang_lomba', KODE_LOMBA)
+                .eq('password_juri', inputPass);
+
+            if (error) throw error;
+
+            // Jika database mengembalikan data, berarti Password Benar!
+            if (data && data.length > 0) {
+                sessionStorage.setItem(NAMA_SESI, "sudah_login");
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.body.style.overflow = 'auto'; 
+            } else {
+                // Jika kosong, berarti Password Salah!
+                document.getElementById('auth-error').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('auth-error').style.display = 'none';
+                }, 3000);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Terjadi kesalahan jaringan saat memverifikasi password.");
+        } finally {
+            // Kembalikan tombol ke semula
+            btnSubmit.innerText = "Buka Formulir";
+            btnSubmit.disabled = false;
+        }
+    }
+
+    // Memungkinkan Juri menekan tombol "Enter" di keyboard
+    document.getElementById('juri_password').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifikasiPassword();
+        }
+    });
+
+    // Fitur Ikon Mata (Show/Hide Password)
+    function togglePassword() {
+        let passInput = document.getElementById('juri_password');
+        let icon = document.getElementById('toggle_password');
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            icon.innerText = "🙈"; 
+        } else {
+            passInput.type = "password";
+            icon.innerText = "👁️";
+        }
     }
 </script>
 </body>
