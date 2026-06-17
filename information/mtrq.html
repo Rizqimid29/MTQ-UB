@@ -127,22 +127,6 @@
 </head>
 <body>
 
-<div id="auth-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f4f4; z-index: 99999; display: flex; align-items: center; justify-content: center;">
-    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; border-top: 5px solid #006d77;">
-        <h2 style="color: #006d77; margin-top: 0;">🔒 Akses Terkunci</h2>
-        <p style="color: #555; margin-bottom: 20px;">Silakan masukkan kata sandi (password) untuk mengakses formulir penilaian lomba ini.</p>
-        
-        <div style="position: relative; width: 100%; margin-bottom: 20px;">
-            <input type="password" id="juri_password" placeholder="Masukkan Password..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; text-align: center; padding-right: 40px;">
-            <span id="toggle_password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" onclick="togglePassword()">👁️</span>
-        </div>
-        
-        <button onclick="verifikasiPassword()" style="background: #006d77; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;">Buka Formulir</button>
-        
-        <p id="auth-error" style="color: red; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">❌ Password Salah!</p>
-    </div>
-</div>
-
 <header>
     <div class="container">
         <h1>Musabaqah Tartilil Qur’an (MTrQ)</h1>
@@ -168,7 +152,7 @@
                 <ul style="list-style: none; padding-left: 0;">
                     <li>📅 : Selasa, 5 Mei 2026</li>
                     <li>⏰ : 08.00 - selesai</li>
-                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing" target="_blank">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
                 </ul>
             </div>
             <div>
@@ -176,16 +160,30 @@
                 <ul style="list-style: none; padding-left: 0;">
                     <li>📅 : Rabu, 6 Mei 2026</li>
                     <li>⏰ : 08.00 - selesai</li>
-                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
+                    <li>🏡 : <a href="https://drive.google.com/file/d/1zNum4rldIntkdLolkhcw1br2TwoxHL6Q/view?usp=sharing" target="_blank">Aula Gedung A FTAB Lt. 2 (FTAB)</a></li>
                 </ul>
             </div>
         </div>
     </div>
     
     <h2>Formulir Penilaian Dewan Hakim</h2>
-    <p style="margin-bottom: 20px;">Silakan isi kolom <strong>Nilai Diperoleh</strong> di bawah ini sesuai perolehan peserta. Kolom berwarna abu-abu (Total) akan terhitung otomatis.</p>
+    <p style="margin-bottom: 20px;">Silakan masukkan kata sandi juri terlebih dahulu untuk memunculkan lembar input nilai.</p>
 
-    <form id="form-penilaian-mtrq">
+    <div id="auth-section" class="panel-penilaian" style="text-align: center; max-width: 500px; margin: 0 auto 30px auto; border-top: 5px solid #006d77;">
+        <h3 style="color: #006d77; margin-top: 0;">🔒 Formulir Penilaian Terkunci</h3>
+        <p style="color: #555; margin-bottom: 20px;">Silakan masukkan kata sandi (password) Dewan Hakim untuk membuka lembar penilaian lomba ini.</p>
+        
+        <div style="position: relative; max-width: 300px; margin: 0 auto 20px auto;">
+            <input type="password" id="juri_password" placeholder="Masukkan Password..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; text-align: center; padding-right: 40px;">
+            <span id="toggle_password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" onclick="togglePassword()">👁️</span>
+        </div>
+        
+        <button type="button" onclick="verifikasiPassword()" style="background: #006d77; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; font-weight: bold; transition: 0.3s;">Buka Formulir</button>
+        
+        <p id="auth-error" style="color: red; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">❌ Password Salah!</p>
+    </div>
+
+    <form id="form-penilaian-mtrq" style="display: none;">
         
         <div class="participant-info">
             <div>
@@ -320,14 +318,12 @@
             <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
             <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
             <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetPeserta()">Nilai Peserta Selanjutnya</button>
+            <button type="button" class="submit-btn" style="background-color: #6c757d; color: white;" onclick="kunciForm()">🔒 Kunci Formulir</button>
         </div>
 
     </form>
 </section>
 
-<!-- ====================================================================== -->
-<!-- TEMPLATE REKAPITULASI 1 HALAMAN (MENGGUNAKAN FLEXBOX ANTI-ERROR)       -->
-<!-- ====================================================================== -->
 <div id="template-pdf">
     <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
         <h2 style="margin: 0; font-size: 14pt;">PANITIA PELAKSANA & DEWAN HAKIM</h2>
@@ -337,7 +333,6 @@
     
     <h3 style="text-align: center; text-decoration: underline; font-size: 14pt; margin-bottom: 25px;">LEMBAR REKAPITULASI PENILAIAN</h3>
     
-    <!-- Identitas Flexbox -->
     <div style="margin-bottom: 25px; font-size: 12pt;">
         <div style="display: flex !important; flex-direction: row !important; margin-bottom: 8px;">
             <div style="width: 160px !important; font-weight: bold;">No. Urut Peserta</div>
@@ -356,38 +351,32 @@
         </div>
     </div>
 
-    <!-- Tabel Berbentuk Vertikal 3 Kolom Murni Menggunakan Flexbox -->
     <div style="width: 100%; border-top: 1px solid black; border-left: 1px solid black; margin-bottom: 20px; font-size: 12pt;">
         
-        <!-- Header -->
         <div style="display: flex !important; flex-direction: row !important; font-weight: bold; text-align: center; background: #fdfdfd;">
             <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Bidang Penilaian</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Nilai Maksimal</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">Nilai Diperoleh</div>
         </div>
         
-        <!-- Baris 1: Tajwid -->
         <div style="display: flex !important; flex-direction: row !important; text-align: center;">
             <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">1. Bidang Tajwid</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">40</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_tajwid">0</strong></div>
         </div>
         
-        <!-- Baris 2: Lagu -->
         <div style="display: flex !important; flex-direction: row !important; text-align: center;">
             <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">2. Bidang Lagu dan Irama</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">30</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_lagu">0</strong></div>
         </div>
         
-        <!-- Baris 3: Fashohah -->
         <div style="display: flex !important; flex-direction: row !important; text-align: center;">
             <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: left; padding-left: 15px;">3. Bidang Fashohah</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;">30</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px;"><strong id="pdf_fashohah">0</strong></div>
         </div>
         
-        <!-- Grand Total -->
         <div style="display: flex !important; flex-direction: row !important; font-weight: bold;">
             <div style="flex: 2; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: right; padding-right: 15px;">GRAND TOTAL NILAI AKHIR :</div>
             <div style="flex: 1; border-right: 1px solid black; border-bottom: 1px solid black; padding: 10px; text-align: center;">100</div>
@@ -395,7 +384,6 @@
         </div>
     </div>
 
-    <!-- Rincian Penilaian (Akan berisi seluruh catatan detail dari juri) -->
     <div style="border: 1px solid black; padding: 15px; min-height: 150px; margin-bottom: 30px;">
         <h4 style="margin-top: 0; margin-bottom: 8px;">Rincian Penilaian & Catatan Juri:</h4>
         <p id="pdf_detail" style="font-size: 11pt; text-align: justify; margin: 0; line-height: 1.6;">-</p>
@@ -527,7 +515,7 @@
         } catch (err) {
             console.error(err);
             alert("Terjadi Kesalahan Database: \n" + (err.message || err));
-            btn.innerText = "1. Simpan ke Database";
+            btn.innerText = "Simpan ke Database";
             btn.disabled = false;
         }
     });
@@ -548,12 +536,13 @@
         hitungSemua(); 
         
         const btnSubmit = document.getElementById('btn-submit');
-        btnSubmit.innerText = "1. Simpan ke Database";
+        btnSubmit.innerText = "Simpan ke Database";
         btnSubmit.disabled = false;
         
         document.getElementById('global_no_urut').focus();
         window.scrollTo(0, 0);
     }
+
     // =======================================================
     // LOGIKA KEAMANAN PASSWORD (DATABASE AUTHENTICATION)
     // =======================================================
@@ -563,18 +552,20 @@
     
     // 2. NAMA SESI (Agar tidak bentrok antar tab lomba)
     const NAMA_SESI = "auth_mtrq"; 
+    
+    // 3. TARGET ID FORMULIR
+    const ID_FORM_TARGET = "form-penilaian-mtrq"; 
 
-    // Cek apakah juri sudah login sebelumnya di browser ini
-    if (sessionStorage.getItem(NAMA_SESI) === "sudah_login") {
-        document.getElementById('auth-overlay').style.display = 'none';
-    } else {
-        document.body.style.overflow = 'hidden'; 
+    // Cek apakah juri sudah login sebelumnya di browser ini (Menggunakan localStorage)
+    if (localStorage.getItem(NAMA_SESI) === "sudah_login") {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById(ID_FORM_TARGET).style.display = 'block';
     }
 
     // FUNGSI VERIFIKASI KE DATABASE SUPABASE
     async function verifikasiPassword() {
         let inputPass = document.getElementById('juri_password').value;
-        let btnSubmit = document.querySelector('#auth-overlay button');
+        let btnSubmit = document.querySelector('#auth-section button');
         
         if (!inputPass) {
             alert("Harap masukkan password terlebih dahulu!");
@@ -582,7 +573,7 @@
         }
 
         // Ubah tombol jadi loading agar juri tahu sistem sedang mengecek DB
-        btnSubmit.innerText = "Memverifikasi ke Database...";
+        btnSubmit.innerText = "Memverifikasi...";
         btnSubmit.disabled = true;
 
         try {
@@ -597,9 +588,9 @@
 
             // Jika database mengembalikan data, berarti Password Benar!
             if (data && data.length > 0) {
-                sessionStorage.setItem(NAMA_SESI, "sudah_login");
-                document.getElementById('auth-overlay').style.display = 'none';
-                document.body.style.overflow = 'auto'; 
+                localStorage.setItem(NAMA_SESI, "sudah_login");
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById(ID_FORM_TARGET).style.display = 'block';
             } else {
                 // Jika kosong, berarti Password Salah!
                 document.getElementById('auth-error').style.display = 'block';
@@ -636,6 +627,15 @@
             passInput.type = "password";
             icon.innerText = "👁️";
         }
+    }
+
+    // Fungsi Kunci Manual (Logout Sesi)
+    function kunciForm() {
+        localStorage.removeItem(NAMA_SESI); 
+        document.getElementById('juri_password').value = ""; 
+        document.getElementById('auth-section').style.display = 'block'; 
+        document.getElementById(ID_FORM_TARGET).style.display = 'none'; 
+        window.scrollTo(0, 0);
     }
 </script>
 </body>

@@ -30,7 +30,7 @@
 
     .submit-btn {
         background-color: #006d77; color: white; padding: 15px 25px;
-        border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;
+        border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.3s;
     }
     .submit-btn:hover { background-color: #023047; }
     .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -55,12 +55,10 @@
     /* ATURAN KHUSUS SAAT DICETAK KELUAR (PRINT)  */
     /* ========================================== */
     @media print {
-        /* PERBAIKAN: Hanya sembunyikan container Web UI, JANGAN sembunyikan seluruh isi body */
         header, nav, section, footer, .action-btn-container { 
             display: none !important; 
         }
         
-        /* Munculkan container PDF Rekapitulasi secara penuh */
         #template-pdf { 
             display: block !important; 
             position: absolute; left: 0; top: 0; width: 100%; background: white;
@@ -68,7 +66,6 @@
             box-sizing: border-box;
         }
 
-        /* Jamin Flexbox pembentuk struktur baris tabel portrait PDF tidak rusak */
         html body #template-pdf div[style*="display: flex"] {
             display: flex !important;
             flex-direction: row !important;
@@ -85,22 +82,6 @@
 </head>
 <body>
 
-<div id="auth-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f4f4; z-index: 99999; display: flex; align-items: center; justify-content: center;">
-    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; border-top: 5px solid #006d77;">
-        <h2 style="color: #006d77; margin-top: 0;">🔒 Akses Terkunci</h2>
-        <p style="color: #555; margin-bottom: 20px;">Silakan masukkan kata sandi (password) untuk mengakses formulir penilaian lomba ini.</p>
-        
-        <div style="position: relative; width: 100%; margin-bottom: 20px;">
-            <input type="password" id="juri_password" placeholder="Masukkan Password..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; text-align: center; padding-right: 40px;">
-            <span id="toggle_password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" onclick="togglePassword()">👁️</span>
-        </div>
-        
-        <button onclick="verifikasiPassword()" style="background: #006d77; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;">Buka Formulir</button>
-        
-        <p id="auth-error" style="color: red; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">❌ Password Salah!</p>
-    </div>
-</div>
-
 <header>
     <div class="container">
         <h1>Musabaqah Karya Tulis Ilmiah Al-Qur'an (MKTIQ)</h1>
@@ -115,6 +96,10 @@
 </nav>
 
 <section class="container" style="margin-top: 30px;">
+    
+    <!-- ======================================================= -->
+    <!-- 1. INFORMASI LOMBA (TERBUKA UNTUK PUBLIK)               -->
+    <!-- ======================================================= -->
     <h2>Informasi Lomba</h2>
     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
         <p>Musabaqah Karya Tulis Ilmiah Al-Qur'an (MKTIQ) Babak Final meliputi sesi Presentasi Karya dan Tanya Jawab bersama Dewan Hakim.</p>
@@ -122,15 +107,35 @@
         <ul style="list-style: none; padding-left: 0;">
             <li>📅 : Selasa, 5 Mei 2026</li>
             <li>⏰ : 08.00 - selesai</li>
-            <li>🏡 : <a href="https://drive.google.com/file/d/1J4Y3ybhsPzBgnoaLng1n8z5zINdZHHym/view?usp=sharing">Aula FIB B (FIB)</a></li>
-            <li>📘 : <a href="https://drive.google.com/file/d/1-LZrZ5S7JKm26bJrUPQAqEJVCho7ckD9/view?usp=drivesdk">Contoh Karya </a></li>
+            <li>🏡 : <a href="https://drive.google.com/file/d/1J4Y3ybhsPzBgnoaLng1n8z5zINdZHHym/view?usp=sharing" target="_blank">Aula FIB B (FIB)</a></li>
+            <li>📘 : <a href="https://drive.google.com/file/d/1-LZrZ5S7JKm26bJrUPQAqEJVCho7ckD9/view?usp=drivesdk" target="_blank">Contoh Karya</a></li>
         </ul>
     </div>
 
     <h2>Formulir Penilaian Dewan Hakim</h2>
-    <p style="margin-bottom: 20px;">Silakan isi kolom <strong>Skor Diperoleh</strong> di bawah ini. Sistem akan otomatis menghitung Total Skor dan mengubahnya ke dalam Nilai Persentase Bobot (60% dan 40%).</p>
+    <p style="margin-bottom: 20px;">Silakan masukkan kata sandi juri terlebih dahulu untuk memunculkan lembar input nilai.</p>
 
-    <form id="form-penilaian-mktiq">
+    <!-- ======================================================= -->
+    <!-- 2. KOTAK LOGIN LOKAL (MENGUNCI FORMULIR)                -->
+    <!-- ======================================================= -->
+    <div id="auth-section" class="panel-penilaian" style="text-align: center; max-width: 500px; margin: 0 auto 30px auto; border-top: 5px solid #006d77;">
+        <h3 style="color: #006d77; margin-top: 0;">🔒 Formulir Penilaian Terkunci</h3>
+        <p style="color: #555; margin-bottom: 20px;">Silakan masukkan kata sandi (password) Dewan Hakim untuk membuka lembar penilaian lomba ini.</p>
+        
+        <div style="position: relative; max-width: 300px; margin: 0 auto 20px auto;">
+            <input type="password" id="juri_password" placeholder="Masukkan Password..." style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; text-align: center; padding-right: 40px;">
+            <span id="toggle_password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px;" onclick="togglePassword()">👁️</span>
+        </div>
+        
+        <button type="button" onclick="verifikasiPassword()" style="background: #006d77; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; font-weight: bold; transition: 0.3s;">Buka Formulir</button>
+        
+        <p id="auth-error" style="color: red; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">❌ Password Salah!</p>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- 3. FORMULIR PENILAIAN (TERSEMBUNYI SECARA DEFAULT)      -->
+    <!-- ======================================================= -->
+    <form id="form-penilaian-mktiq" style="display: none;">
         
         <div class="participant-info">
             <div>
@@ -147,9 +152,7 @@
             </div>
         </div>
 
-        <!-- ============================================== -->
         <!-- PANEL A: PRESENTASI -->
-        <!-- ============================================== -->
         <div class="panel-penilaian">
             <h3 style="text-align: center; margin-top: 0;">A. PRESENTASI (BOBOT 60%)</h3>
             <table class="form-table">
@@ -199,9 +202,7 @@
             </table>
         </div>
 
-        <!-- ============================================== -->
         <!-- PANEL B: TANYA JAWAB -->
-        <!-- ============================================== -->
         <div class="panel-penilaian">
             <h3 style="text-align: center; margin-top: 0;">B. TANYA JAWAB (BOBOT 40%)</h3>
             <table class="form-table">
@@ -229,7 +230,7 @@
                         <strong>Diskusi & Aspek Kebahasaan</strong>
                         <div class="sub-items">
                             1) Kejelasan penggunaan bahasa dalam penyampaian gagasan<br>
-                            2) Kontribusi dan kekompakan tim[cite: 13]
+                            2) Kontribusi dan kekompakan tim
                         </div>
                     </td>
                     <td>30</td>
@@ -262,6 +263,8 @@
             <button type="submit" class="submit-btn" id="btn-submit">Simpan ke Database</button>
             <button type="button" class="submit-btn" id="btn-cetak" style="background-color: #ffb703; color: #023047;" onclick="cetakPDF()">Unduh PDF Rekap</button>
             <button type="button" class="submit-btn" id="btn-reset" style="background-color: #e63946;" onclick="resetLomba()">Nilai Peserta Selanjutnya</button>
+            <!-- Tombol Kunci Manual -->
+            <button type="button" class="submit-btn" style="background-color: #6c757d; color: white;" onclick="kunciForm()">🔒 Kunci Formulir</button>
         </div>
 
     </form>
@@ -505,6 +508,7 @@
         document.getElementById('nomor_tampil').focus();
         window.scrollTo(0, 0);
     }
+
     // =======================================================
     // LOGIKA KEAMANAN PASSWORD (DATABASE AUTHENTICATION)
     // =======================================================
@@ -514,30 +518,30 @@
     
     // 2. NAMA SESI (Agar tidak bentrok antar tab lomba)
     const NAMA_SESI = "auth_mktiq"; 
+    
+    // 3. TARGET ID FORMULIR
+    const ID_FORM_TARGET = "form-penilaian-mktiq";
 
-    // Cek apakah juri sudah login sebelumnya di browser ini
-    if (sessionStorage.getItem(NAMA_SESI) === "sudah_login") {
-        document.getElementById('auth-overlay').style.display = 'none';
-    } else {
-        document.body.style.overflow = 'hidden'; 
+    // Cek status login saat juri membuka/me-refresh halaman
+    if (localStorage.getItem(NAMA_SESI) === "sudah_login") {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById(ID_FORM_TARGET).style.display = 'block';
     }
 
     // FUNGSI VERIFIKASI KE DATABASE SUPABASE
     async function verifikasiPassword() {
         let inputPass = document.getElementById('juri_password').value;
-        let btnSubmit = document.querySelector('#auth-overlay button');
+        let btnSubmit = document.querySelector('#auth-section button');
         
         if (!inputPass) {
             alert("Harap masukkan password terlebih dahulu!");
             return;
         }
 
-        // Ubah tombol jadi loading agar juri tahu sistem sedang mengecek DB
-        btnSubmit.innerText = "Memverifikasi ke Database...";
+        btnSubmit.innerText = "Memverifikasi...";
         btnSubmit.disabled = true;
 
         try {
-            // Mencari kecocokan cabang lomba dan password di tabel Supabase
             const { data, error } = await supabaseClient
                 .from('password_form')
                 .select('*')
@@ -546,13 +550,12 @@
 
             if (error) throw error;
 
-            // Jika database mengembalikan data, berarti Password Benar!
             if (data && data.length > 0) {
-                sessionStorage.setItem(NAMA_SESI, "sudah_login");
-                document.getElementById('auth-overlay').style.display = 'none';
-                document.body.style.overflow = 'auto'; 
+                // Jika sukses: Simpan sesi, sembunyikan kotak login, tampilkan form nilai!
+                localStorage.setItem(NAMA_SESI, "sudah_login");
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById(ID_FORM_TARGET).style.display = 'block';
             } else {
-                // Jika kosong, berarti Password Salah!
                 document.getElementById('auth-error').style.display = 'block';
                 setTimeout(() => {
                     document.getElementById('auth-error').style.display = 'none';
@@ -562,13 +565,12 @@
             console.error(err);
             alert("Terjadi kesalahan jaringan saat memverifikasi password.");
         } finally {
-            // Kembalikan tombol ke semula
             btnSubmit.innerText = "Buka Formulir";
             btnSubmit.disabled = false;
         }
     }
 
-    // Memungkinkan Juri menekan tombol "Enter" di keyboard
+    // Mengaktifkan tombol Enter pada keyboard
     document.getElementById('juri_password').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -587,6 +589,15 @@
             passInput.type = "password";
             icon.innerText = "👁️";
         }
+    }
+
+    // Fungsi Kunci Manual (Logout Sesi)
+    function kunciForm() {
+        localStorage.removeItem(NAMA_SESI); 
+        document.getElementById('juri_password').value = ""; 
+        document.getElementById('auth-section').style.display = 'block'; 
+        document.getElementById(ID_FORM_TARGET).style.display = 'none'; 
+        window.scrollTo(0, 0);
     }
 </script>
 </body>
